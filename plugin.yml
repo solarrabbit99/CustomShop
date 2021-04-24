@@ -1,0 +1,25 @@
+main: Plugin.CustomShops
+name: CustomShops
+version: 1.0
+author: SolarRabbit
+api-version: 1.16
+
+commands:
+    removeshop:
+        description: Removes a shop.
+    newshop:
+        description: Creates a new shop of specified type.
+    hello:
+        description: Sends "Hello" to the player.
+        permission: builder
+        permission-message: You are not a builder!
+
+permissions:
+    god:
+        description: Has access to all available commands.
+        default: op
+        children:
+            builder: true
+    builder:
+        description: Has access to build-related commands.
+        default: op
