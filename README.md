@@ -29,9 +29,18 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 
 ### Vending Machine
 
-<p align="center">
-  <a href="https://imgur.com/9O1uP3E"><img height="274" 
-  src="https://i.imgur.com/9O1uP3E.png" title="Wooden Vending Machine"/></a>
-  <a href="https://imgur.com/SyNNdEH"><img height="274"
-  src="https://i.imgur.com/SyNNdEH.png" title="Nether Vending Machine" /></a>
-</p>
+<table style="margin: auto; text-align: center; max-width: 100%;" data-description="Passive mobs">
+<tbody><tr>
+<td scope="col" style="width:68px"><a href="https://imgur.com/9O1uP3E" title="Wooden Vending Machine">
+<img src="https://i.imgur.com/9O1uP3E.png" decoding="async" width="64"></a></td>
+<td scope="col" style="width:68px"><a href="https://imgur.com/hCeiTmn" title="Stone Vending Machine">
+<img src="https://i.imgur.com/hCeiTmn.png" decoding="async" width="64"></a></td>
+<td scope="col" style="width:68px"><a href="https://imgur.com/SyNNdEH" title="Nether Vending Machine">
+<img src="https://i.imgur.com/SyNNdEH.png" decoding="async" width="64"></a></td>
+</tr>
+<tr>
+<td>Wooden Vending Machine</td>
+<td>Stone Vending Machine</td>
+<td>Nether Vending Machine</td>
+</tr>
+</tbody></table>
