@@ -6,7 +6,7 @@ chest-shops.
 ## Type of Shops
 
 1. Vending Machines (The only type being implemented right now)
-2. Newts Briefcase
+2. Newt's Briefcase
 3. Salesman's Deal
 
 ### Vending Machines
@@ -30,6 +30,8 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 ### Vending Machine
 
 <p align="center">
-  <a href="https://imgur.com/9O1uP3E"><img width="274" 
+  <a href="https://imgur.com/9O1uP3E"><img height="274" 
   src="https://i.imgur.com/9O1uP3E.png" title="Wooden Vending Machine"/></a>
+  <a href="https://imgur.com/SyNNdEH"><img height="274"
+  src="https://i.imgur.com/SyNNdEH.png" title="Nether Vending Machine" /></a>
 </p>
