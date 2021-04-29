@@ -90,7 +90,10 @@ public class ShopCreation implements CommandExecutor, Listener {
     private static Location getCreationLocation(Block targetBlock, Player player) {
         Location result = targetBlock.getLocation().clone();
         result.add(0.5, 1, 0.5);
-        int yaw = ((Float) (player.getLocation().getYaw() + 180)).intValue();
+        // The yaw of a player, contrary to what's stated in spigot's API documentation,
+        // ranges from -360 to 360. Hence we add 540 here to ensure positivity. Somehow
+        // fixes the issue of yaw not rounding off correctly.
+        int yaw = ((Float) (player.getLocation().getYaw() + 540)).intValue();
         yaw += 45;
         yaw -= yaw % 90;
         result.setYaw(yaw);
