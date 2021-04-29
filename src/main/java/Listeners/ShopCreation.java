@@ -19,8 +19,8 @@ import Plugin.CustomShops;
 
 /**
  * Encapsulates a shop creation process. Player runs {@code /newshop} to spawn a
- * GUI with the CommandExecutor. Afterwhich, a shop will attempt to spawn if
- * player clicks on a design listed in the GUI.
+ * GUI with the {@link CommandExecutor}. Afterwhich, a shop will attempt to
+ * spawn if player clicks on a design listed in the GUI.
  */
 public class ShopCreation implements CommandExecutor, Listener {
     @Override
@@ -41,7 +41,7 @@ public class ShopCreation implements CommandExecutor, Listener {
     /**
      * Creates a shop when player clicks on a valid shop design in the GUI.
      *
-     * @param evt corresponding InventoryClickEvent
+     * @param evt corresponding {@link InventoryClickEvent}
      */
     @EventHandler
     public void createShop(InventoryClickEvent evt) {
@@ -90,7 +90,7 @@ public class ShopCreation implements CommandExecutor, Listener {
     private static Location getCreationLocation(Block targetBlock, Player player) {
         Location result = targetBlock.getLocation().clone();
         result.add(0.5, 1, 0.5);
-        // The yaw of a player, contrary to what's stated in spigot's API documentation,
+        // The yaw of a player, on top of what is stated in spigot's API documentation,
         // ranges from -360 to 360. Hence we add 540 here to ensure positivity. Somehow
         // fixes the issue of yaw not rounding off correctly.
         int yaw = ((Float) (player.getLocation().getYaw() + 540)).intValue();
@@ -101,7 +101,7 @@ public class ShopCreation implements CommandExecutor, Listener {
     }
 
     /**
-     * Returns a specific ShopCreator for the selected item.
+     * Returns a specific {@link ShopCreator} for the selected item.
      *
      * @param meta item meta of the clicked item
      * @return ShopCreator corresponding to the clicked item

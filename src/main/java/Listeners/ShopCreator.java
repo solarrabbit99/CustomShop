@@ -13,7 +13,7 @@ public interface ShopCreator {
     /**
      * The main method where the creator creates the shop with its own requirements
      * and specifications. A message is returned as a feedback to player on whether
-     * the shop is created succesfully.
+     * the shop is created successfully.
      *
      * @param location location in which the shop will attempt on top of
      * @param owner    owner of the shop

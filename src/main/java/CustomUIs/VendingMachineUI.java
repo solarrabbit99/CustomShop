@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import Plugin.CustomShops;
-import UUIDMaps.VendingMachine;
 import Utils.UIUtils;
+import Utils.UUIDMaps;
 import net.milkbowl.vault.economy.Economy;
 
 /** Custom UI for vending machines. */
@@ -84,20 +84,21 @@ public class VendingMachineUI {
      * Save vending machine inventory, and remove the corresponding mapping in the
      * two HashMaps. This method attempts to replace the original shulker in the
      * armor stand's chestplate slot with a duplicate of the same name and updated
-     * contents, as the original copy is not retrievable. New items added into empty
-     * slots will follow the price of the last instance of the same item listed. As
-     * the prices of the items are saved according to their positions in the
-     * inventory, it is possible to swap two or more items in established slots to
-     * make differing prices among items of the same type.
+     * contents, as the original copy is not retrievable.
+     * <p>
+     * New items added into empty slots will follow the price of the last instance
+     * of the same item listed. As the prices of the items are saved according to
+     * their positions in the inventory, it is possible to swap two or more items in
+     * established slots to make differing prices among items of the same type.
      *
      * @param player player viewing the inventory
      */
     public static void saveInventory(Player player) {
         UUID playerID = player.getUniqueId();
-        UUID armorStandID = VendingMachine.playerToArmorStand.get(playerID);
+        UUID armorStandID = UUIDMaps.playerToArmorStand.get(playerID);
         if (armorStandID != null) {
-            ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(VendingMachine.playerToArmorStand.get(playerID));
-            VendingMachineUI ui = VendingMachine.playerToVendingUI.get(playerID);
+            ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUIDMaps.playerToArmorStand.get(playerID));
+            VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(playerID);
             HashMap<ItemStack, Double> withPrices = new HashMap<>();
             for (int i = 0; i < 27; i++) {
                 ui.sourceImage.getInventory().setItem(i, ui.inventory.getItem(i));
@@ -129,17 +130,21 @@ public class VendingMachineUI {
             shulkerMeta.setBlockState(ui.sourceImage);
             container.setItemMeta(shulkerMeta);
             armorStand.getEquipment().setChestplate(container);
-            VendingMachine.playerToVendingUI.remove(playerID);
-            VendingMachine.playerToArmorStand.remove(playerID);
+            UUIDMaps.playerToVendingUI.remove(playerID);
+            UUIDMaps.playerToArmorStand.remove(playerID);
         }
     }
 
     /**
-     * Player purchases item from shop. The outcome of this event will be sent to
-     * the players involved in this transaction. This event is cancelled if 1) Shop
-     * does not have the specified amount of items 2) Player inventory does not have
-     * enough space 3) Player does not have enough money to purchase the specified
-     * amount of items.
+     * Player purchases item from shop. This event is cancelled if:
+     * <ul>
+     * <li>Shop does not have the specified amount of items
+     * <li>Player inventory does not have enough space
+     * <li>Player does not have enough money to purchase the specified amount of
+     * items
+     * </ul>
+     * The outcome of this event will be sent to the players involved in this
+     * transaction.
      *
      * @param player player purchasing item
      * @param item   item to be purchased

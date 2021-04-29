@@ -22,9 +22,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import CustomUIs.VendingMachineUI;
 import Plugin.CustomShops;
-import UUIDMaps.VendingMachine;
 import Utils.UIUtils;
+import Utils.UUIDMaps;
 
+/**
+ * Listener for players interacting with custom shops, containing handlers for
+ * which the owner left clicks on shops to list items.
+ */
 public class ListItem implements Listener {
     private static ConversationFactory listingConversation;
 
@@ -46,7 +50,7 @@ public class ListItem implements Listener {
             ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
             UUID armorStandID = armorStand.getUniqueId();
             Player player = evt.getPlayer();
-            if (VendingMachine.playerToArmorStand.containsValue(armorStandID)) {
+            if (UUIDMaps.playerToArmorStand.containsValue(armorStandID)) {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
@@ -58,8 +62,8 @@ public class ListItem implements Listener {
                 conversation.begin();
             }
             UUID playerID = player.getUniqueId();
-            VendingMachine.playerToArmorStand.put(playerID, armorStandID);
-            VendingMachine.playerToVendingUI.put(playerID, ui);
+            UUIDMaps.playerToArmorStand.put(playerID, armorStandID);
+            UUIDMaps.playerToVendingUI.put(playerID, ui);
         }
     }
 
@@ -93,7 +97,7 @@ public class ListItem implements Listener {
             Player player = (Player) context.getForWhom();
             PlayerInventory playerInventory = player.getInventory();
             ItemStack item = playerInventory.getItemInMainHand();
-            VendingMachineUI ui = VendingMachine.playerToVendingUI.get(player.getUniqueId());
+            VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
             ui.listPrice(player, item, price);
             return END_OF_CONVERSATION;
         }

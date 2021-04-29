@@ -6,9 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import Plugin.CustomShops;
-import UUIDMaps.PendingShopCreation;
 import Utils.UIUtils;
+import Utils.UUIDMaps;
 
+/** GUI for players to create a new custom shop. */
 public class CreationGUI {
     private static int[] vendingMachineID = new int[] { 100000, 100001, 100002 };
     private static String[] vendingMachineNames = new String[] { "Wooden", "Stone", "Nether" };
@@ -67,11 +68,11 @@ public class CreationGUI {
      * Opens the first page for its viewer.
      *
      * @throws NullPointerException if GUI is not yet initialised
-     * @see {@code CreationGUI.setUpGUI()}
+     * @see #setUpGUI()
      */
     public static void openFirstPage(Player player) {
         CreationGUI gui = new CreationGUI();
-        PendingShopCreation.playerToCreationGUI.put(player.getUniqueId(), gui);
+        UUIDMaps.playerToCreationGUI.put(player.getUniqueId(), gui);
         Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
     }
 
@@ -81,10 +82,10 @@ public class CreationGUI {
      * @param player viewer of the GUI
      * @throws NullPointerException if GUI is not yet initialised, or player hasn't
      *                              up the GUI
-     * @see {@code CreationGUI.setUpGUI()}
+     * @see #setUpGUI()
      */
     public static void nextPage(Player player) {
-        CreationGUI gui = PendingShopCreation.playerToCreationGUI.get(player.getUniqueId());
+        CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != pages.length - 1) {
             gui.currentPage++;
             Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
@@ -97,10 +98,10 @@ public class CreationGUI {
      * @param player viewer of the GUI
      * @throws NullPointerException if GUI is not yet initialised, or player hasn't
      *                              open up the GUI
-     * @see {@code CreationGUI.setUpGUI()}
+     * @see #setUpGUI()
      */
     public static void previousPage(Player player) {
-        CreationGUI gui = PendingShopCreation.playerToCreationGUI.get(player.getUniqueId());
+        CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != 0) {
             gui.currentPage--;
             Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
@@ -114,7 +115,7 @@ public class CreationGUI {
      * @return {@code true} if the specified player had the GUI open
      */
     public static boolean playerClosedGUI(Player player) {
-        CreationGUI gui = PendingShopCreation.playerToCreationGUI.remove(player.getUniqueId());
+        CreationGUI gui = UUIDMaps.playerToCreationGUI.remove(player.getUniqueId());
         return gui != null;
     }
 }

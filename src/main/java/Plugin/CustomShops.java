@@ -15,6 +15,8 @@ import Listeners.VendingMachine.OpenInventory;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.
+ *
+ * @author SolarRabbit
  */
 public final class CustomShops extends JavaPlugin {
     private static Economy economy;
@@ -57,7 +59,7 @@ public final class CustomShops extends JavaPlugin {
     /**
      * Get economy provider of the server.
      *
-     * @return a boolean value of whether the detected provider is valid
+     * @return {@code true} if the detected provider is valid
      */
     private boolean setUpEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {

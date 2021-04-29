@@ -17,8 +17,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import CustomUIs.VendingMachineUI;
 import Plugin.CustomShops;
-import UUIDMaps.VendingMachine;
+import Utils.UUIDMaps;
 
+/**
+ * Listener for players interacting with custom shops' GUI, containing handlers
+ * for which the player (owner or not) purchases items.
+ */
 public class InteractInventory implements Listener {
     private static ConversationFactory purchasingConversation;
     private static final String CLOSE = "§cClose";
@@ -43,9 +47,9 @@ public class InteractInventory implements Listener {
                 if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
                     Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
-                    VendingMachineUI ui = VendingMachine.playerToVendingUI.get(playerID);
+                    VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(playerID);
                     ItemStack item = ui.getItem(evt.getSlot());
-                    VendingMachine.purchasing.put(playerID, item);
+                    UUIDMaps.purchasing.put(playerID, item);
                     Conversation conversation = purchasingConversation.buildConversation(player);
                     conversation.begin();
                     Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
@@ -78,8 +82,8 @@ public class InteractInventory implements Listener {
         protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
-                ItemStack purchasingItem = VendingMachine.purchasing.remove(player.getUniqueId());
-                VendingMachineUI ui = VendingMachine.playerToVendingUI.get(player.getUniqueId());
+                ItemStack purchasingItem = UUIDMaps.purchasing.remove(player.getUniqueId());
+                VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
                 ui.purchaseItem(player, purchasingItem, input.intValue());
             }
             return END_OF_CONVERSATION;

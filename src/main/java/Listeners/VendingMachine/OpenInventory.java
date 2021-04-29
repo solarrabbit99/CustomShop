@@ -2,7 +2,6 @@ package Listeners.VendingMachine;
 
 import java.util.Collection;
 import java.util.UUID;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,9 +13,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import CustomUIs.VendingMachineUI;
-import UUIDMaps.VendingMachine;
 import Utils.UIUtils;
+import Utils.UUIDMaps;
 
+/**
+ * Listener for players interacting with custom shops, containing handlers for
+ * which the player (owner or not) right clicks on shops to purchase items.
+ */
 public class OpenInventory implements Listener {
     /**
      * Open vending machine's UI when player right clicks the armor stand.
@@ -40,7 +43,7 @@ public class OpenInventory implements Listener {
             evt.setCancelled(true);
             ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
             UUID armorStandID = armorStand.getUniqueId();
-            if (VendingMachine.playerToArmorStand.containsValue(armorStandID)) {
+            if (UUIDMaps.playerToArmorStand.containsValue(armorStandID)) {
                 evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
@@ -48,8 +51,8 @@ public class OpenInventory implements Listener {
             ui.openUI(evt.getPlayer());
 
             UUID playerID = evt.getPlayer().getUniqueId();
-            VendingMachine.playerToArmorStand.put(playerID, armorStandID);
-            VendingMachine.playerToVendingUI.put(playerID, ui);
+            UUIDMaps.playerToArmorStand.put(playerID, armorStandID);
+            UUIDMaps.playerToVendingUI.put(playerID, ui);
         }
     }
 }

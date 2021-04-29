@@ -7,10 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import CustomUIs.VendingMachineUI;
-import UUIDMaps.VendingMachine;
+import Utils.UUIDMaps;
 
 /**
- * Listener for interaction with vending machines.
+ * Listener for {@link InventoryCloseEvent} and saves player's inventory, this
+ * also includes events of plugin disabling and player leaving/kicking.
  */
 public class CloseInventory implements Listener {
     /**
@@ -39,7 +40,7 @@ public class CloseInventory implements Listener {
      * Save all opened UIs. Used when plugin disables.
      */
     public void saveAll() {
-        VendingMachine.playerToArmorStand.forEach(
+        UUIDMaps.playerToArmorStand.forEach(
                 (playerID, armorStandID) -> VendingMachineUI.saveInventory((Player) Bukkit.getEntity(playerID)));
     }
 }
