@@ -8,7 +8,7 @@ commands:
     removeshop:
         description: Removes a shop.
     newshop:
-        description: Creates a new shop of specified type.
+        description: Creates a new shop.
     hello:
         description: Sends "Hello" to the player.
         permission: builder

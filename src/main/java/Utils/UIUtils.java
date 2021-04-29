@@ -36,14 +36,13 @@ public final class UIUtils {
      * @param inv         inventory to insert stack
      * @param row         row in inventory to insert stack
      * @param column      column in inventory to insert stack
-     * @param maxStack    maximum item allowed in that stack (Deprecated)
      * @param material    material of the item
      * @param amount      amount of item in the stack
      * @param displayName display name of the item
      * @param lore        lore of item
      * @return ItemStack of given specifications
      */
-    public static ItemStack createItem(Inventory inv, int row, int column, int maxStack, Material material, int amount,
+    public static ItemStack createItem(Inventory inv, int row, int column, Material material, int amount,
             String displayName, String... lore) {
         ItemStack item = new ItemStack(material, amount);
         List<String> loreStrings = new ArrayList<>();
@@ -57,6 +56,62 @@ public final class UIUtils {
         meta.setLore(loreStrings);
         item.setItemMeta(meta);
         inv.setItem(invSlot, item);
+        return item;
+    }
+
+    /**
+     * Creates and inserts ItemStack in given inventory. Returns the ItemStack.
+     *
+     * @param inv         inventory to insert stack
+     * @param slot        slot in inventory to insert stack
+     * @param material    material of the item
+     * @param amount      amount of item in the stack
+     * @param displayName display name of the item
+     * @param lore        lore of item
+     * @return ItemStack of given specifications
+     */
+    public static ItemStack createItem(Inventory inv, int slot, Material material, int amount, String displayName,
+            String... lore) {
+        ItemStack item = new ItemStack(material, amount);
+        List<String> loreStrings = new ArrayList<>();
+        for (String s : lore) {
+            loreStrings.add(s);
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(displayName);
+        meta.setLore(loreStrings);
+        item.setItemMeta(meta);
+        inv.setItem(slot, item);
+        return item;
+    }
+
+    /**
+     * Creates and inserts ItemStack in given inventory. Returns the ItemStack.
+     *
+     * @param inv           inventory to insert stack
+     * @param slot          slot in inventory to insert stack
+     * @param material      material of the item
+     * @param amount        amount of item in the stack
+     * @param customModelID custom model data's ID
+     * @param displayName   display name of the item
+     * @param lore          lore of item
+     * @return ItemStack of given specifications
+     */
+    public static ItemStack createItem(Inventory inv, int slot, Material material, int amount, int customModelID,
+            String displayName, String... lore) {
+        ItemStack item = new ItemStack(material, amount);
+        List<String> loreStrings = new ArrayList<>();
+        for (String s : lore) {
+            loreStrings.add(s);
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(displayName);
+        meta.setLore(loreStrings);
+        meta.setCustomModelData(customModelID);
+        item.setItemMeta(meta);
+        inv.setItem(slot, item);
         return item;
     }
 

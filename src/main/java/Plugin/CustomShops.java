@@ -1,6 +1,7 @@
 package Plugin;
 
 import java.util.logging.Logger;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import Listeners.VendingMachine.ShopCreation;
+import CustomUIs.CreationGUI;
 import Listeners.VendingMachine.ShopRemoval;
-import net.milkbowl.vault.economy.Economy;
+import Listeners.ShopCreation;
 import Listeners.VendingMachine.CloseInventory;
 import Listeners.VendingMachine.InteractInventory;
 import Listeners.VendingMachine.ListItem;
@@ -41,9 +42,10 @@ public final class CustomShops extends JavaPlugin {
         pluginManager.registerEvents(closeInventory, this);
         pluginManager.registerEvents(interactInventory, this);
         pluginManager.registerEvents(listItem, this);
+        pluginManager.registerEvents(shopCreation, this);
         getCommand("newshop").setExecutor(shopCreation);
         getCommand("removeshop").setExecutor(shopRemoval);
-
+        CreationGUI.setUpGUI();
         InteractInventory.initConversationFactory(this);
         ListItem.initConversationFactory(this);
     }
