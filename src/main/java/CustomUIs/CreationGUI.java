@@ -30,7 +30,7 @@ public class CreationGUI {
         int noOfItems = vendingMachineID.length;
         LinkedList<String> names = new LinkedList<>();
         for (String e : vendingMachineNames) {
-            names.add("§5§l" + e + " Vending Machine");
+            names.add(e + " Vending Machine");
         }
         LinkedList<Integer> ids = new LinkedList<>();
         for (int e : vendingMachineID) {
@@ -42,7 +42,7 @@ public class CreationGUI {
 
         int item = 0;
         for (int i = 0; i < noOfPages; i++) {
-            pages[i] = Bukkit.createInventory(null, 9 * 4, "§5§lCustom Shops");
+            pages[i] = Bukkit.createInventory(null, 9 * 4, "§e§lCustom Shops");
 
             // Setting up UI elemenets on the last row.
             int[] blackSlots = new int[] { 0, 1, 2, 6, 7, 8 };

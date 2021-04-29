@@ -42,7 +42,7 @@ public class ShopCreation implements CommandExecutor, Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (holder == null && title.equalsIgnoreCase("§5§lCustom Shops")) {
+        if (holder == null && title.equalsIgnoreCase("§e§lCustom Shops")) {
             ItemMeta itemMeta = item.getItemMeta();
             if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
                 player.closeInventory();
@@ -76,7 +76,7 @@ public class ShopCreation implements CommandExecutor, Listener {
      * @throws NoSuchShopException if the given item meta does not match any shops
      */
     private static ShopCreator getShopCreator(ItemMeta meta) {
-        if (!meta.hasDisplayName() || !meta.getDisplayName().contains("§5§l")) {
+        if (!meta.hasDisplayName()) {
             throw new NoSuchShopException();
         }
         String name = meta.getDisplayName();

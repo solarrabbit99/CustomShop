@@ -66,7 +66,7 @@ public class VendingMachineUI {
         for (int i : blackSlots) {
             UIUtils.createItem(inventoryView, 3, i, Material.BLACK_STAINED_GLASS_PANE, 1, " ");
         }
-        UIUtils.createItem(inventoryView, 3, 4, Material.BARRIER, 1, "§c§lClose", "");
+        UIUtils.createItem(inventoryView, 3, 4, Material.BARRIER, 1, "§cClose", "");
 
         ItemStack[] items = sourceImage.getInventory().getContents();
         if (blockMeta.hasLore()) {

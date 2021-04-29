@@ -49,3 +49,44 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td>Nether Vending Machine</td>
 </tr>
 </tbody></table>
+
+## Deconflicts
+
+There are certain data that this plugin uses that may conflict with other
+plugins or the serverpack. Some can be easily deconflicted, while others may
+require a change in code.
+
+### Custom Model IDs
+
+The following IDs for `Material.PAPER` are used for custom shops. Change
+**BOTH** the conflicting IDs and the respective IDs in
+`CustomUIs/CreationGUI.java`.
+
+| **ID** | **Model**              |
+| ------ | ---------------------- |
+| 100000 | wooden_vending_machine |
+| 100001 | stone_vending_machine  |
+| 100002 | nether_vending_machine |
+
+### Display Names
+
+The following display names are used for items used in GUIs and armor stands.
+Blacklist these names so that players are not able to rename their items to the
+following to abuse the plugin. Also check if these display names affect other
+plugins.
+
+| **Material**             | **Display Name**      |
+| ------------------------ | --------------------- |
+| ARMOR_STAND              | `§5§lVending Machine` |
+| ARROW                    | `§eNext`              |
+|                          | `§eBack`              |
+| BARRIER                  | `§cClose`             |
+| BLACK_STAINED_GLASS_PANE | `<space>`             |
+
+### Inventory Title
+
+The plugin uses two following inventory titles. Check if these title conflicts
+with other plugins.
+
+1. `§e§lCustom Shops`
+2. `§5§lVending Machine`

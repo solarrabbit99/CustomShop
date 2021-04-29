@@ -19,7 +19,7 @@ import UUIDMaps.VendingMachine;
 
 public class InteractInventory implements Listener {
     private static ConversationFactory purchasingConversation;
-    private static final String CLOSE = "§c§lClose";
+    private static final String CLOSE = "§cClose";
 
     /**
      * Event handler for interactions with shop's GUI.
