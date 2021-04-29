@@ -11,14 +11,14 @@ chest-shops.
 
 ### Vending Machines
 
-A shop design used only for selling items with 27 available slots. The shop is
-capable of selling various kinds of items at once, each with its own price.
+A shop design with 27 available slots used only for selling items. The shop is
+capable of selling different types of items at once, each with its own price.
 
 ### Newt's Briefcase
 
-A shop that is able to hold virtually as much item of the same type as you want
+A shop capable of holding virtually as much items of the same type as you want
 (the real limit being Java's Integer.MAX_VALUE, 2 147 483 647). This shop can be
-used for selling and buying at the same time.
+used for both selling and buying at the same time.
 
 ### Salesman's Deal
 

@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import Plugin.CustomShops;
 import UUIDMaps.PendingShopCreation;
 import Utils.UIUtils;
 
@@ -71,7 +72,7 @@ public class CreationGUI {
     public static void openFirstPage(Player player) {
         CreationGUI gui = new CreationGUI();
         PendingShopCreation.playerToCreationGUI.put(player.getUniqueId(), gui);
-        player.openInventory(pages[gui.currentPage]);
+        Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
     }
 
     /**
@@ -86,7 +87,7 @@ public class CreationGUI {
         CreationGUI gui = PendingShopCreation.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != pages.length - 1) {
             gui.currentPage++;
-            player.openInventory(pages[gui.currentPage]);
+            Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
         }
     }
 
@@ -102,7 +103,7 @@ public class CreationGUI {
         CreationGUI gui = PendingShopCreation.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != 0) {
             gui.currentPage--;
-            player.openInventory(pages[gui.currentPage]);
+            Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
         }
     }
 
@@ -110,7 +111,7 @@ public class CreationGUI {
      * Removes any mapping of a player if he/she closed the GUI.
      *
      * @param player player that closed the GUI
-     * @return a boolean value indicating if the specified player had the GUI open
+     * @return {@code true} if the specified player had the GUI open
      */
     public static boolean playerClosedGUI(Player player) {
         CreationGUI gui = PendingShopCreation.playerToCreationGUI.remove(player.getUniqueId());

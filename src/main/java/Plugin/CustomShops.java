@@ -2,10 +2,6 @@ package Plugin;
 
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +18,7 @@ import Listeners.VendingMachine.OpenInventory;
  */
 public final class CustomShops extends JavaPlugin {
     private static Economy economy;
+    private static CustomShops pluginInstance;
     private static final OpenInventory openInventory = new OpenInventory();
     private static final CloseInventory closeInventory = new CloseInventory();
     private static final InteractInventory interactInventory = new InteractInventory();
@@ -31,6 +28,7 @@ public final class CustomShops extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        pluginInstance = this;
         Logger log = this.getLogger();
         if (!setUpEconomy()) {
             log.info("[CustomShops] - No Vault dependencies found! Disabling plugin...");
@@ -56,22 +54,8 @@ public final class CustomShops extends JavaPlugin {
         super.onDisable();
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("hello")) {
-            if (sender instanceof Player) {
-                Player p = (Player) sender;
-                String playerName = p.getName();
-                p.sendMessage(
-                        ChatColor.BOLD + "" + ChatColor.GREEN + "Welcome to SolarRabbit's server, " + playerName + "!");
-            }
-            return true;
-        }
-        return false;
-    }
-
     /**
-     * Get economy provider.
+     * Get economy provider of the server.
      *
      * @return a boolean value of whether the detected provider is valid
      */
@@ -96,5 +80,14 @@ public final class CustomShops extends JavaPlugin {
      */
     public static Economy getEconomy() {
         return economy;
+    }
+
+    /**
+     * Return instance of plugin that is running.
+     *
+     * @return plugin instance
+     */
+    public static CustomShops getPlugin() {
+        return pluginInstance;
     }
 }

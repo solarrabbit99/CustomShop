@@ -1,5 +1,6 @@
 package Listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -14,7 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import CustomUIs.CreationGUI;
 import Listeners.VendingMachine.VendingMachineCreator;
+import Plugin.CustomShops;
 
+/**
+ * Encapsulates a shop creation process. Player runs {@code /newshop} to spawn a
+ * GUI with the CommandExecutor. Afterwhich, a shop will attempt to spawn if
+ * player clicks on a design listed in the GUI.
+ */
 public class ShopCreation implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -27,12 +34,15 @@ public class ShopCreation implements CommandExecutor, Listener {
             player.sendMessage("§cYou are not targeting any block...");
             return false;
         }
-
-        // Creating GUI for player to select the custom shop of his/her choice.
         CreationGUI.openFirstPage(player);
         return false;
     }
 
+    /**
+     * Creates a shop when player clicks on a valid shop design in the GUI.
+     *
+     * @param evt corresponding InventoryClickEvent
+     */
     @EventHandler
     public void createShop(InventoryClickEvent evt) {
         ItemStack item = evt.getCurrentItem();
@@ -42,38 +52,58 @@ public class ShopCreation implements CommandExecutor, Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (holder == null && title.equalsIgnoreCase("§e§lCustom Shops")) {
-            ItemMeta itemMeta = item.getItemMeta();
-            if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
-                player.closeInventory();
-                CreationGUI.playerClosedGUI(player);
-            } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eBack")) {
-                CreationGUI.previousPage(player);
-            } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eNext")) {
-                CreationGUI.nextPage(player);
-            } else if (evt.getSlot() < 27) {
-                Block targetBlock = player.getTargetBlockExact(5);
-                if (targetBlock == null) {
-                    player.sendMessage("§cYou are not targeting any block...");
-                    return;
-                }
-                Location location = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5,
-                        targetBlock.getY() + 1, targetBlock.getZ() + 0.5);
-                ShopCreator creator = getShopCreator(itemMeta);
-                player.sendMessage(creator.createShop(location, player, item));
-                player.closeInventory();
-                CreationGUI.playerClosedGUI(player);
-            }
+        if (title.equalsIgnoreCase("§e§lCustom Shops")) {
             evt.setCancelled(true);
+            if (holder == null) {
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
+                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                    CreationGUI.playerClosedGUI(player);
+                } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eBack")) {
+                    CreationGUI.previousPage(player);
+                } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eNext")) {
+                    CreationGUI.nextPage(player);
+                } else if (evt.getSlot() < 27) {
+                    Block targetBlock = player.getTargetBlockExact(5);
+                    if (targetBlock == null) {
+                        player.sendMessage("§cYou are not targeting any block...");
+                        return;
+                    }
+                    Location location = getCreationLocation(targetBlock, player);
+                    ShopCreator creator = getShopCreator(itemMeta);
+                    player.sendMessage(creator.createShop(location, player, item));
+                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                    CreationGUI.playerClosedGUI(player);
+                }
+            }
         }
     }
 
     /**
-     * Return a specific ShopCreator for the selected item.
+     * Returns location where the shop will attempt to spawn at. The returned
+     * location faces the player.
+     *
+     * @param targetBlock block that the player is targeting
+     * @param player      player of interest
+     * @return resulting location
+     */
+    private static Location getCreationLocation(Block targetBlock, Player player) {
+        Location result = targetBlock.getLocation().clone();
+        result.add(0.5, 1, 0.5);
+        int yaw = ((Float) (player.getLocation().getYaw() + 180)).intValue();
+        yaw += 45;
+        yaw -= yaw % 90;
+        result.setYaw(yaw);
+        return result;
+    }
+
+    /**
+     * Returns a specific ShopCreator for the selected item.
      *
      * @param meta item meta of the clicked item
      * @return ShopCreator corresponding to the clicked item
-     * @throws NoSuchShopException if the given item meta does not match any shops
+     * @throws NoSuchShopException if the given item meta does not match any shop
+     *                             designs
      */
     private static ShopCreator getShopCreator(ItemMeta meta) {
         if (!meta.hasDisplayName()) {
@@ -85,9 +115,12 @@ public class ShopCreation implements CommandExecutor, Listener {
         } else {
             throw new NoSuchShopException(name);
         }
-
     }
 
+    /**
+     * Encapsulates an exception where no shop designs corresponds to the item that
+     * the player picked. This exception should never be thrown.
+     */
     private static class NoSuchShopException extends RuntimeException {
         private NoSuchShopException(String name) {
             super("Selected item did not match any kind of shops: " + name);

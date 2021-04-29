@@ -1,6 +1,7 @@
 package Listeners.VendingMachine;
 
 import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import CustomUIs.VendingMachineUI;
+import Plugin.CustomShops;
 import UUIDMaps.VendingMachine;
 
 public class InteractInventory implements Listener {
@@ -35,18 +37,19 @@ public class InteractInventory implements Listener {
         Player player = (Player) evt.getWhoClicked();
         UUID playerID = player.getUniqueId();
         String title = evt.getView().getTitle();
-        if (holder == null && VendingMachine.playerToArmorStand.containsKey(playerID)
-                && title.equalsIgnoreCase("§5§lVending Machine")) {
-            ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-            if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
-                player.closeInventory();
-            } else if (evt.getSlot() < 27) { // For non shop-owners.
-                VendingMachineUI ui = VendingMachine.playerToVendingUI.get(playerID);
-                ItemStack item = ui.getItem(evt.getSlot());
-                VendingMachine.purchasing.put(playerID, item);
-                Conversation conversation = purchasingConversation.buildConversation(player);
-                conversation.begin();
-                player.closeInventory();
+        if (title.equalsIgnoreCase("§5§lVending Machine")) {
+            if (holder == null) {
+                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
+                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                } else if (evt.getSlot() < 27) {
+                    VendingMachineUI ui = VendingMachine.playerToVendingUI.get(playerID);
+                    ItemStack item = ui.getItem(evt.getSlot());
+                    VendingMachine.purchasing.put(playerID, item);
+                    Conversation conversation = purchasingConversation.buildConversation(player);
+                    conversation.begin();
+                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                }
             }
             evt.setCancelled(true);
         }
@@ -91,6 +94,5 @@ public class InteractInventory implements Listener {
         protected String getFailedValidationText(ConversationContext context, String invalidInput) {
             return "§cInput is not valid!";
         }
-
     }
 }

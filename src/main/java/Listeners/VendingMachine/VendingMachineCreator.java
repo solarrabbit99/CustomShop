@@ -15,7 +15,8 @@ import Listeners.ShopCreator;
 import Utils.UIUtils;
 
 /**
- * Listener that deals with shop creation and destruction.
+ * Vending machine's shop creator. Player's target block must have at least 2
+ * blocks of air above for the shop to be spawned successfully.
  */
 public class VendingMachineCreator implements ShopCreator {
     @Override
@@ -30,7 +31,6 @@ public class VendingMachineCreator implements ShopCreator {
         locationAddOne.getBlock().setType(Material.BARRIER);
 
         ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
-        // armorStand.setRotation(yaw, 0); // TODO: correct the yaw settings.
         armorStand.setCustomName("§5§lVending Machine");
         EntityEquipment armorStandBody = armorStand.getEquipment();
         armorStandBody.setHelmet(item);
@@ -51,9 +51,9 @@ public class VendingMachineCreator implements ShopCreator {
     }
 
     /**
-     * Locks armor stand to prevent accesibility of item within its slots.
+     * Locks armor stand to prevent accessibility of items within its slots.
      *
-     * @param armorStand armor stand to lock
+     * @param armorStand ArmorStand to lock
      */
     private void lockArmorStand(ArmorStand armorStand) {
         armorStand.setInvulnerable(true);

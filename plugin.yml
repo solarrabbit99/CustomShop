@@ -9,17 +9,3 @@ commands:
         description: Removes a shop.
     newshop:
         description: Creates a new shop.
-    hello:
-        description: Sends "Hello" to the player.
-        permission: builder
-        permission-message: You are not a builder!
-
-permissions:
-    god:
-        description: Has access to all available commands.
-        default: op
-        children:
-            builder: true
-    builder:
-        description: Has access to build-related commands.
-        default: op
