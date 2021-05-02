@@ -8,7 +8,8 @@ import CustomUIs.VendingMachineUI;
 
 /**
  * Contains all the mappings from player's UUID to corresponding interacting
- * entities/items/GUIs.
+ * entities/items/GUIs. Any data that is not required of the server to save over
+ * reboots should be saved here.
  */
 public class UUIDMaps {
     /** Maps player's UUID to a {@link CreationGUI}. */
