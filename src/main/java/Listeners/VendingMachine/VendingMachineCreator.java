@@ -12,7 +12,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import Listeners.ShopCreator;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 import Utils.UIUtils;
 
 /**
@@ -52,7 +52,7 @@ public class VendingMachineCreator implements ShopCreator {
 
         lockArmorStand(armorStand);
 
-        CustomShops.getPlugin().getDatabase().incrementTotalShopsOwned(owner);
+        CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner);
 
         return "§aVending machine successfully created!";
     }

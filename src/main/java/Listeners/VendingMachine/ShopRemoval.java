@@ -12,7 +12,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 
 public class ShopRemoval implements CommandExecutor {
     @Override
@@ -41,7 +41,7 @@ public class ShopRemoval implements CommandExecutor {
             shopEntity.remove();
             loc.getBlock().setType(Material.AIR);
             locTheOther.getBlock().setType(Material.AIR);
-            CustomShops.getPlugin().getDatabase().decrementTotalShopsOwned(player);
+            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
         } else {
             player.sendMessage("§cInvalid target...");
         }

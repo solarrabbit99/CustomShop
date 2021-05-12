@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 import Utils.UIUtils;
 import Utils.UUIDMaps;
 import net.milkbowl.vault.economy.Economy;
@@ -171,7 +171,7 @@ public class VendingMachineUI {
             }
         }
 
-        Economy economy = CustomShops.getEconomy();
+        Economy economy = CustomShop.getEconomy();
         double bal = economy.getBalance(player);
         double totalCost = amount * prices[inventory.first(item)];
 

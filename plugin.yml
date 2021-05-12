@@ -1,5 +1,5 @@
-main: Plugin.CustomShops
-name: CustomShops
+main: Plugin.CustomShop
+name: CustomShop
 version: 1.0
 author: SolarRabbit
 api-version: 1.16

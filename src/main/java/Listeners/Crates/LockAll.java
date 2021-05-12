@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 
 public class LockAll implements CommandExecutor {
 
@@ -21,7 +21,7 @@ public class LockAll implements CommandExecutor {
             sender.sendMessage("§cCannot find specified player!");
             return false;
         }
-        CustomShops.getPlugin().getDatabase().setUnlockedShops(player, new ArrayList<>());
+        CustomShop.getPlugin().getDatabase().setUnlockedShops(player, new ArrayList<>());
         sender.sendMessage("§aSuccessfully locked all custom shops of the specified player!");
         return true;
     }

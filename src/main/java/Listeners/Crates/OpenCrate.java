@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 
 public class OpenCrate implements Listener {
     private static Location crateBlock;
@@ -41,12 +41,12 @@ public class OpenCrate implements Listener {
             } else {
                 Random rng = new Random();
                 int unlocked = rng.nextInt(3) + 100001;
-                List<Integer> lst = CustomShops.getPlugin().getDatabase().getUnlockedShops(player);
+                List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
                 if (lst.contains(unlocked)) {
                     player.sendMessage("§6You already have " + unlocked + " unlocked :(");
                 } else {
                     lst.add(unlocked);
-                    CustomShops.getPlugin().getDatabase().setUnlockedShops(player, lst);
+                    CustomShop.getPlugin().getDatabase().setUnlockedShops(player, lst);
                     player.sendMessage("§aNew custom shop unlocked! " + unlocked);
                 }
             }

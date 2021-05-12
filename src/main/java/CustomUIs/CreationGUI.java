@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import Database.Database;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 import Utils.UIUtils;
 import Utils.UUIDMaps;
 
@@ -37,7 +37,7 @@ public class CreationGUI {
      * @param player player opening the GUI.
      */
     public void setUpGUI(Player player) {
-        Database db = CustomShops.getPlugin().getDatabase();
+        Database db = CustomShop.getPlugin().getDatabase();
         List<Integer> unlockedShops = db.getUnlockedShops(player);
 
         int noOfItems = vendingMachineID.length;
@@ -85,7 +85,7 @@ public class CreationGUI {
     public static void openFirstPage(Player player) {
         CreationGUI gui = new CreationGUI(player);
         UUIDMaps.playerToCreationGUI.put(player.getUniqueId(), gui);
-        Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(gui.pages[gui.currentPage]));
+        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(gui.pages[gui.currentPage]));
     }
 
     /**
@@ -100,7 +100,7 @@ public class CreationGUI {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != gui.pages.length - 1) {
             gui.currentPage++;
-            Bukkit.getScheduler().runTask(CustomShops.getPlugin(),
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
                     () -> player.openInventory(gui.pages[gui.currentPage]));
         }
     }
@@ -117,7 +117,7 @@ public class CreationGUI {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != 0) {
             gui.currentPage--;
-            Bukkit.getScheduler().runTask(CustomShops.getPlugin(),
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
                     () -> player.openInventory(gui.pages[gui.currentPage]));
         }
     }

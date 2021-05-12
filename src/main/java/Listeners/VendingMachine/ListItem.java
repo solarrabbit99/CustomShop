@@ -21,7 +21,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import CustomUIs.VendingMachineUI;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 import Utils.UIUtils;
 import Utils.UUIDMaps;
 
@@ -72,7 +72,7 @@ public class ListItem implements Listener {
      *
      * @param plugin instance of plugin that owns the factory
      */
-    public static void initConversationFactory(CustomShops plugin) {
+    public static void initConversationFactory(CustomShop plugin) {
         listingConversation = new ConversationFactory(plugin).withFirstPrompt(new PricePrompt()).withModality(false)
                 .withLocalEcho(false);
     }

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 
 public class SQLite extends Database {
     private static String dbname = "player_data";
@@ -16,7 +16,7 @@ public class SQLite extends Database {
             + "`player` varchar(36) NOT NULL," + "`shops_unlocked` varchar(1024) NOT NULL,"
             + "`total_shops_owned` int(2) NOT NULL," + "PRIMARY KEY (`player`));";
 
-    public SQLite(CustomShops instance) {
+    public SQLite(CustomShop instance) {
         super(instance, dbname);
     }
 

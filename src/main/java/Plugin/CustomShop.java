@@ -24,9 +24,9 @@ import Listeners.VendingMachine.OpenInventory;
  *
  * @author SolarRabbit
  */
-public final class CustomShops extends JavaPlugin {
+public final class CustomShop extends JavaPlugin {
     private static Economy economy;
-    private static CustomShops pluginInstance;
+    private static CustomShop pluginInstance;
     private static final OpenInventory openInventory = new OpenInventory();
     private static final CloseInventory closeInventory = new CloseInventory();
     private static final InteractInventory interactInventory = new InteractInventory();
@@ -115,7 +115,7 @@ public final class CustomShops extends JavaPlugin {
      *
      * @return plugin instance
      */
-    public static CustomShops getPlugin() {
+    public static CustomShop getPlugin() {
         return pluginInstance;
     }
 

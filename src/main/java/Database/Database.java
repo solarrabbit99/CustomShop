@@ -9,15 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.entity.Player;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 
 public abstract class Database {
-    CustomShops plugin;
+    CustomShop plugin;
     Connection connection;
     public String table;
     public int tokens = 0;
 
-    public Database(CustomShops instance, String dbname) {
+    public Database(CustomShop instance, String dbname) {
         plugin = instance;
         this.table = dbname;
     }

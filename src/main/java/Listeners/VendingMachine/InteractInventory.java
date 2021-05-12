@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import CustomUIs.VendingMachineUI;
-import Plugin.CustomShops;
+import Plugin.CustomShop;
 import Utils.UUIDMaps;
 
 /**
@@ -45,14 +45,14 @@ public class InteractInventory implements Listener {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
                 if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
-                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
                     VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(playerID);
                     ItemStack item = ui.getItem(evt.getSlot());
                     UUIDMaps.purchasing.put(playerID, item);
                     Conversation conversation = purchasingConversation.buildConversation(player);
                     conversation.begin();
-                    Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.closeInventory());
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }
             }
             evt.setCancelled(true);
