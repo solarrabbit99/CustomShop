@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetCrate implements CommandExecutor {
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -22,9 +21,9 @@ public class SetCrate implements CommandExecutor {
         } else if (!targetBlock.getType().equals(Material.CHEST)) {
             player.sendMessage("§cYou are not targeting any chests!");
         } else {
-
+            OpenCrate.setCrateLocation(targetBlock.getLocation());
+            player.sendMessage("§aSet chest as crate chest!");
         }
         return false;
     }
-
 }

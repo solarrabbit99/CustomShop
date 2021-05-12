@@ -5,10 +5,14 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
+
 import Database.Database;
 import Database.SQLite;
 import Listeners.VendingMachine.ShopRemoval;
 import Listeners.GetTotal;
+import Listeners.GiveKey;
+import Listeners.OpenCrate;
 import Listeners.SetCrate;
 import Listeners.ShopCreation;
 import Listeners.VendingMachine.CloseInventory;
@@ -32,6 +36,8 @@ public final class CustomShops extends JavaPlugin {
     private static final ListItem listItem = new ListItem();
     private static final SetCrate setCrate = new SetCrate();
     private static final GetTotal getTotal = new GetTotal();
+    private static final GiveKey giveKey = new GiveKey();
+    private static final OpenCrate openCrate = new OpenCrate();
     private Database database;
 
     @Override
@@ -56,10 +62,12 @@ public final class CustomShops extends JavaPlugin {
         pluginManager.registerEvents(interactInventory, this);
         pluginManager.registerEvents(listItem, this);
         pluginManager.registerEvents(shopCreation, this);
+        pluginManager.registerEvents(openCrate, this);
         getCommand("newshop").setExecutor(shopCreation);
         getCommand("removeshop").setExecutor(shopRemoval);
         getCommand("setcrate").setExecutor(setCrate);
         getCommand("gettotal").setExecutor(getTotal);
+        getCommand("givekey").setExecutor(giveKey);
         InteractInventory.initConversationFactory(this);
         ListItem.initConversationFactory(this);
 

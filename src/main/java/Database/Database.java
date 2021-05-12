@@ -83,7 +83,7 @@ public abstract class Database {
      */
     public List<Integer> getUnlockedShops(Player player) {
         String arrayString = this.getUnlockedShopsString(player);
-        if (arrayString.equalsIgnoreCase("[]")) {
+        if (arrayString.equalsIgnoreCase("[]") || arrayString.equalsIgnoreCase("")) {
             return new ArrayList<>();
         }
         arrayString = arrayString.substring(1, arrayString.length() - 1);
@@ -140,10 +140,10 @@ public abstract class Database {
      *                        the player
      * @param totalShopsOwned total shops owned by the player
      */
-    public void setData(Player player, Integer[] unlockedShops, Integer totalShopsOwned) {
+    public void setData(Player player, List<Integer> unlockedShops, Integer totalShopsOwned) {
         Connection conn = null;
         PreparedStatement ps = null;
-        String unlockedShopsString = Arrays.toString(unlockedShops);
+        String unlockedShopsString = Arrays.toString(unlockedShops.toArray());
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement(
@@ -174,29 +174,9 @@ public abstract class Database {
      * @param player player of interest
      */
     public void decrementTotalShopsOwned(Player player) {
-        Connection conn = null;
-        PreparedStatement ps = null;
         Integer previousTotal = getTotalShopOwned(player);
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + table + " (player,total_shops_owned) VALUES(?,?,?)");
-            ps.setString(1, player.getUniqueId().toString());
-            ps.setInt(2, previousTotal - 1);
-            ps.executeUpdate();
-            return;
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return;
+        List<Integer> unlockedShops = getUnlockedShops(player);
+        setData(player, unlockedShops, previousTotal - 1);
     }
 
     /**
@@ -205,29 +185,20 @@ public abstract class Database {
      * @param player player of interest
      */
     public void incrementTotalShopsOwned(Player player) {
-        Connection conn = null;
-        PreparedStatement ps = null;
         Integer previousTotal = getTotalShopOwned(player);
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + table + " (player,total_shops_owned) VALUES(?,?,?)");
-            ps.setString(1, player.getUniqueId().toString());
-            ps.setInt(2, previousTotal + 1);
-            ps.executeUpdate();
-            return;
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return;
+        List<Integer> unlockedShops = getUnlockedShops(player);
+        setData(player, unlockedShops, previousTotal + 1);
+    }
+
+    /**
+     * Updates the list of shops owned by the player.
+     *
+     * @param player player of interest
+     * @param lst    list of shops unlocked by the player
+     */
+    public void setUnlockedShops(Player player, List<Integer> unlockedShops) {
+        Integer totalShopsOwned = getTotalShopOwned(player);
+        setData(player, unlockedShops, totalShopsOwned);
     }
 
     public void close(PreparedStatement ps, ResultSet rs) {
