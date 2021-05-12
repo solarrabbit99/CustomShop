@@ -5,8 +5,10 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import CustomUIs.CreationGUI;
+import Database.Database;
+import Database.SQLite;
 import Listeners.VendingMachine.ShopRemoval;
+import Listeners.SetCrate;
 import Listeners.ShopCreation;
 import Listeners.VendingMachine.CloseInventory;
 import Listeners.VendingMachine.InteractInventory;
@@ -27,6 +29,8 @@ public final class CustomShops extends JavaPlugin {
     private static final ShopCreation shopCreation = new ShopCreation();
     private static final ShopRemoval shopRemoval = new ShopRemoval();
     private static final ListItem listItem = new ListItem();
+    private static final SetCrate setCrate = new SetCrate();
+    private Database database;
 
     @Override
     public void onEnable() {
@@ -37,6 +41,13 @@ public final class CustomShops extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        if (!this.getDataFolder().exists()) {
+            try {
+                this.getDataFolder().mkdir();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(openInventory, this);
         pluginManager.registerEvents(closeInventory, this);
@@ -45,9 +56,12 @@ public final class CustomShops extends JavaPlugin {
         pluginManager.registerEvents(shopCreation, this);
         getCommand("newshop").setExecutor(shopCreation);
         getCommand("removeshop").setExecutor(shopRemoval);
-        CreationGUI.setUpGUI();
+        getCommand("setcrate").setExecutor(setCrate);
         InteractInventory.initConversationFactory(this);
         ListItem.initConversationFactory(this);
+
+        this.database = new SQLite(this);
+        this.database.load();
     }
 
     @Override
@@ -91,5 +105,14 @@ public final class CustomShops extends JavaPlugin {
      */
     public static CustomShops getPlugin() {
         return pluginInstance;
+    }
+
+    /**
+     * Return database used by the plugin.
+     *
+     * @return database
+     */
+    public Database getDatabase() {
+        return this.database;
     }
 }

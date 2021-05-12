@@ -21,6 +21,10 @@ import Utils.UIUtils;
 public class VendingMachineCreator implements ShopCreator {
     @Override
     public String createShop(Location location, Player owner, ItemStack item) {
+        if (item.getItemMeta().getCustomModelData() == 100000) {
+            return "§cYou have yet to unlock the selected Vending Machine!";
+        }
+
         Location locationAddOne = location.clone();
         locationAddOne.setY(location.getY() + 1);
         if (location.getBlock().getType() != Material.AIR || locationAddOne.getBlock().getType() != Material.AIR) {

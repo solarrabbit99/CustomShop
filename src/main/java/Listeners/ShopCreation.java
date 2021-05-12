@@ -39,7 +39,8 @@ public class ShopCreation implements CommandExecutor, Listener {
     }
 
     /**
-     * Creates a shop when player clicks on a valid shop design in the GUI.
+     * Creates a shop when player clicks on a valid and unlocked shop design in the
+     * GUI.
      *
      * @param evt corresponding {@link InventoryClickEvent}
      */

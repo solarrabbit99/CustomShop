@@ -1,34 +1,45 @@
 package CustomUIs;
 
 import java.util.LinkedList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import Database.Database;
 import Plugin.CustomShops;
 import Utils.UIUtils;
 import Utils.UUIDMaps;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
-    private static int[] vendingMachineID = new int[] { 100000, 100001, 100002 };
+    private static int defaultVendingMachineID = 100000;
+    private static int[] vendingMachineID = new int[] { 100001, 100002, 100003 };
     private static String[] vendingMachineNames = new String[] { "Wooden", "Stone", "Nether" };
-    private static Inventory[] pages;
+    private Inventory[] pages;
     private int currentPage;
 
     /**
      * Set up a GUI. Ensure that {@code CreationGUI.setUpGUI()} is called before
      * using the constructor.
      */
-    private CreationGUI() {
+    private CreationGUI(Player player) {
         this.currentPage = 0;
+        this.setUpGUI(player);
     }
 
     /**
-     * This method must be run to set up all static variables before calling other
-     * methods.
+     * This method must be run to set up all player's unlocked custom shops
+     * variables before calling other methods.
+     *
+     * @param player player opening the GUI.
      */
-    public static void setUpGUI() {
+    public void setUpGUI(Player player) {
+        Database db = CustomShops.getPlugin().getDatabase();
+        List<Integer> unlockedShops = db.getUnlockedShops(player);
+
         int noOfItems = vendingMachineID.length;
         LinkedList<String> names = new LinkedList<>();
         for (String e : vendingMachineNames) {
@@ -38,6 +49,7 @@ public class CreationGUI {
         for (int e : vendingMachineID) {
             ids.add(e);
         }
+        ids.replaceAll(e -> unlockedShops.contains(e) ? e : defaultVendingMachineID);
 
         final int noOfPages = ((Double) Math.ceil(noOfItems / 27.0)).intValue();
         pages = new Inventory[noOfPages];
@@ -71,9 +83,9 @@ public class CreationGUI {
      * @see #setUpGUI()
      */
     public static void openFirstPage(Player player) {
-        CreationGUI gui = new CreationGUI();
+        CreationGUI gui = new CreationGUI(player);
         UUIDMaps.playerToCreationGUI.put(player.getUniqueId(), gui);
-        Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
+        Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(gui.pages[gui.currentPage]));
     }
 
     /**
@@ -86,9 +98,10 @@ public class CreationGUI {
      */
     public static void nextPage(Player player) {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
-        if (gui.currentPage != pages.length - 1) {
+        if (gui.currentPage != gui.pages.length - 1) {
             gui.currentPage++;
-            Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
+            Bukkit.getScheduler().runTask(CustomShops.getPlugin(),
+                    () -> player.openInventory(gui.pages[gui.currentPage]));
         }
     }
 
@@ -104,7 +117,8 @@ public class CreationGUI {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != 0) {
             gui.currentPage--;
-            Bukkit.getScheduler().runTask(CustomShops.getPlugin(), () -> player.openInventory(pages[gui.currentPage]));
+            Bukkit.getScheduler().runTask(CustomShops.getPlugin(),
+                    () -> player.openInventory(gui.pages[gui.currentPage]));
         }
     }
 

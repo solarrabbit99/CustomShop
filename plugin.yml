@@ -9,3 +9,12 @@ commands:
         description: Removes a shop.
     newshop:
         description: Creates a new shop.
+    setcrate:
+        description: Set the chest for crate.
+        permission: customshop.admin
+        permission-message: You do not have permission to use this command.
+
+permissions:
+    customshop.admin:
+        description: User able to set the location of the crate.
+        default: op
