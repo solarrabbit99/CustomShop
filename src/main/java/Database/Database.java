@@ -1,4 +1,4 @@
-package Database;
+package database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.entity.Player;
-import Plugin.CustomShop;
+import plugin.CustomShop;
 
 public abstract class Database {
     CustomShop plugin;

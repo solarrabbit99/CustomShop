@@ -1,4 +1,4 @@
-package Listeners.VendingMachine;
+package events.VendingMachine;
 
 import java.util.Collection;
 import org.bukkit.Location;
@@ -11,8 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import Plugin.CustomShop;
+import plugin.CustomShop;
 
 public class ShopRemoval implements CommandExecutor {
     @Override

@@ -1,4 +1,4 @@
-package Listeners.VendingMachine;
+package events.VendingMachine;
 
 import java.util.List;
 import org.bukkit.Location;
@@ -11,9 +11,10 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import Listeners.ShopCreator;
-import Plugin.CustomShop;
-import Utils.UIUtils;
+
+import events.ShopCreator;
+import plugin.CustomShop;
+import utils.UIUtils;
 
 /**
  * Vending machine's shop creator. Player's target block must have at least 2

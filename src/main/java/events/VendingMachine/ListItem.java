@@ -1,4 +1,4 @@
-package Listeners.VendingMachine;
+package events.VendingMachine;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -20,10 +20,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import CustomUIs.VendingMachineUI;
-import Plugin.CustomShop;
-import Utils.UIUtils;
-import Utils.UUIDMaps;
+import plugin.CustomShop;
+import utils.UIUtils;
+import utils.UUIDMaps;
+import gui.VendingMachineUI;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for

@@ -1,23 +1,24 @@
-package Plugin;
+package plugin;
 
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import Database.Database;
-import Database.SQLite;
-import Listeners.VendingMachine.ShopRemoval;
-import Listeners.ShopCreation;
-import Listeners.Crates.GetTotal;
-import Listeners.Crates.GiveKey;
-import Listeners.Crates.LockAll;
-import Listeners.Crates.OpenCrate;
-import Listeners.Crates.SetCrate;
-import Listeners.VendingMachine.CloseInventory;
-import Listeners.VendingMachine.InteractInventory;
-import Listeners.VendingMachine.ListItem;
-import Listeners.VendingMachine.OpenInventory;
+
+import commands.GetTotal;
+import commands.GiveKey;
+import commands.LockAll;
+import commands.SetCrate;
+import database.Database;
+import database.SQLite;
+import events.OpenCrate;
+import events.ShopCreation;
+import events.VendingMachine.CloseInventory;
+import events.VendingMachine.InteractInventory;
+import events.VendingMachine.ListItem;
+import events.VendingMachine.OpenInventory;
+import events.VendingMachine.ShopRemoval;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.
@@ -27,17 +28,6 @@ import Listeners.VendingMachine.OpenInventory;
 public final class CustomShop extends JavaPlugin {
     private static Economy economy;
     private static CustomShop pluginInstance;
-    private static final OpenInventory openInventory = new OpenInventory();
-    private static final CloseInventory closeInventory = new CloseInventory();
-    private static final InteractInventory interactInventory = new InteractInventory();
-    private static final ShopCreation shopCreation = new ShopCreation();
-    private static final ShopRemoval shopRemoval = new ShopRemoval();
-    private static final ListItem listItem = new ListItem();
-    private static final SetCrate setCrate = new SetCrate();
-    private static final GetTotal getTotal = new GetTotal();
-    private static final GiveKey giveKey = new GiveKey();
-    private static final LockAll lockAll = new LockAll();
-    private static final OpenCrate openCrate = new OpenCrate();
     private Database database;
 
     @Override
@@ -57,18 +47,18 @@ public final class CustomShop extends JavaPlugin {
             }
         }
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(openInventory, this);
-        pluginManager.registerEvents(closeInventory, this);
-        pluginManager.registerEvents(interactInventory, this);
-        pluginManager.registerEvents(listItem, this);
-        pluginManager.registerEvents(shopCreation, this);
-        pluginManager.registerEvents(openCrate, this);
-        getCommand("newshop").setExecutor(shopCreation);
-        getCommand("removeshop").setExecutor(shopRemoval);
-        getCommand("setcrate").setExecutor(setCrate);
-        getCommand("gettotal").setExecutor(getTotal);
-        getCommand("givekey").setExecutor(giveKey);
-        getCommand("lockall").setExecutor(lockAll);
+        pluginManager.registerEvents(new OpenInventory(), this);
+        pluginManager.registerEvents(new CloseInventory(), this);
+        pluginManager.registerEvents(new InteractInventory(), this);
+        pluginManager.registerEvents(new ListItem(), this);
+        pluginManager.registerEvents(new ShopCreation(), this);
+        pluginManager.registerEvents(new OpenCrate(), this);
+        getCommand("newshop").setExecutor(new ShopCreation());
+        getCommand("removeshop").setExecutor(new ShopRemoval());
+        getCommand("setcrate").setExecutor(new SetCrate());
+        getCommand("gettotal").setExecutor(new GetTotal());
+        getCommand("givekey").setExecutor(new GiveKey());
+        getCommand("lockall").setExecutor(new LockAll());
         InteractInventory.initConversationFactory(this);
         ListItem.initConversationFactory(this);
 
@@ -78,7 +68,7 @@ public final class CustomShop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        closeInventory.saveAll();
+        CloseInventory.saveAll();
         super.onDisable();
     }
 

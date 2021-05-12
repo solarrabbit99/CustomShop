@@ -1,10 +1,11 @@
-package Utils;
+package utils;
 
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
-import CustomUIs.CreationGUI;
-import CustomUIs.VendingMachineUI;
+
+import gui.CreationGUI;
+import gui.VendingMachineUI;
 
 /**
  * Contains all the mappings from player's UUID to corresponding interacting

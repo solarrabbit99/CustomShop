@@ -1,17 +1,15 @@
-package CustomUIs;
+package gui;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
-import Database.Database;
-import Plugin.CustomShop;
-import Utils.UIUtils;
-import Utils.UUIDMaps;
+import plugin.CustomShop;
+import utils.UIUtils;
+import utils.UUIDMaps;
+import database.Database;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {

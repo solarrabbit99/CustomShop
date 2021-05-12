@@ -1,4 +1,4 @@
-package Listeners;
+package events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,9 +13,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import CustomUIs.CreationGUI;
-import Listeners.VendingMachine.VendingMachineCreator;
-import Plugin.CustomShop;
+
+import events.VendingMachine.VendingMachineCreator;
+import plugin.CustomShop;
+import gui.CreationGUI;
 
 /**
  * Encapsulates a shop creation process. Player runs {@code /newshop} to spawn a

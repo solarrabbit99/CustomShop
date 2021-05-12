@@ -1,4 +1,4 @@
-package Listeners.VendingMachine;
+package events.VendingMachine;
 
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -15,9 +15,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import CustomUIs.VendingMachineUI;
-import Plugin.CustomShop;
-import Utils.UUIDMaps;
+import plugin.CustomShop;
+import utils.UUIDMaps;
+import gui.VendingMachineUI;
 
 /**
  * Listener for players interacting with custom shops' GUI, containing handlers

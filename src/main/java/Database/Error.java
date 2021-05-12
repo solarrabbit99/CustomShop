@@ -1,8 +1,8 @@
-package Database;
+package database;
 
 import java.util.logging.Level;
 
-import Plugin.CustomShop;
+import plugin.CustomShop;
 
 public class Error {
 

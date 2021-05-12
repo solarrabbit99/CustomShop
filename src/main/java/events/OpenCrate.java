@@ -1,4 +1,4 @@
-package Listeners.Crates;
+package events;
 
 import java.util.List;
 import java.util.Random;
@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import Plugin.CustomShop;
+import plugin.CustomShop;
 
 public class OpenCrate implements Listener {
     private static Location crateBlock;
@@ -22,6 +22,7 @@ public class OpenCrate implements Listener {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
         meta.setDisplayName("[§5§lCustom Shop Crate Key§f]");
+        template.setItemMeta(meta);
         crateKey = template;
     }
 

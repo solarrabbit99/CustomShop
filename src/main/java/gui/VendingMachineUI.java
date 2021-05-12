@@ -1,4 +1,4 @@
-package CustomUIs;
+package gui;
 
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.block.ShulkerBox;
@@ -12,9 +12,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import Plugin.CustomShop;
-import Utils.UIUtils;
-import Utils.UUIDMaps;
+import plugin.CustomShop;
+import utils.UIUtils;
+import utils.UUIDMaps;
 import net.milkbowl.vault.economy.Economy;
 
 /** Custom UI for vending machines. */

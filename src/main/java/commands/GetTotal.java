@@ -1,10 +1,10 @@
-package Listeners.Crates;
+package commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import Plugin.CustomShop;
+import plugin.CustomShop;
 
 public class GetTotal implements CommandExecutor {
 
