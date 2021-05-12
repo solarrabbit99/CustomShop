@@ -66,6 +66,10 @@ public class ShopCreation implements CommandExecutor, Listener {
                     CreationGUI.nextPage(player);
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);
+                    if (CustomShops.getPlugin().getDatabase().getTotalShopOwned(player).equals(5)) {
+                        player.sendMessage("§cYou have reached the maximum number of custom shops created!");
+                        return;
+                    }
                     if (targetBlock == null) {
                         player.sendMessage("§cYou are not targeting any block...");
                         return;

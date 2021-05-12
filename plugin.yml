@@ -13,6 +13,8 @@ commands:
         description: Set the chest for crate.
         permission: customshop.admin
         permission-message: You do not have permission to use this command.
+    gettotal:
+        description: Returns the total number of custom shops owned.
 
 permissions:
     customshop.admin:

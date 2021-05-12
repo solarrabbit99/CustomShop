@@ -133,14 +133,14 @@ public abstract class Database {
     }
 
     /**
-     * Updates the database with the given inputs.
+     * Updates the all data of the player with the given inputs.
      *
      * @param player          player of interest
      * @param unlockedShops   string representation of the list of shops unlocked by
      *                        the player
      * @param totalShopsOwned total shops owned by the player
      */
-    public void setTokens(Player player, Integer[] unlockedShops, Integer totalShopsOwned) {
+    public void setData(Player player, Integer[] unlockedShops, Integer totalShopsOwned) {
         Connection conn = null;
         PreparedStatement ps = null;
         String unlockedShopsString = Arrays.toString(unlockedShops);
@@ -151,6 +151,68 @@ public abstract class Database {
             ps.setString(1, player.getUniqueId().toString());
             ps.setString(2, unlockedShopsString);
             ps.setInt(3, totalShopsOwned);
+            ps.executeUpdate();
+            return;
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return;
+    }
+
+    /**
+     * Decrements the total number of custom shops owned by the player.
+     *
+     * @param player player of interest
+     */
+    public void decrementTotalShopsOwned(Player player) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Integer previousTotal = getTotalShopOwned(player);
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (player,total_shops_owned) VALUES(?,?,?)");
+            ps.setString(1, player.getUniqueId().toString());
+            ps.setInt(2, previousTotal - 1);
+            ps.executeUpdate();
+            return;
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return;
+    }
+
+    /**
+     * Increments the total number of custom shops owned by the player.
+     *
+     * @param player player of interest
+     */
+    public void incrementTotalShopsOwned(Player player) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Integer previousTotal = getTotalShopOwned(player);
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (player,total_shops_owned) VALUES(?,?,?)");
+            ps.setString(1, player.getUniqueId().toString());
+            ps.setInt(2, previousTotal + 1);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {

@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import Database.Database;
 import Database.SQLite;
 import Listeners.VendingMachine.ShopRemoval;
+import Listeners.GetTotal;
 import Listeners.SetCrate;
 import Listeners.ShopCreation;
 import Listeners.VendingMachine.CloseInventory;
@@ -30,6 +31,7 @@ public final class CustomShops extends JavaPlugin {
     private static final ShopRemoval shopRemoval = new ShopRemoval();
     private static final ListItem listItem = new ListItem();
     private static final SetCrate setCrate = new SetCrate();
+    private static final GetTotal getTotal = new GetTotal();
     private Database database;
 
     @Override
@@ -57,6 +59,7 @@ public final class CustomShops extends JavaPlugin {
         getCommand("newshop").setExecutor(shopCreation);
         getCommand("removeshop").setExecutor(shopRemoval);
         getCommand("setcrate").setExecutor(setCrate);
+        getCommand("gettotal").setExecutor(getTotal);
         InteractInventory.initConversationFactory(this);
         ListItem.initConversationFactory(this);
 
