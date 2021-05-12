@@ -68,6 +68,8 @@ public class ShopCreation implements CommandExecutor, Listener {
                     Block targetBlock = player.getTargetBlockExact(5);
                     if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player).equals(5)) {
                         player.sendMessage("§cYou have reached the maximum number of custom shops created!");
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                        CreationGUI.playerClosedGUI(player);
                         return;
                     }
                     if (targetBlock == null) {
