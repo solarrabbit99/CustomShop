@@ -169,14 +169,15 @@ public abstract class Database {
     }
 
     /**
-     * Decrements the total number of custom shops owned by the player.
+     * Decrements the total number of custom shops owned by the player. Lower limit
+     * set to 0.
      *
      * @param player player of interest
      */
     public void decrementTotalShopsOwned(Player player) {
         Integer previousTotal = getTotalShopOwned(player);
         List<Integer> unlockedShops = getUnlockedShops(player);
-        setData(player, unlockedShops, previousTotal - 1);
+        setData(player, unlockedShops, Math.max(previousTotal - 1, 0));
     }
 
     /**
