@@ -1,4 +1,4 @@
-package Listeners;
+package Listeners.Crates;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,6 +23,7 @@ public class SetCrate implements CommandExecutor {
         } else {
             OpenCrate.setCrateLocation(targetBlock.getLocation());
             player.sendMessage("§aSet chest as crate chest!");
+            return true;
         }
         return false;
     }

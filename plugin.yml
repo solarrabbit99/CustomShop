@@ -20,6 +20,11 @@ commands:
         permission: customshop.givekey
         permission-message: You do not have permission to use this command.
         usage: /<command> <player> <amount>
+    lockall:
+        description: Locks all custom shops of the specified player.
+        permission: custom.lockall
+        permission-message: You do not have permission to use this command.
+        usage: /<command> <player>
 
 permissions:
     customshop.setcrate:

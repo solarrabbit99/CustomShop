@@ -1,4 +1,4 @@
-package Listeners;
+package Listeners.Crates;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,7 +28,9 @@ public class GiveKey implements CommandExecutor {
         try {
             int amount = Integer.parseInt(args[1]);
             ItemStack keys = OpenCrate.getCrateKey(amount);
+            sender.sendMessage("§aGiven " + amount + " keys to specified player!");
             player.getInventory().addItem(keys);
+            return true;
         } catch (NumberFormatException e) {
             sender.sendMessage("§cInvalid input amount!");
         }
