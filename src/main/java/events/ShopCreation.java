@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import events.VendingMachine.VendingMachineCreator;
 import plugin.CustomShop;
 import gui.CreationGUI;
@@ -67,7 +66,8 @@ public class ShopCreation implements CommandExecutor, Listener {
                     CreationGUI.nextPage(player);
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);
-                    if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player).equals(5)) {
+                    int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
+                    if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player).intValue() >= maxShops) {
                         player.sendMessage("§cYou have reached the maximum number of custom shops created!");
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                         CreationGUI.playerClosedGUI(player);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,9 +23,9 @@ public class OpenCrate implements Listener {
     public OpenCrate() {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
-        meta.setDisplayName("[§5§lCustom Shop Crate Key§f]");
+        meta.setDisplayName("§r[§5§lCustom Shop Crate Key§f]");
         List<String> lore = new ArrayList<>();
-        lore.add("§9Use on Custom Shop Crate!");
+        lore.add("§9Use key on Custom Shop Crate!");
         meta.setLore(lore);
         template.setItemMeta(meta);
         crateKey = template;
@@ -51,6 +52,7 @@ public class OpenCrate implements Listener {
                 Random rng = new Random();
                 int unlocked = rng.nextInt(3) + 100001;
                 List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.0F);
                 if (lst.contains(unlocked)) {
                     player.sendMessage("§6You already have " + unlocked + " unlocked :(");
                 } else {
@@ -64,13 +66,15 @@ public class OpenCrate implements Listener {
 
     private static boolean verifyCrateLocation(Location location) {
         FileConfiguration conf = CustomShop.getPlugin().getConfig();
-        if (conf.getString("crate-location.world") == null)
+        if (conf.getString("crate-location.world") == null) {
+            CustomShop.getPlugin().getServer().getPluginManager().disablePlugin(CustomShop.getPlugin());
             return false;
+        }
         String worldName = location.getWorld().getName();
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
-        return conf.getString("crate-location.world") == worldName && conf.getDouble("crate-location.x") == x
+        return conf.getString("crate-location.world").equals(worldName) && conf.getDouble("crate-location.x") == x
                 && conf.getDouble("crate-location.y") == y && conf.getDouble("crate-location.z") == z;
     }
 
