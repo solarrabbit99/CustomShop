@@ -13,7 +13,7 @@ import database.Database;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
-    private static int defaultVendingMachineID = 100000;
+    private static int defaultVM;
     private static int[] vendingMachineID = new int[] { 100001, 100002, 100003 };
     private static String[] vendingMachineNames = new String[] { "Wooden", "Stone", "Nether" };
     private Inventory[] pages;
@@ -25,6 +25,7 @@ public class CreationGUI {
      */
     private CreationGUI(Player player) {
         this.currentPage = 0;
+        defaultVM = CustomShop.getPlugin().getConfig().getInt("vending-machine.default.model-data");
         this.setUpGUI(player);
     }
 
@@ -40,6 +41,8 @@ public class CreationGUI {
 
         int noOfItems = vendingMachineID.length;
         LinkedList<String> names = new LinkedList<>();
+        // List<?> vm = CustomShop.getPlugin().getConfig().getList("vending-machine");
+
         for (String e : vendingMachineNames) {
             names.add(e + " Vending Machine");
         }
@@ -47,7 +50,7 @@ public class CreationGUI {
         for (int e : vendingMachineID) {
             ids.add(e);
         }
-        ids.replaceAll(e -> unlockedShops.contains(e) ? e : defaultVendingMachineID);
+        ids.replaceAll(e -> unlockedShops.contains(e) ? e : defaultVM);
 
         final int noOfPages = ((Double) Math.ceil(noOfItems / 27.0)).intValue();
         pages = new Inventory[noOfPages];

@@ -1,9 +1,11 @@
 package events;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,13 +17,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import plugin.CustomShop;
 
 public class OpenCrate implements Listener {
-    private static Location crateBlock;
     private static ItemStack crateKey;
 
     public OpenCrate() {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
         meta.setDisplayName("[§5§lCustom Shop Crate Key§f]");
+        List<String> lore = new ArrayList<>();
+        lore.add("§9Use on Custom Shop Crate!");
+        meta.setLore(lore);
         template.setItemMeta(meta);
         crateKey = template;
     }
@@ -31,15 +35,19 @@ public class OpenCrate implements Listener {
         EquipmentSlot hand = evt.getHand();
         if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
-        } else if (!evt.getClickedBlock().getLocation().equals(crateBlock)) {
+        } else if (!verifyCrateLocation(evt.getClickedBlock().getLocation())) {
             return;
         } else {
             evt.setCancelled(true);
             Player player = evt.getPlayer();
             ItemStack item = player.getEquipment().getItemInMainHand();
             if (!item.isSimilar(crateKey)) {
+                player.sendMessage("§cYou do not have the required crate key in main hand!");
                 return;
             } else {
+                ItemStack itemInHand = player.getInventory().getItemInMainHand();
+                itemInHand.setAmount(itemInHand.getAmount() - 1);
+                player.getInventory().setItemInMainHand(itemInHand);
                 Random rng = new Random();
                 int unlocked = rng.nextInt(3) + 100001;
                 List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
@@ -54,9 +62,16 @@ public class OpenCrate implements Listener {
         }
     }
 
-    public static void setCrateLocation(Location loc) {
-        // TODO: save it in database/yaml file instead of static variable
-        crateBlock = loc;
+    private static boolean verifyCrateLocation(Location location) {
+        FileConfiguration conf = CustomShop.getPlugin().getConfig();
+        if (conf.getString("crate-location.world") == null)
+            return false;
+        String worldName = location.getWorld().getName();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        return conf.getString("crate-location.world") == worldName && conf.getDouble("crate-location.x") == x
+                && conf.getDouble("crate-location.y") == y && conf.getDouble("crate-location.z") == z;
     }
 
     /**

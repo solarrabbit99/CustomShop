@@ -5,7 +5,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import commands.GetTotal;
 import commands.GiveKey;
 import commands.LockAll;
@@ -64,6 +63,8 @@ public final class CustomShop extends JavaPlugin {
 
         this.database = new SQLite(this);
         this.database.load();
+
+        saveDefaultConfig();
     }
 
     @Override

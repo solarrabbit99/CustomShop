@@ -90,3 +90,7 @@ with other plugins.
 
 1. `§e§lCustom Shops`
 2. `§5§lVending Machine`
+
+## Dependencies
+
+The plugin requires **Vault** to be enabled.

@@ -1,0 +1,51 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                  Main Configurations                 | #
+# +------------------------------------------------------+ #
+############################################################
+
+# How many custom shops can a player own?
+max-shops: 5
+
+############################################################
+# +------------------------------------------------------+ #
+# |                      Model Data                      | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   Deconflict your custom model data here. Make sure      #
+#   that the data here correctly corresponds to the data   #
+#   in the resource pack.                                  #
+#                                                          #
+############################################################
+
+vending-machine:
+    default:
+        model-data: 100000
+    wooden:
+        name: Wooden Vending Machine
+        model-data: 100001
+    stone:
+        name: Stone Vending Machine
+        model-data: 100002
+    nether:
+        name: Nether Vending Machine
+        model-data: 100003
+
+############################################################
+# +------------------------------------------------------+ #
+# |                    Crate Location                    | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   IMPORTANT: Do not change this manually unless you are  #
+#   absolutely sure of the location of the target chest.   #
+#   Use the `/setcrate` command for the plugin to write    #
+#   onto this instead. Delete value for world to render    #
+#   location ineffective.                                  #
+#                                                          #
+############################################################
+
+crate-location:
+    world:
+    x: 0
+    y: 0
+    z: 0

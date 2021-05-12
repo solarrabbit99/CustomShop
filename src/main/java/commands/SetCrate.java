@@ -6,8 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import events.OpenCrate;
+import plugin.CustomShop;
 
 public class SetCrate implements CommandExecutor {
     @Override
@@ -23,7 +22,12 @@ public class SetCrate implements CommandExecutor {
         } else if (!targetBlock.getType().equals(Material.CHEST)) {
             player.sendMessage("§cYou are not targeting any chests!");
         } else {
-            OpenCrate.setCrateLocation(targetBlock.getLocation());
+            CustomShop.getPlugin().getConfig().set("crate-location.world",
+                    targetBlock.getLocation().getWorld().getName());
+            CustomShop.getPlugin().getConfig().set("crate-location.x", targetBlock.getLocation().getX());
+            CustomShop.getPlugin().getConfig().set("crate-location.y", targetBlock.getLocation().getY());
+            CustomShop.getPlugin().getConfig().set("crate-location.z", targetBlock.getLocation().getZ());
+            CustomShop.getPlugin().saveConfig();
             player.sendMessage("§aSet chest as crate chest!");
             return true;
         }
