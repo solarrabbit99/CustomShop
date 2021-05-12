@@ -59,14 +59,14 @@ require a change in code.
 ### Custom Model IDs
 
 The following IDs for `Material.PAPER` are used for custom shops. Change
-**BOTH** the conflicting IDs and the respective IDs in
-`CustomUIs/CreationGUI.java`.
+**BOTH** the conflicting IDs and the respective IDs in `config.yml`.
 
-| **ID** | **Model**              |
-| ------ | ---------------------- |
-| 100000 | wooden_vending_machine |
-| 100001 | stone_vending_machine  |
-| 100002 | nether_vending_machine |
+| **ID** | **Model**               |
+| ------ | ----------------------- |
+| 100000 | default_vending_machine |
+| 100001 | wooden_vending_machine  |
+| 100002 | stone_vending_machine   |
+| 100003 | nether_vending_machine  |
 
 ### Display Names
 

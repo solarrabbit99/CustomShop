@@ -6,8 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import plugin.CustomShop;
 
+/**
+ * A command executor that returns the number of custom shops owned by the
+ * sender.
+ */
 public class GetTotal implements CommandExecutor {
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -17,5 +20,4 @@ public class GetTotal implements CommandExecutor {
         }
         return false;
     }
-
 }

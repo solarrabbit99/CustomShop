@@ -8,8 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import plugin.CustomShop;
 
+/** Locks and resets all unlocked custom shops of the specified player. */
 public class LockAll implements CommandExecutor {
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
@@ -25,5 +25,4 @@ public class LockAll implements CommandExecutor {
         sender.sendMessage("§aSuccessfully locked all custom shops of the specified player!");
         return true;
     }
-
 }

@@ -11,6 +11,7 @@ import plugin.CustomShop;
 
 public class SQLite extends Database {
     private static String dbname = "player_data";
+    // Player is 36 characters as we are using UUID to represent a player.
     private String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS " + dbname + " ("
             + "`player` varchar(36) NOT NULL," + "`shops_unlocked` varchar(1024) NOT NULL,"
             + "`total_shops_owned` int(2) NOT NULL," + "PRIMARY KEY (`player`));";

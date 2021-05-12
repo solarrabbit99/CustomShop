@@ -11,39 +11,79 @@ import java.util.logging.Level;
 import org.bukkit.entity.Player;
 import plugin.CustomShop;
 
+/**
+ * Parent class of a database loader. Contains implementation of data retrieval
+ * and update methods.
+ */
 public abstract class Database {
     CustomShop plugin;
     Connection connection;
+    /** Name of database table. */
     public String table;
-    public int tokens = 0;
 
+    /**
+     * Constuctor for database.
+     *
+     * @param instance plugin instance used for logging
+     * @param dbname   name of database table
+     */
     public Database(CustomShop instance, String dbname) {
         plugin = instance;
         this.table = dbname;
     }
 
+    /**
+     * Returns connection established by the database loader.
+     *
+     * @return SQL connection
+     */
     public abstract Connection getSQLConnection();
 
+    /**
+     * Executes create table statement.
+     */
     public abstract void load();
 
+    /**
+     * Initializes SQL connection.
+     */
     public void initialize() {
         connection = getSQLConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table + " WHERE player = ?");
             ResultSet rs = ps.executeQuery();
             close(ps, rs);
-
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection", ex);
         }
     }
 
     /**
-     * Returns a string representation of the list of custom shops unlocked by the
-     * player.
+     * Returns an array of custom shops unlocked by the player.
      *
      * @param player player of interest
-     * @return a list of shops unlocked by the player in string form
+     * @return an array of shops unlocked by the player
+     */
+    public List<Integer> getUnlockedShops(Player player) {
+        String arrayString = this.getUnlockedShopsString(player);
+        if (arrayString.equalsIgnoreCase("[]") || arrayString.equalsIgnoreCase("")) {
+            return new ArrayList<>();
+        }
+        arrayString = arrayString.substring(1, arrayString.length() - 1);
+        String[] strArr = arrayString.split(", ");
+        List<Integer> intList = new ArrayList<>();
+        for (String e : strArr) {
+            intList.add(Integer.parseInt(e));
+        }
+        return intList;
+    }
+
+    /**
+     * Returns a string representation of the list of custom shops unlocked by the
+     * player. Helper method for {@link #getUnlockedShops}.
+     *
+     * @param player player of interest
+     * @return list of shops unlocked by the player in string form
      */
     private String getUnlockedShopsString(Player player) {
         String string = player.getUniqueId().toString();
@@ -73,26 +113,6 @@ public abstract class Database {
             }
         }
         return "[]";
-    }
-
-    /**
-     * Returns an array of custom shops unlocked by the player.
-     *
-     * @param player player of interest
-     * @return an array of shops unlocked by the player
-     */
-    public List<Integer> getUnlockedShops(Player player) {
-        String arrayString = this.getUnlockedShopsString(player);
-        if (arrayString.equalsIgnoreCase("[]") || arrayString.equalsIgnoreCase("")) {
-            return new ArrayList<>();
-        }
-        arrayString = arrayString.substring(1, arrayString.length() - 1);
-        String[] strArr = arrayString.split(", ");
-        List<Integer> intList = new ArrayList<>();
-        for (String e : strArr) {
-            intList.add(Integer.parseInt(e));
-        }
-        return intList;
     }
 
     /**
@@ -194,14 +214,21 @@ public abstract class Database {
     /**
      * Updates the list of shops owned by the player.
      *
-     * @param player player of interest
-     * @param lst    list of shops unlocked by the player
+     * @param player        player of interest
+     * @param unlockedShops list of shops unlocked by the player
      */
     public void setUnlockedShops(Player player, List<Integer> unlockedShops) {
         Integer totalShopsOwned = getTotalShopOwned(player);
         setData(player, unlockedShops, totalShopsOwned);
     }
 
+    /**
+     * Releases both the {@link PreparedStatement} and {@link ResultSet} of the
+     * database.
+     *
+     * @param ps PreparedStatement of the database
+     * @param rs ResultSet of the database
+     */
     public void close(PreparedStatement ps, ResultSet rs) {
         try {
             if (ps != null)
@@ -209,7 +236,7 @@ public abstract class Database {
             if (rs != null)
                 rs.close();
         } catch (SQLException ex) {
-            Error.close(plugin, ex);
+            Errors.close(plugin, ex);
         }
     }
 }

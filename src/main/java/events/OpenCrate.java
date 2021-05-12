@@ -17,9 +17,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import plugin.CustomShop;
 
+/** Encapsulated an event of player attempting to open a custom shop crate. */
 public class OpenCrate implements Listener {
     private static ItemStack crateKey;
 
+    /**
+     * Constructor for the listener. Creates a template for the crate keys to be
+     * used.
+     */
     public OpenCrate() {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
@@ -31,6 +36,11 @@ public class OpenCrate implements Listener {
         crateKey = template;
     }
 
+    /**
+     * Event handler for player attempting to open crates.
+     *
+     * @param evt event of player interacting with a block
+     */
     @EventHandler
     public static void onOpenCrate(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
@@ -64,6 +74,13 @@ public class OpenCrate implements Listener {
         }
     }
 
+    /**
+     * Verify if a given location is the location of the crate saved in
+     * {@code config.yml}.
+     *
+     * @param location location to verify
+     * @return {@code true} if given location is the location of the crate
+     */
     private static boolean verifyCrateLocation(Location location) {
         FileConfiguration conf = CustomShop.getPlugin().getConfig();
         if (conf.getString("crate-location.world") == null) {

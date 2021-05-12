@@ -6,11 +6,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import events.OpenCrate;
 
+/**
+ * Gives specified player in the first position of args when using
+ * {@code /givekey} the amount of crate keys specified in the second position of
+ * args. Process fails if target player doesn't have enough inventory space.
+ */
 public class GiveKey implements CommandExecutor {
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 2) {
@@ -38,5 +41,4 @@ public class GiveKey implements CommandExecutor {
         }
         return false;
     }
-
 }

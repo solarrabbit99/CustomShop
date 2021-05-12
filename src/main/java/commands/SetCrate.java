@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import plugin.CustomShop;
 
+/** Set the position of custom shop crate in {@code config.yml}. */
 public class SetCrate implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
