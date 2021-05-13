@@ -127,7 +127,7 @@ public final class UIUtils {
         ItemMeta meta = item.getItemMeta();
         List<String> loreStrings = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         for (String s : lore) {
-            loreStrings.add(0, s);
+            loreStrings.add(s);
         }
         meta.setLore(loreStrings);
         clone.setItemMeta(meta);

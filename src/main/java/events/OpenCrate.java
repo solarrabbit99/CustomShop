@@ -7,12 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import plugin.CustomShop;
@@ -28,11 +30,13 @@ public class OpenCrate implements Listener {
     public OpenCrate() {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
-        meta.setDisplayName("§r[§5§lCustom Shop Crate Key§f]");
+        meta.setDisplayName("§r[§5§lCustom Shop Crate Key§b]");
         List<String> lore = new ArrayList<>();
         lore.add("§9Use key on Custom Shop Crate!");
         meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         template.setItemMeta(meta);
+        template.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
         crateKey = template;
     }
 

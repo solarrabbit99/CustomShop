@@ -22,7 +22,7 @@ commands:
         usage: /<command> <player> <amount>
     lockall:
         description: Locks all custom shops of the specified player.
-        permission: custom.lockall
+        permission: customshop.lockall
         permission-message: You do not have permission to use this command.
         usage: /<command> <player>
 
@@ -33,9 +33,13 @@ permissions:
     customshop.givekey:
         description: User able to give custom shop crate keys to players.
         default: op
+    customshop.lockall:
+        description: User able to lock all custom shops of a player.
+        default: op
     customshop.admin:
         description: User able to perform all commands.
         default: op
         children:
             customshop.setcrate: true
             customshop.givekey: true
+            customshop.lockall: true
