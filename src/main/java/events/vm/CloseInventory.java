@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 
-import gui.VendingMachineUI;
+import gui.VMGUI;
 import utils.UUIDMaps;
 
 /**
@@ -23,7 +23,7 @@ public class CloseInventory implements Listener {
     @EventHandler
     public void closeShop(InventoryCloseEvent evt) {
         if (!((Player) evt.getPlayer()).isConversing()) {
-            VendingMachineUI.saveInventory((Player) evt.getPlayer());
+            VMGUI.saveInventory((Player) evt.getPlayer());
         }
     }
 
@@ -34,14 +34,14 @@ public class CloseInventory implements Listener {
      */
     @EventHandler
     public void playerLeave(PlayerKickEvent evt) {
-        VendingMachineUI.saveInventory(evt.getPlayer());
+        VMGUI.saveInventory(evt.getPlayer());
     }
 
     /**
      * Save all opened UIs. Used when plugin disables.
      */
     public static void saveAll() {
-        UUIDMaps.playerToArmorStand.forEach(
-                (playerID, armorStandID) -> VendingMachineUI.saveInventory((Player) Bukkit.getEntity(playerID)));
+        UUIDMaps.playerToArmorStand
+                .forEach((playerID, armorStandID) -> VMGUI.saveInventory((Player) Bukkit.getEntity(playerID)));
     }
 }

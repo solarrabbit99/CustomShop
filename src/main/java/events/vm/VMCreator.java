@@ -20,7 +20,7 @@ import utils.UIUtils;
  * Vending machine's shop creator. Player's target block must have at least 2
  * blocks of air above for the shop to be spawned successfully.
  */
-public class VendingMachineCreator implements ShopCreator {
+public class VMCreator implements ShopCreator {
     @Override
     public String createShop(Location location, Player owner, ItemStack item) {
         if (item.getItemMeta().getCustomModelData() == 100000) {

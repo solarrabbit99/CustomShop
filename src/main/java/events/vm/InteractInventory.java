@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import plugin.CustomShop;
 import utils.UUIDMaps;
-import gui.VendingMachineUI;
+import gui.VMGUI;
 
 /**
  * Listener for players interacting with custom shops' GUI, containing handlers
@@ -47,7 +47,7 @@ public class InteractInventory implements Listener {
                 if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
-                    VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(playerID);
+                    VMGUI ui = UUIDMaps.playerToVendingUI.get(playerID);
                     ItemStack item = ui.getItem(evt.getSlot());
                     UUIDMaps.purchasing.put(playerID, item);
                     Conversation conversation = purchasingConversation.buildConversation(player);
@@ -83,7 +83,7 @@ public class InteractInventory implements Listener {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 ItemStack purchasingItem = UUIDMaps.purchasing.remove(player.getUniqueId());
-                VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
+                VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
                 ui.purchaseItem(player, purchasingItem, input.intValue());
             }
             return END_OF_CONVERSATION;

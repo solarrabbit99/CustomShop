@@ -1,58 +1,87 @@
 package gui;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import plugin.CustomShop;
 import utils.UIUtils;
 import utils.UUIDMaps;
-import database.Database;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
-    private static int defaultVM;
-    private static int[] vendingMachineID = new int[] { 100001, 100002, 100003 };
-    private static String[] vendingMachineNames = new String[] { "Wooden", "Stone", "Nether" };
+    private static int noOfPages;
+    private static int noOfItems;
+    private static LinkedList<String> names;
+    private static LinkedList<Integer> modelData;
+    private static List<Integer> defaults;
+
+    private List<Integer> unlockedShops;
     private Inventory[] pages;
     private int currentPage;
 
     /**
-     * Set up a GUI. Ensure that {@code CreationGUI.setUpGUI()} is called before
-     * using the constructor.
+     * Set up a GUI for the player. Called when static method
+     * {@link #openFirstPage(Player)} is called.
      */
     private CreationGUI(Player player) {
         this.currentPage = 0;
-        defaultVM = CustomShop.getPlugin().getConfig().getInt("vending-machine.default.model-data");
+        unlockedShops = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
         this.setUpGUI(player);
     }
 
     /**
-     * This method must be run to set up all player's unlocked custom shops
-     * variables before calling other methods.
+     * Read from loaded configuration of {@code config.yml} the model data of custom
+     * shops. Initializes class's static variables. Must be run, preferably in
+     * plugin's {@code onEnable()} method, before any creation of
+     * {@link CreationGUI}s.
+     */
+    public static void initialize() {
+        names = new LinkedList<>();
+        modelData = new LinkedList<>();
+        defaults = new ArrayList<>();
+        ConsoleCommandSender logger = CustomShop.getPlugin().getServer().getConsoleSender();
+
+        int defaultVM = CustomShop.getPlugin().getConfig().getInt("defaults.vending-machine");
+        Set<String> vm = CustomShop.getPlugin().getConfig().getConfigurationSection("vending-machine").getKeys(false);
+        for (String e : vm) {
+            String customModelName = CustomShop.getPlugin().getConfig().getString("vending-machine." + e + ".name");
+            if (customModelName == null) {
+                logger.sendMessage(
+                        "§c§l[CustomShop] Name not set for at least one of the vending machines! Disabling plugin...");
+                Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
+            }
+            names.add(customModelName);
+            Integer customModelData = CustomShop.getPlugin().getConfig().getInt("vending-machine." + e + ".model-data");
+            if (customModelData == 0) {
+                logger.sendMessage(
+                        "§c§l[CustomShop] Missing Custom Model Data or set to 0 for at least one of the vending machines! Disabling plugin...");
+                Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
+            }
+            modelData.add(customModelData);
+            defaults.add(defaultVM);
+        }
+
+        noOfItems = names.size();
+        noOfPages = ((Double) Math.ceil(noOfItems / 27.0)).intValue();
+    }
+
+    /**
+     * Set up all player's unlocked custom shops variables.
      *
-     * @param player player opening the GUI.
+     * @param player player opening the GUI
      */
     public void setUpGUI(Player player) {
-        Database db = CustomShop.getPlugin().getDatabase();
-        List<Integer> unlockedShops = db.getUnlockedShops(player);
-
-        int noOfItems = vendingMachineID.length;
-        LinkedList<String> names = new LinkedList<>();
-        // List<?> vm = CustomShop.getPlugin().getConfig().getList("vending-machine");
-
-        for (String e : vendingMachineNames) {
-            names.add(e + " Vending Machine");
-        }
-        LinkedList<Integer> ids = new LinkedList<>();
-        for (int e : vendingMachineID) {
-            ids.add(e);
-        }
-        ids.replaceAll(e -> unlockedShops.contains(e) ? e : defaultVM);
-
-        final int noOfPages = ((Double) Math.ceil(noOfItems / 27.0)).intValue();
+        @SuppressWarnings("unchecked")
+        LinkedList<String> iterNames = (LinkedList<String>) names.clone();
+        @SuppressWarnings("unchecked")
+        LinkedList<Integer> iterModelData = (LinkedList<Integer>) modelData.clone();
+        iterModelData.replaceAll(e -> unlockedShops.contains(e) ? e : getDefault(e));
         pages = new Inventory[noOfPages];
 
         int item = 0;
@@ -71,7 +100,7 @@ public class CreationGUI {
             for (int j = 0; j < 27; j++) {
                 if (i == noOfPages - 1 && item == noOfItems)
                     break;
-                UIUtils.createItem(pages[i], j, Material.PAPER, 1, ids.poll(), names.poll());
+                UIUtils.createItem(pages[i], j, Material.PAPER, 1, iterModelData.poll(), iterNames.poll());
                 item++;
             }
         }
@@ -93,9 +122,7 @@ public class CreationGUI {
      * Navigate to the previous page for its viewer.
      *
      * @param player viewer of the GUI
-     * @throws NullPointerException if GUI is not yet initialised, or player hasn't
-     *                              up the GUI
-     * @see #setUpGUI()
+     * @throws NullPointerException if player has yet to open the first page
      */
     public static void nextPage(Player player) {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
@@ -110,9 +137,7 @@ public class CreationGUI {
      * Navigate to the previous page for its viewer.
      *
      * @param player viewer of the GUI
-     * @throws NullPointerException if GUI is not yet initialised, or player hasn't
-     *                              open up the GUI
-     * @see #setUpGUI()
+     * @throws NullPointerException if player has yet to open the first page
      */
     public static void previousPage(Player player) {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
@@ -132,5 +157,17 @@ public class CreationGUI {
     public static boolean playerClosedGUI(Player player) {
         CreationGUI gui = UUIDMaps.playerToCreationGUI.remove(player.getUniqueId());
         return gui != null;
+    }
+
+    /**
+     * Return the default custom model data of a shop given its variant's model
+     * data.
+     *
+     * @param model variant's model data
+     * @return default model data
+     */
+    private static Integer getDefault(Integer model) {
+        int index = modelData.indexOf(model);
+        return defaults.get(index);
     }
 }

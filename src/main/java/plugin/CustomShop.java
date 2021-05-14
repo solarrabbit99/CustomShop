@@ -1,6 +1,5 @@
 package plugin;
 
-import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -18,6 +17,7 @@ import events.vm.InteractInventory;
 import events.vm.ListItem;
 import events.vm.OpenInventory;
 import events.vm.ShopRemoval;
+import gui.CreationGUI;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.
@@ -32,11 +32,13 @@ public final class CustomShop extends JavaPlugin {
     @Override
     public void onEnable() {
         pluginInstance = this;
-        Logger log = this.getLogger();
         if (!setUpEconomy()) {
-            log.info("[CustomShops] - No Vault dependencies found! Disabling plugin...");
+            getServer().getConsoleSender()
+                    .sendMessage("§c§l[CustomShop] No Vault dependencies found! Disabling plugin...");
             getServer().getPluginManager().disablePlugin(this);
             return;
+        } else {
+            getServer().getConsoleSender().sendMessage("§2§l[CustomShop] Successfully hooked onto Vault.");
         }
         if (!this.getDataFolder().exists()) {
             try {
@@ -65,6 +67,7 @@ public final class CustomShop extends JavaPlugin {
         this.database.load();
 
         saveDefaultConfig();
+        CreationGUI.initialize();
     }
 
     @Override

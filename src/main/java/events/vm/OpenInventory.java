@@ -13,7 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import gui.VendingMachineUI;
+import gui.VMGUI;
 import utils.UIUtils;
 import utils.UUIDMaps;
 
@@ -48,7 +48,7 @@ public class OpenInventory implements Listener {
                 evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
-            VendingMachineUI ui = new VendingMachineUI(armorStand);
+            VMGUI ui = new VMGUI(armorStand);
             ui.openUI(evt.getPlayer());
 
             UUID playerID = evt.getPlayer().getUniqueId();

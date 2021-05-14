@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
 import gui.CreationGUI;
-import gui.VendingMachineUI;
+import gui.VMGUI;
 
 /**
  * Contains all the mappings from player's UUID to corresponding interacting
@@ -17,8 +17,8 @@ public class UUIDMaps {
     public static HashMap<UUID, CreationGUI> playerToCreationGUI = new HashMap<>();
     /** Maps player's UUID to an armor stand's UUID. */
     public static HashMap<UUID, UUID> playerToArmorStand = new HashMap<>();
-    /** Maps player's UUID to a {@link VendingMachineUI}. */
-    public static HashMap<UUID, VendingMachineUI> playerToVendingUI = new HashMap<>();
+    /** Maps player's UUID to a {@link VMGUI}. */
+    public static HashMap<UUID, VMGUI> playerToVendingUI = new HashMap<>();
     /** Maps player's UUID to the item the player is attempting to purchase. */
     public static HashMap<UUID, ItemStack> purchasing = new HashMap<>();
 }

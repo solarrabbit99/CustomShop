@@ -23,7 +23,7 @@ import org.bukkit.inventory.PlayerInventory;
 import plugin.CustomShop;
 import utils.UIUtils;
 import utils.UUIDMaps;
-import gui.VendingMachineUI;
+import gui.VMGUI;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for
@@ -54,7 +54,7 @@ public class ListItem implements Listener {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
-            VendingMachineUI ui = new VendingMachineUI(armorStand);
+            VMGUI ui = new VMGUI(armorStand);
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
                 ui.openOwnerUI(player);
             } else {
@@ -97,7 +97,7 @@ public class ListItem implements Listener {
             Player player = (Player) context.getForWhom();
             PlayerInventory playerInventory = player.getInventory();
             ItemStack item = playerInventory.getItemInMainHand();
-            VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
+            VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
             ui.listPrice(player, item, price);
             return END_OF_CONVERSATION;
         }

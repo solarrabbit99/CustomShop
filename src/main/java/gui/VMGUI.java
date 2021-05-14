@@ -18,7 +18,7 @@ import utils.UUIDMaps;
 import net.milkbowl.vault.economy.Economy;
 
 /** Custom UI for vending machines. */
-public class VendingMachineUI {
+public class VMGUI {
     /**
      * Inventory that is viewed by the player, possibly consisting of UI elements
      * such as exit buttons, next page etc. Each item for sale is also labelled with
@@ -51,7 +51,7 @@ public class VendingMachineUI {
      *
      * @param armorStand armor stand containing source container
      */
-    public VendingMachineUI(ArmorStand armorStand) {
+    public VMGUI(ArmorStand armorStand) {
         ItemStack block = armorStand.getEquipment().getChestplate();
         BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
         ownerID = blockMeta.getDisplayName();
@@ -98,7 +98,7 @@ public class VendingMachineUI {
         UUID armorStandID = UUIDMaps.playerToArmorStand.get(playerID);
         if (armorStandID != null) {
             ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUIDMaps.playerToArmorStand.get(playerID));
-            VendingMachineUI ui = UUIDMaps.playerToVendingUI.get(playerID);
+            VMGUI ui = UUIDMaps.playerToVendingUI.get(playerID);
             HashMap<ItemStack, Double> withPrices = new HashMap<>();
             for (int i = 0; i < 27; i++) {
                 ui.sourceImage.getInventory().setItem(i, ui.inventory.getItem(i));

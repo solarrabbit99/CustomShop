@@ -14,7 +14,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import events.vm.VendingMachineCreator;
+import events.vm.VMCreator;
 import plugin.CustomShop;
 import gui.CreationGUI;
 
@@ -123,7 +123,7 @@ public class ShopCreation implements CommandExecutor, Listener {
         }
         String name = meta.getDisplayName();
         if (name.contains("Vending Machine")) {
-            return new VendingMachineCreator();
+            return new VMCreator();
         } else {
             throw new NoSuchShopException(name);
         }

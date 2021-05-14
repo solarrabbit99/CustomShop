@@ -18,9 +18,10 @@ max-shops: 5
 #                                                          #
 ############################################################
 
+defaults:
+    vending-machine: 100000
+
 vending-machine:
-    default:
-        model-data: 100000
     wooden:
         name: Wooden Vending Machine
         model-data: 100001
