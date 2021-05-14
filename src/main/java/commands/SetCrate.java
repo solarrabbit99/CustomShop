@@ -2,7 +2,6 @@ package commands;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,8 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import plugin.CustomShop;
 
 /** Set the position of custom shop crate in {@code config.yml}. */
 public class SetCrate implements CommandExecutor {
@@ -63,6 +60,8 @@ public class SetCrate implements CommandExecutor {
     /**
      * Create YAML file for crate-location if not already exists. Load configuration
      * file thereafter.
+     *
+     * @param plugin plugin instance
      */
     private void createCustomConfig(JavaPlugin plugin) {
         crateLocationFile = new File(plugin.getDataFolder(), "crate-location.yml");
@@ -86,14 +85,13 @@ public class SetCrate implements CommandExecutor {
      * @return {@code true} if given location is the location of the crate
      */
     public static boolean verifyCrateLocation(Location location) {
-        FileConfiguration crateLocation = CustomShop.getPlugin().getConfig();
-        if (crateLocation.getString("crate-location.world") == null) {
-            return false;
-        }
         String worldName = location.getWorld().getName();
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
+        if (crateLocation.getString("crate-location.world") == null) {
+            return false;
+        }
         return crateLocation.getString("crate-location.world").equals(worldName)
                 && crateLocation.getDouble("crate-location.x") == x && crateLocation.getDouble("crate-location.y") == y
                 && crateLocation.getDouble("crate-location.z") == z;
