@@ -1,4 +1,4 @@
-package events.VendingMachine;
+package events.vm;
 
 import java.util.List;
 import org.bukkit.Location;

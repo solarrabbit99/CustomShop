@@ -1,15 +1,37 @@
 package commands;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import plugin.CustomShop;
 
 /** Set the position of custom shop crate in {@code config.yml}. */
 public class SetCrate implements CommandExecutor {
+    private static File crateLocationFile;
+    private static FileConfiguration crateLocation;
+
+    /**
+     * Constructor that calls {@link #createCustomConfig(JavaPlugin)} given plugin
+     * instance.
+     *
+     * @param plugin plugin instance
+     */
+    public SetCrate(JavaPlugin plugin) {
+        createCustomConfig(plugin);
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -23,15 +45,57 @@ public class SetCrate implements CommandExecutor {
         } else if (!targetBlock.getType().equals(Material.CHEST)) {
             player.sendMessage("§cYou are not targeting any chests!");
         } else {
-            CustomShop.getPlugin().getConfig().set("crate-location.world",
-                    targetBlock.getLocation().getWorld().getName());
-            CustomShop.getPlugin().getConfig().set("crate-location.x", targetBlock.getLocation().getX());
-            CustomShop.getPlugin().getConfig().set("crate-location.y", targetBlock.getLocation().getY());
-            CustomShop.getPlugin().getConfig().set("crate-location.z", targetBlock.getLocation().getZ());
-            CustomShop.getPlugin().saveConfig();
+            crateLocation.set("crate-location.world", targetBlock.getLocation().getWorld().getName());
+            crateLocation.set("crate-location.x", targetBlock.getLocation().getX());
+            crateLocation.set("crate-location.y", targetBlock.getLocation().getY());
+            crateLocation.set("crate-location.z", targetBlock.getLocation().getZ());
+            try {
+                crateLocation.save(crateLocationFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             player.sendMessage("§aSet chest as crate chest!");
             return true;
         }
         return false;
+    }
+
+    /**
+     * Create YAML file for crate-location if not already exists. Load configuration
+     * file thereafter.
+     */
+    private void createCustomConfig(JavaPlugin plugin) {
+        crateLocationFile = new File(plugin.getDataFolder(), "crate-location.yml");
+        if (!crateLocationFile.exists()) {
+            crateLocationFile.getParentFile().mkdirs();
+            plugin.saveResource("crate-location.yml", false);
+        }
+        crateLocation = new YamlConfiguration();
+        try {
+            crateLocation.load(crateLocationFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Verify if a given location is the location of the crate saved in
+     * {@code config.yml}.
+     *
+     * @param location location to verify
+     * @return {@code true} if given location is the location of the crate
+     */
+    public static boolean verifyCrateLocation(Location location) {
+        FileConfiguration crateLocation = CustomShop.getPlugin().getConfig();
+        if (crateLocation.getString("crate-location.world") == null) {
+            return false;
+        }
+        String worldName = location.getWorld().getName();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        return crateLocation.getString("crate-location.world").equals(worldName)
+                && crateLocation.getDouble("crate-location.x") == x && crateLocation.getDouble("crate-location.y") == y
+                && crateLocation.getDouble("crate-location.z") == z;
     }
 }

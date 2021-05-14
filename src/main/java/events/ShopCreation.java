@@ -13,7 +13,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import events.VendingMachine.VendingMachineCreator;
+
+import events.vm.VendingMachineCreator;
 import plugin.CustomShop;
 import gui.CreationGUI;
 

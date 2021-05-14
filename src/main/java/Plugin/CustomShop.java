@@ -13,11 +13,11 @@ import database.Database;
 import database.SQLite;
 import events.OpenCrate;
 import events.ShopCreation;
-import events.VendingMachine.CloseInventory;
-import events.VendingMachine.InteractInventory;
-import events.VendingMachine.ListItem;
-import events.VendingMachine.OpenInventory;
-import events.VendingMachine.ShopRemoval;
+import events.vm.CloseInventory;
+import events.vm.InteractInventory;
+import events.vm.ListItem;
+import events.vm.OpenInventory;
+import events.vm.ShopRemoval;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.
@@ -54,7 +54,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new OpenCrate(), this);
         getCommand("newshop").setExecutor(new ShopCreation());
         getCommand("removeshop").setExecutor(new ShopRemoval());
-        getCommand("setcrate").setExecutor(new SetCrate());
+        getCommand("setcrate").setExecutor(new SetCrate(this));
         getCommand("gettotal").setExecutor(new GetTotal());
         getCommand("givekey").setExecutor(new GiveKey());
         getCommand("lockall").setExecutor(new LockAll());

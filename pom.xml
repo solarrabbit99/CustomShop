@@ -375,7 +375,7 @@
 		<resources>
 			<resource>
 				<directory>
-					${project.basedir}
+					${project.basedir}/src/main/resources
 				</directory>
 				<filtering>
 					true
@@ -386,6 +386,9 @@
 					</include>
 					<include>
 						config.yml
+					</include>
+					<include>
+						crate-location.yml
 					</include>
 				</includes>
 			</resource>

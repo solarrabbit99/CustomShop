@@ -3,10 +3,8 @@ package events;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +15,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import commands.SetCrate;
 import plugin.CustomShop;
 
 /** Encapsulated an event of player attempting to open a custom shop crate. */
@@ -30,7 +30,7 @@ public class OpenCrate implements Listener {
     public OpenCrate() {
         ItemStack template = new ItemStack(Material.TRIPWIRE_HOOK);
         ItemMeta meta = template.getItemMeta();
-        meta.setDisplayName("§r[§5§lCustom Shop Crate Key§b]");
+        meta.setDisplayName("§r§b[§5§lCustom Shop Crate Key§b]");
         List<String> lore = new ArrayList<>();
         lore.add("§9Use key on Custom Shop Crate!");
         meta.setLore(lore);
@@ -50,7 +50,7 @@ public class OpenCrate implements Listener {
         EquipmentSlot hand = evt.getHand();
         if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
-        } else if (!verifyCrateLocation(evt.getClickedBlock().getLocation())) {
+        } else if (!SetCrate.verifyCrateLocation(evt.getClickedBlock().getLocation())) {
             return;
         } else {
             evt.setCancelled(true);
@@ -76,27 +76,6 @@ public class OpenCrate implements Listener {
                 }
             }
         }
-    }
-
-    /**
-     * Verify if a given location is the location of the crate saved in
-     * {@code config.yml}.
-     *
-     * @param location location to verify
-     * @return {@code true} if given location is the location of the crate
-     */
-    private static boolean verifyCrateLocation(Location location) {
-        FileConfiguration conf = CustomShop.getPlugin().getConfig();
-        if (conf.getString("crate-location.world") == null) {
-            CustomShop.getPlugin().getServer().getPluginManager().disablePlugin(CustomShop.getPlugin());
-            return false;
-        }
-        String worldName = location.getWorld().getName();
-        double x = location.getX();
-        double y = location.getY();
-        double z = location.getZ();
-        return conf.getString("crate-location.world").equals(worldName) && conf.getDouble("crate-location.x") == x
-                && conf.getDouble("crate-location.y") == y && conf.getDouble("crate-location.z") == z;
     }
 
     /**

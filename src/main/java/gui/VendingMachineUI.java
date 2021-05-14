@@ -203,7 +203,7 @@ public class VendingMachineUI {
             String itemName = item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
                     : item.getType() + "";
             player.sendMessage(
-                    "§aSuccessfully purchased [" + printAmount + "x" + itemName + "] for $" + totalCost + "!");
+                    "§aSuccessfully purchased " + printAmount + "x" + itemName + "§a for $" + totalCost + "!");
         }
         saveInventory(player);
     }
@@ -227,7 +227,7 @@ public class VendingMachineUI {
             }
             ItemMeta meta = item.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
-            player.sendMessage("§aSuccessfully listed " + name + " for $" + price + "!");
+            player.sendMessage("§aSuccessfully listed " + name + "§a for $" + price + "!");
         }
         saveInventory(player);
     }

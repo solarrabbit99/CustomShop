@@ -1,4 +1,4 @@
-package events.VendingMachine;
+package events.vm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

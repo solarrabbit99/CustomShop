@@ -1,4 +1,4 @@
-package events.VendingMachine;
+package events.vm;
 
 import java.util.Collection;
 import java.util.UUID;
