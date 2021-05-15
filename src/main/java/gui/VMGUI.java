@@ -143,22 +143,18 @@ public class VMGUI {
      * <li>Player does not have enough money to purchase the specified amount of
      * items
      * </ul>
-     * The outcome of this event will be sent to the players involved in this
-     * transaction.
+     * Returns the outcome message of this event.
      *
      * @param player player purchasing item
      * @param item   item to be purchased
      * @param amount amount of item the player intended to purchase
+     * @return outcome message of the purchase, to be sent to the player involved
      */
-    public void purchaseItem(Player player, ItemStack item, int amount) {
+    public String purchaseItem(Player player, ItemStack item, int amount) {
         if (item == null) {
-            player.sendMessage("§cItem is null...");
-            saveInventory(player);
-            return;
+            return "§cItem is null...";
         } else if (!inventory.containsAtLeast(item, amount)) {
-            player.sendMessage("§cShop does not have the specified amount of the selected item!");
-            saveInventory(player);
-            return;
+            return "§cShop does not have the specified amount of the selected item!";
         }
         Inventory pInventory = player.getInventory();
         int totalSpace = 0;
@@ -176,9 +172,9 @@ public class VMGUI {
         double totalCost = amount * prices[inventory.first(item)];
 
         if (totalSpace < amount) {
-            player.sendMessage("§cYou do not have enough space in your inventory!");
+            return "§cYou do not have enough space in your inventory!";
         } else if (bal < totalCost) {
-            player.sendMessage("§cYou need at least $" + totalCost + " to make the purchase!");
+            return "§cYou need at least $" + totalCost + " to make the purchase!";
         } else { // Valid transaction
             item.setAmount(amount);
             final int printAmount = amount;
@@ -202,22 +198,22 @@ public class VMGUI {
             economy.depositPlayer(owner, totalCost);
             String itemName = item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
                     : item.getType() + "";
-            player.sendMessage(
-                    "§aSuccessfully purchased " + printAmount + "x" + itemName + "§a for $" + totalCost + "!");
+            return "§aSuccessfully purchased " + printAmount + "x" + itemName + "§a for $" + totalCost + "!";
         }
-        saveInventory(player);
     }
 
     /**
-     * List all similar ItemStack with the specified price.
+     * List all similar ItemStack with the specified price. Returns the outcome
+     * message of this event.
      *
      * @param player owner of the shop
      * @param item   item to set the price for
      * @param price  new price
+     * @return outcome message of the purchase, to be sent to the player involved
      */
-    public void listPrice(Player player, ItemStack item, double price) {
+    public String listPrice(Player player, ItemStack item, double price) {
         if (item == null) {
-            player.sendMessage("§cYou are not holding anything in your main hand!");
+            return "§cYou are not holding anything in your main hand!";
         } else {
             for (int i = 0; i < 27; i++) {
                 ItemStack sItem = inventory.getItem(i);
@@ -227,9 +223,8 @@ public class VMGUI {
             }
             ItemMeta meta = item.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
-            player.sendMessage("§aSuccessfully listed " + name + "§a for $" + price + "!");
+            return "§aSuccessfully listed " + name + "§a for $" + price + "!";
         }
-        saveInventory(player);
     }
 
     /**

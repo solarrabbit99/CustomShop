@@ -53,13 +53,13 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 ## Deconflicts
 
 There are certain data that this plugin uses that may conflict with other
-plugins or the serverpack. Some can be easily deconflicted, while others may
-require a change in code.
+plugins or the serverpack.
 
 ### Custom Model IDs
 
 The following IDs for `Material.PAPER` are used for custom shops. Change
-**BOTH** the conflicting IDs and the respective IDs in `config.yml`.
+**BOTH** the conflicting IDs in the items' JSON and the respective IDs in
+`config.yml`.
 
 | **ID** | **Model**               |
 | ------ | ----------------------- |
@@ -93,4 +93,5 @@ with other plugins.
 
 ## Dependencies
 
-The plugin requires **Vault** to be enabled.
+The plugin requires **Vault** and one of its supporting economy plugins to be
+enabled.

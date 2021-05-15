@@ -38,7 +38,7 @@ public final class CustomShop extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            getServer().getConsoleSender().sendMessage("§2§l[CustomShop] Successfully hooked onto Vault.");
+            getServer().getConsoleSender().sendMessage("§a§l[CustomShop] Successfully hooked onto Vault.");
         }
         if (!this.getDataFolder().exists()) {
             try {

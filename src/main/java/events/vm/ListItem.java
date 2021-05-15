@@ -8,8 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -81,7 +81,7 @@ public class ListItem implements Listener {
      * Prompt when player attempts to list a new price to all items in shop similar
      * to the item in hand.
      */
-    private static class PricePrompt extends NumericPrompt {
+    private static class PricePrompt extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -89,27 +89,28 @@ public class ListItem implements Listener {
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            double price = input.doubleValue();
-            if (!(context.getForWhom() instanceof Player)) {
-                return END_OF_CONVERSATION;
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if (context.getForWhom() instanceof Player) {
+                Player player = (Player) context.getForWhom();
+                try {
+                    double price = Double.parseDouble(input);
+                    if (price <= 0) {
+                        player.sendMessage("§cPrice must be more than 0!");
+                    } else {
+                        PlayerInventory playerInventory = player.getInventory();
+                        ItemStack item = playerInventory.getItemInMainHand();
+                        VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
+                        player.sendMessage(ui.listPrice(player, item, price));
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage("§cInvalid input!");
+                }
+                VMGUI.saveInventory(player);
+            } else {
+                // Should not get here.
+                context.getForWhom().sendRawMessage("This is a player-only command.");
             }
-            Player player = (Player) context.getForWhom();
-            PlayerInventory playerInventory = player.getInventory();
-            ItemStack item = playerInventory.getItemInMainHand();
-            VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
-            ui.listPrice(player, item, price);
             return END_OF_CONVERSATION;
-        }
-
-        @Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.doubleValue() > 0;
-        }
-
-        @Override
-        protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-            return "§cInput is not valid!";
         }
     }
 }

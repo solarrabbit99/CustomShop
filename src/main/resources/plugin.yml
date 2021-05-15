@@ -9,12 +9,12 @@ commands:
         description: Removes a shop.
     newshop:
         description: Creates a new shop.
+    gettotal:
+        description: Returns the total number of custom shops owned.
     setcrate:
         description: Set the chest for crate.
         permission: customshop.setcrate
         permission-message: You do not have permission to use this command.
-    gettotal:
-        description: Returns the total number of custom shops owned.
     givekey:
         description: Gives custom shop crate keys to the specified player.
         permission: customshop.givekey
