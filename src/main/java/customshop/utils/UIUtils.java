@@ -2,13 +2,19 @@ package customshop.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -206,6 +212,45 @@ public final class UIUtils {
             ArmorStand armorStand = (ArmorStand) entity;
             String standName = armorStand.getCustomName();
             return standName.equals("§5§lVending Machine");
+        }
+    }
+
+    /**
+     * Checks if the playuer has permission to access the shop's listing and removal
+     * features. Currently only owners, OPs or player with {@code customshop.admin}
+     * permission can access the shop.
+     *
+     * @param armorStand {@link ArmorStand} representing the custom shop
+     * @param player     player of interest
+     * @return {@code true} if player has permissions
+     */
+    public static boolean hasShopPermission(ArmorStand armorStand, Player player) {
+        if (player.hasPermission("customshop.admin") || player.isOp()) {
+            return true;
+        }
+        String customName = armorStand.getCustomName();
+        if (customName == null || !customName.equals("§5§lVending Machine"))
+            return false;
+        else {
+            EntityEquipment equipment = armorStand.getEquipment();
+            ItemStack item = equipment.getChestplate();
+            if (item != null && item.getType() == Material.SHULKER_BOX) {
+                BlockStateMeta blockMeta = (BlockStateMeta) item.getItemMeta();
+                if (!blockMeta.hasDisplayName()) {
+                    Location standLocation = armorStand.getLocation();
+                    Bukkit.getServer().getConsoleSender().sendMessage(
+                            "§6§l[CustomShop] Vending machine's shulker box without display name detected at "
+                                    + standLocation + "!");
+                    return false;
+                }
+                String ownerUUID = blockMeta.getDisplayName();
+                return player.getUniqueId().toString().equals(ownerUUID);
+            } else {
+                Location standLocation = armorStand.getLocation();
+                Bukkit.getServer().getConsoleSender().sendMessage(
+                        "§6§l[CustomShop] Vending machine without shulker box detected at " + standLocation + "!");
+                return false;
+            }
         }
     }
 }
