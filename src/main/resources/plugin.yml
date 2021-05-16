@@ -6,8 +6,10 @@ api-version: 1.16
 
 commands:
     removeshop:
+        alias: [rm]
         description: Removes a shop.
     newshop:
+        alias: [ns]
         description: Creates a new shop.
     gettotal:
         description: Returns the total number of custom shops owned.
@@ -16,6 +18,7 @@ commands:
         permission: customshop.setcrate
         permission-message: You do not have permission to use this command.
     givekey:
+        alias: [givecustomshopkey]
         description: Gives custom shop crate keys to the specified player.
         permission: customshop.givekey
         permission-message: You do not have permission to use this command.

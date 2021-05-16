@@ -1,9 +1,11 @@
 package gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
@@ -11,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import plugin.CustomShop;
 import utils.UIUtils;
-import utils.UUIDMaps;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -20,6 +21,7 @@ public class CreationGUI {
     private static LinkedList<String> names;
     private static LinkedList<Integer> modelData;
     private static List<Integer> defaults;
+    private static HashMap<UUID, CreationGUI> playerToCreationGUI = new HashMap<>();
 
     private List<Integer> unlockedShops;
     private Inventory[] pages;
@@ -114,7 +116,7 @@ public class CreationGUI {
      */
     public static void openFirstPage(Player player) {
         CreationGUI gui = new CreationGUI(player);
-        UUIDMaps.playerToCreationGUI.put(player.getUniqueId(), gui);
+        playerToCreationGUI.put(player.getUniqueId(), gui);
         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(gui.pages[gui.currentPage]));
     }
 
@@ -125,7 +127,7 @@ public class CreationGUI {
      * @throws NullPointerException if player has yet to open the first page
      */
     public static void nextPage(Player player) {
-        CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
+        CreationGUI gui = playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != gui.pages.length - 1) {
             gui.currentPage++;
             Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
@@ -140,7 +142,7 @@ public class CreationGUI {
      * @throws NullPointerException if player has yet to open the first page
      */
     public static void previousPage(Player player) {
-        CreationGUI gui = UUIDMaps.playerToCreationGUI.get(player.getUniqueId());
+        CreationGUI gui = playerToCreationGUI.get(player.getUniqueId());
         if (gui.currentPage != 0) {
             gui.currentPage--;
             Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
@@ -154,8 +156,9 @@ public class CreationGUI {
      * @param player player that closed the GUI
      * @return {@code true} if the specified player had the GUI open
      */
-    public static boolean playerClosedGUI(Player player) {
-        CreationGUI gui = UUIDMaps.playerToCreationGUI.remove(player.getUniqueId());
+    public static boolean closeGUI(Player player) {
+        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+        CreationGUI gui = playerToCreationGUI.remove(player.getUniqueId());
         return gui != null;
     }
 

@@ -12,11 +12,11 @@ import database.Database;
 import database.SQLite;
 import events.OpenCrate;
 import events.ShopCreation;
+import events.ShopRemoval;
 import events.vm.CloseInventory;
 import events.vm.InteractInventory;
 import events.vm.ListItem;
 import events.vm.OpenInventory;
-import events.vm.ShopRemoval;
 import gui.CreationGUI;
 
 /**

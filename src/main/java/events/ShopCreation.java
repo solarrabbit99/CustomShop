@@ -1,6 +1,5 @@
 package events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -13,7 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import events.vm.VMCreator;
 import plugin.CustomShop;
 import gui.CreationGUI;
@@ -59,8 +57,7 @@ public class ShopCreation implements CommandExecutor, Listener {
             if (holder == null) {
                 ItemMeta itemMeta = item.getItemMeta();
                 if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    CreationGUI.playerClosedGUI(player);
+                    CreationGUI.closeGUI(player);
                 } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eBack")) {
                     CreationGUI.previousPage(player);
                 } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eNext")) {
@@ -70,8 +67,7 @@ public class ShopCreation implements CommandExecutor, Listener {
                     int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
                     if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player).intValue() >= maxShops) {
                         player.sendMessage("§cYou have reached the maximum number of custom shops created!");
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                        CreationGUI.playerClosedGUI(player);
+                        CreationGUI.closeGUI(player);
                         return;
                     }
                     if (targetBlock == null) {
@@ -81,8 +77,7 @@ public class ShopCreation implements CommandExecutor, Listener {
                     Location location = getCreationLocation(targetBlock, player);
                     ShopCreator creator = getShopCreator(itemMeta);
                     player.sendMessage(creator.createShop(location, player, item));
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    CreationGUI.playerClosedGUI(player);
+                    CreationGUI.closeGUI(player);
                 }
             }
         }

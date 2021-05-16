@@ -3,8 +3,6 @@ package utils;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
-
-import gui.CreationGUI;
 import gui.VMGUI;
 
 /**
@@ -13,8 +11,6 @@ import gui.VMGUI;
  * reboots should be saved here.
  */
 public class UUIDMaps {
-    /** Maps player's UUID to a {@link CreationGUI}. */
-    public static HashMap<UUID, CreationGUI> playerToCreationGUI = new HashMap<>();
     /** Maps player's UUID to an armor stand's UUID. */
     public static HashMap<UUID, UUID> playerToArmorStand = new HashMap<>();
     /** Maps player's UUID to a {@link VMGUI}. */

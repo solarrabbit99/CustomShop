@@ -5,46 +5,31 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import plugin.CustomShop;
+import events.ShopRemover;
 
-public class ShopRemoval implements CommandExecutor {
+/**
+ * Vending machine's shop remover.
+ */
+public class VMRemover extends ShopRemover {
+    public VMRemover(Block targetBlock) {
+        super(targetBlock);
+    }
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return false;
-        }
-        Player player = (Player) sender;
-        Block targetBlock = player.getTargetBlockExact(5);
-        if (targetBlock == null) {
-            player.sendMessage("§cYou are not targeting any block...");
-            return false;
-        }
+    public void removeShop() {
         Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
                 targetBlock.getZ() + 0.5);
-        if (loc.getBlock().getType() != Material.BARRIER) {
-            player.sendMessage("§cInvalid target...");
-            return false;
-        }
+
         int delta = linearSearch(targetBlock) ? 1 : -1;
         Location locTheOther = new Location(targetBlock.getWorld(), targetBlock.getX(), targetBlock.getY() + delta,
                 targetBlock.getZ());
         Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
         Entity shopEntity = (Entity) list.toArray()[0];
-        if (shopEntity instanceof ArmorStand) {
-            shopEntity.remove();
-            loc.getBlock().setType(Material.AIR);
-            locTheOther.getBlock().setType(Material.AIR);
-            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
-        } else {
-            player.sendMessage("§cInvalid target...");
-        }
-        return false;
+
+        shopEntity.remove();
+        loc.getBlock().setType(Material.AIR);
+        locTheOther.getBlock().setType(Material.AIR);
     }
 
     /**
