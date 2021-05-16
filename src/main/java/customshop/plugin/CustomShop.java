@@ -15,6 +15,7 @@ import customshop.crate.SetCrate;
 import customshop.database.Database;
 import customshop.database.SQLite;
 import customshop.gui.CreationGUI;
+import customshop.player.PlayerLeave;
 import customshop.player.PlayerMove;
 import customshop.player.PlayerState;
 import customshop.player.PlayerTeleport;
@@ -59,6 +60,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new OpenCrate(), this);
         pluginManager.registerEvents(new PlayerTeleport(), this);
         pluginManager.registerEvents(new PlayerMove(), this);
+        pluginManager.registerEvents(new PlayerLeave(), this);
         getCommand("newshop").setExecutor(new ShopCreation());
         getCommand("removeshop").setExecutor(new ShopRemoval());
         getCommand("setcrate").setExecutor(new SetCrate(this));

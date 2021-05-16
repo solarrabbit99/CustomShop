@@ -11,11 +11,12 @@ import customshop.gui.ShopGUI;
 import customshop.gui.VMGUI;
 
 /**
- * Contains all the mappings from player's UUID to corresponding interacting
+ * Contains all the references from player to corresponding interacting
  * entities/items/GUIs. Any data that is not required of the server to save over
  * reboots should be saved here.
  */
 public class PlayerState {
+    /** Mapping of player to player state. */
     private static HashMap<Player, PlayerState> playerStates = new HashMap<>();
 
     private ArmorStand armorStand;
@@ -29,6 +30,13 @@ public class PlayerState {
         playerStates.put(player, this);
     }
 
+    /**
+     * Factory method to construct player state and create reference from player if
+     * not already existing.
+     *
+     * @param player player of interest
+     * @return player state associated with the player
+     */
     public static PlayerState getPlayerState(Player player) {
         PlayerState result = playerStates.get(player);
         if (result == null) {
@@ -42,6 +50,12 @@ public class PlayerState {
         this.shopGUI = gui;
     }
 
+    /**
+     * ShopGUI getter. Returns the ShopGUI that a player has opened, {@code null} if
+     * player has no ShopGUIs opened.
+     *
+     * @return ShopGUI opened by player
+     */
     public ShopGUI getShopGUI() {
         return this.shopGUI;
     }

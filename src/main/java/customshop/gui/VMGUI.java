@@ -96,7 +96,7 @@ public class VMGUI implements ShopGUI {
     public static void saveInventory(Player player) {
         PlayerState state = PlayerState.getPlayerState(player);
         ArmorStand armorStand = state.getArmorStand();
-        // TODO: Does non-null armorStand imply non-null ShopGUI?
+        // Does non-null armorStand imply non-null ShopGUI?
         if (armorStand != null) {
             VMGUI ui = (VMGUI) state.getShopGUI();
             HashMap<ItemStack, Double> withPrices = new HashMap<>();
