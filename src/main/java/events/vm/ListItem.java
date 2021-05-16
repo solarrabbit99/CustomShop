@@ -82,7 +82,7 @@ public class ListItem implements Listener {
      * to the item in hand.
      */
     private static class PricePrompt extends StringPrompt {
-
+        // TODO: Set cancel to true for teleportation/movement/timer/leave.
         @Override
         public String getPromptText(ConversationContext context) {
             return "§aEnter the price of the item that you want to list...";
@@ -93,7 +93,7 @@ public class ListItem implements Listener {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 try {
-                    double price = Double.parseDouble(input);
+                    double price = Math.round(Double.parseDouble(input) * 100) / 100;
                     if (price <= 0) {
                         player.sendMessage("§cPrice must be more than 0!");
                     } else {

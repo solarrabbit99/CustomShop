@@ -1,5 +1,7 @@
 package commands;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,22 +25,26 @@ public class GiveKey implements CommandExecutor {
         Player player = Bukkit.getPlayerExact(args[0]);
         if (player == null) {
             sender.sendMessage("§cCannot find specified player!");
-            return false;
-        }
-        if (player.getInventory().firstEmpty() == -1) {
-            // TODO: Handle giving more than a stack.
-            sender.sendMessage("§cSpecified player doesn't have space in his/her inventory!");
-            return false;
+            return true;
         }
         try {
             int amount = Integer.parseInt(args[1]);
             ItemStack keys = OpenCrate.getCrateKey(amount);
-            sender.sendMessage("§aGiven " + amount + " keys to specified player!");
-            player.getInventory().addItem(keys);
-            return true;
+            HashMap<Integer, ItemStack> remain = player.getInventory().addItem(keys);
+            if (remain.isEmpty()) {
+                sender.sendMessage("§aGiven " + amount + " keys to specified player!");
+            } else {
+                int overflow = remain.get(0).getAmount();
+                if (overflow == amount) {
+                    sender.sendMessage("§cSpecified player doesn't have space in his/her inventory!");
+                } else {
+                    sender.sendMessage("§6Specified player doesn't have enough space in his/her inventory, given "
+                            + (amount - overflow) + " keys to specified player!");
+                }
+            }
         } catch (NumberFormatException e) {
             sender.sendMessage("§cInvalid input amount!");
         }
-        return false;
+        return true;
     }
 }
