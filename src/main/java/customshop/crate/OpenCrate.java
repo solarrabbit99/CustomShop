@@ -15,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import customshop.gui.CreationGUI;
 import customshop.plugin.CustomShop;
 
 /** Encapsulated an event of player attempting to open a custom shop crate. */
@@ -62,15 +63,17 @@ public class OpenCrate implements Listener {
                 itemInHand.setAmount(itemInHand.getAmount() - 1);
                 player.getInventory().setItemInMainHand(itemInHand);
                 Random rng = new Random();
-                int unlocked = rng.nextInt(3) + 100001;
+                int index = rng.nextInt(CreationGUI.noOfItems);
+                int unlocked = CreationGUI.modelData.get(index);
+                String name = CreationGUI.names.get(index);
                 List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
                 player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.0F);
                 if (lst.contains(unlocked)) {
-                    player.sendMessage("§6You already have " + unlocked + " unlocked :(");
+                    player.sendMessage("§6You already have " + name + " unlocked :(");
                 } else {
                     lst.add(unlocked);
                     CustomShop.getPlugin().getDatabase().setUnlockedShops(player, lst);
-                    player.sendMessage("§aNew custom shop unlocked! " + unlocked);
+                    player.sendMessage("§aNew custom shop unlocked! " + name);
                 }
             }
         }

@@ -16,12 +16,13 @@ import customshop.utils.UIUtils;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
+    public static int noOfItems;
+    public static LinkedList<String> names;
+    public static LinkedList<Integer> modelData;
+
     private static int noOfPages;
-    private static int noOfItems;
-    private static LinkedList<String> names;
-    private static LinkedList<Integer> modelData;
     private static List<Integer> defaults;
-    private static HashMap<UUID, CreationGUI> playerToCreationGUI = new HashMap<>();
+    private static HashMap<UUID, CreationGUI> playerToCreationGUI;
 
     private List<Integer> unlockedShops;
     private Inventory[] pages;
@@ -47,6 +48,7 @@ public class CreationGUI {
         names = new LinkedList<>();
         modelData = new LinkedList<>();
         defaults = new ArrayList<>();
+        playerToCreationGUI = new HashMap<>();
         ConsoleCommandSender logger = CustomShop.getPlugin().getServer().getConsoleSender();
 
         int defaultVM = CustomShop.getPlugin().getConfig().getInt("defaults.vending-machine");
