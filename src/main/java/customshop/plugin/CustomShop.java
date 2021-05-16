@@ -15,6 +15,8 @@ import customshop.crate.SetCrate;
 import customshop.database.Database;
 import customshop.database.SQLite;
 import customshop.gui.CreationGUI;
+import customshop.player.PlayerState;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,7 +74,7 @@ public final class CustomShop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        CloseInventory.saveAll();
+        PlayerState.saveAll();
         super.onDisable();
     }
 

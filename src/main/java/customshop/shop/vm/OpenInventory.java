@@ -1,7 +1,6 @@
 package customshop.shop.vm;
 
 import java.util.Collection;
-import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,8 +12,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import customshop.gui.VMGUI;
+import customshop.player.PlayerState;
 import customshop.utils.UIUtils;
-import customshop.utils.UUIDMaps;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for
@@ -42,17 +41,14 @@ public class OpenInventory implements Listener {
         if (UIUtils.validate((Entity) list.toArray()[0])) {
             evt.setCancelled(true);
             ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
-            UUID armorStandID = armorStand.getUniqueId();
-            if (UUIDMaps.playerToArmorStand.containsValue(armorStandID)) {
+            PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
+            if (!state.setArmorStand(armorStand)) {
                 evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
             VMGUI ui = new VMGUI(armorStand);
             ui.openUI(evt.getPlayer());
-
-            UUID playerID = evt.getPlayer().getUniqueId();
-            UUIDMaps.playerToArmorStand.put(playerID, armorStandID);
-            UUIDMaps.playerToVendingUI.put(playerID, ui);
+            state.setShopGUI(ui);
         }
     }
 }

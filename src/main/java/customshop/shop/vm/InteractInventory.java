@@ -1,6 +1,5 @@
 package customshop.shop.vm;
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationContext;
@@ -16,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import customshop.plugin.CustomShop;
-import customshop.utils.UUIDMaps;
 import customshop.gui.VMGUI;
+import customshop.player.PlayerState;
 
 /**
  * Listener for players interacting with custom shops' GUI, containing handlers
@@ -39,7 +38,6 @@ public class InteractInventory implements Listener {
         }
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
-        UUID playerID = player.getUniqueId();
         String title = evt.getView().getTitle();
         if (title.equalsIgnoreCase("§5§lVending Machine")) {
             if (holder == null) {
@@ -47,9 +45,10 @@ public class InteractInventory implements Listener {
                 if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
-                    VMGUI ui = UUIDMaps.playerToVendingUI.get(playerID);
+                    PlayerState state = PlayerState.getPlayerState(player);
+                    VMGUI ui = (VMGUI) state.getShopGUI();
                     ItemStack item = ui.getItem(evt.getSlot());
-                    UUIDMaps.purchasing.put(playerID, item);
+                    state.startPurchase(item);
                     Conversation conversation = purchasingConversation.buildConversation(player);
                     conversation.begin();
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
@@ -82,7 +81,8 @@ public class InteractInventory implements Listener {
         public Prompt acceptInput(ConversationContext context, String input) {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
-                ItemStack purchasingItem = UUIDMaps.purchasing.remove(player.getUniqueId());
+                PlayerState state = PlayerState.getPlayerState(player);
+                ItemStack purchasingItem = state.removePurchase();
                 try {
                     int inputInt = Integer.parseInt(input);
                     double inputDouble = Double.parseDouble(input);
@@ -90,7 +90,7 @@ public class InteractInventory implements Listener {
                     if (inputInt != inputDouble || inputDouble <= 0) {
                         player.sendMessage("§cInvalid input!");
                     } else if (context.getForWhom() instanceof Player) {
-                        VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
+                        VMGUI ui = (VMGUI) state.getShopGUI();
                         player.sendMessage(ui.purchaseItem(player, purchasingItem, inputInt));
                     }
                 } catch (NumberFormatException e) {

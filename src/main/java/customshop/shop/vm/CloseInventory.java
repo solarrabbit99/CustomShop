@@ -1,14 +1,11 @@
 package customshop.shop.vm;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-
 import customshop.gui.VMGUI;
-import customshop.utils.UUIDMaps;
 
 /**
  * Listener for {@link InventoryCloseEvent} and saves player's inventory, this
@@ -35,13 +32,5 @@ public class CloseInventory implements Listener {
     @EventHandler
     public void playerLeave(PlayerKickEvent evt) {
         VMGUI.saveInventory(evt.getPlayer());
-    }
-
-    /**
-     * Save all opened UIs. Used when plugin disables.
-     */
-    public static void saveAll() {
-        UUIDMaps.playerToArmorStand
-                .forEach((playerID, armorStandID) -> VMGUI.saveInventory((Player) Bukkit.getEntity(playerID)));
     }
 }

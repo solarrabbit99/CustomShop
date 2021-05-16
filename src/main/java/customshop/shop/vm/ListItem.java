@@ -1,13 +1,16 @@
 package customshop.shop.vm;
 
 import java.util.Collection;
-import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.conversations.ConversationAbandonedListener;
+import org.bukkit.conversations.ConversationCanceller;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.ArmorStand;
@@ -22,8 +25,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import customshop.plugin.CustomShop;
 import customshop.utils.UIUtils;
-import customshop.utils.UUIDMaps;
 import customshop.gui.VMGUI;
+import customshop.player.PlayerState;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for
@@ -48,9 +51,9 @@ public class ListItem implements Listener {
         if (UIUtils.validate((Entity) list.toArray()[0])) {
             evt.setCancelled(true);
             ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
-            UUID armorStandID = armorStand.getUniqueId();
             Player player = evt.getPlayer();
-            if (UUIDMaps.playerToArmorStand.containsValue(armorStandID)) {
+            PlayerState state = PlayerState.getPlayerState(player);
+            if (!state.setArmorStand(armorStand)) {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
@@ -61,9 +64,7 @@ public class ListItem implements Listener {
                 Conversation conversation = listingConversation.buildConversation(player);
                 conversation.begin();
             }
-            UUID playerID = player.getUniqueId();
-            UUIDMaps.playerToArmorStand.put(playerID, armorStandID);
-            UUIDMaps.playerToVendingUI.put(playerID, ui);
+            state.setShopGUI(ui);
         }
     }
 
@@ -74,7 +75,19 @@ public class ListItem implements Listener {
      */
     public static void initConversationFactory(CustomShop plugin) {
         listingConversation = new ConversationFactory(plugin).withFirstPrompt(new PricePrompt()).withModality(false)
-                .withLocalEcho(false);
+                .withLocalEcho(false)
+                .withConversationCanceller(new InactivityConversationCanceller(CustomShop.getPlugin(), 10))
+                .addConversationAbandonedListener(new ConversationAbandonedListener() {
+                    @Override
+                    public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
+                        ConversationCanceller canceller = abandonedEvent.getCanceller();
+                        if (canceller instanceof InactivityConversationCanceller) {
+                            Player player = (Player) abandonedEvent.getContext().getForWhom();
+                            VMGUI.saveInventory(player);
+                            player.sendMessage("§cShop listing cancelled...");
+                        }
+                    }
+                });
     }
 
     /**
@@ -99,7 +112,7 @@ public class ListItem implements Listener {
                     } else {
                         PlayerInventory playerInventory = player.getInventory();
                         ItemStack item = playerInventory.getItemInMainHand();
-                        VMGUI ui = UUIDMaps.playerToVendingUI.get(player.getUniqueId());
+                        VMGUI ui = (VMGUI) PlayerState.getPlayerState(player).getShopGUI();
                         player.sendMessage(ui.listPrice(player, item, price));
                     }
                 } catch (NumberFormatException e) {

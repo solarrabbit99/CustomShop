@@ -12,13 +12,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import customshop.player.PlayerState;
 import customshop.plugin.CustomShop;
 import customshop.utils.UIUtils;
-import customshop.utils.UUIDMaps;
 import net.milkbowl.vault.economy.Economy;
 
 /** Custom UI for vending machines. */
-public class VMGUI {
+public class VMGUI implements ShopGUI {
     /**
      * Inventory that is viewed by the player, possibly consisting of UI elements
      * such as exit buttons, next page etc. Each item for sale is also labelled with
@@ -94,11 +94,11 @@ public class VMGUI {
      * @param player player viewing the inventory
      */
     public static void saveInventory(Player player) {
-        UUID playerID = player.getUniqueId();
-        UUID armorStandID = UUIDMaps.playerToArmorStand.get(playerID);
-        if (armorStandID != null) {
-            ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUIDMaps.playerToArmorStand.get(playerID));
-            VMGUI ui = UUIDMaps.playerToVendingUI.get(playerID);
+        PlayerState state = PlayerState.getPlayerState(player);
+        ArmorStand armorStand = state.getArmorStand();
+        // TODO: Does non-null armorStand imply non-null ShopGUI?
+        if (armorStand != null) {
+            VMGUI ui = (VMGUI) state.getShopGUI();
             HashMap<ItemStack, Double> withPrices = new HashMap<>();
             for (int i = 0; i < 27; i++) {
                 ui.sourceImage.getInventory().setItem(i, ui.inventory.getItem(i));
@@ -130,8 +130,7 @@ public class VMGUI {
             shulkerMeta.setBlockState(ui.sourceImage);
             container.setItemMeta(shulkerMeta);
             armorStand.getEquipment().setChestplate(container);
-            UUIDMaps.playerToVendingUI.remove(playerID);
-            UUIDMaps.playerToArmorStand.remove(playerID);
+            state.clearShopInteraction();
         }
     }
 
