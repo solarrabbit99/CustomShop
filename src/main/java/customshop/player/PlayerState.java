@@ -2,7 +2,6 @@ package customshop.player;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.Map.Entry;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
@@ -55,7 +54,7 @@ public class PlayerState {
      * @return {@code true} if there were no players interacting with the ArmorStand
      */
     public boolean setArmorStand(ArmorStand armorStand) {
-        if (getInteractingPlayer(armorStand))
+        if (getInteractingPlayer(armorStand) != null)
             return false;
         this.armorStand = armorStand;
         return true;
@@ -65,14 +64,13 @@ public class PlayerState {
      * Get the player interacting with it.
      *
      * @param armorStand the target {@link ArmorStand}
-     * @return {@code true} if there is a player interacting with the armor stand
+     * @return player interacting with the armor stand
      */
-    private static boolean getInteractingPlayer(ArmorStand armorStand) {
-        Optional<Entry<Player, PlayerState>> entry = playerStates.entrySet().stream()
+    private static Player getInteractingPlayer(ArmorStand armorStand) {
+        return playerStates.entrySet().stream()
                 .filter(e -> armorStand.getUniqueId().equals(
                         Optional.ofNullable(e.getValue().armorStand).map(stand -> stand.getUniqueId()).orElse(null)))
-                .findFirst();
-        return entry.isPresent();
+                .findFirst().map(e -> e.getKey()).orElse(null);
     }
 
     public ArmorStand getArmorStand() {
