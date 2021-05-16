@@ -1,9 +1,12 @@
 package customshop.shop.vm;
 
 import org.bukkit.Bukkit;
-import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.conversations.ConversationAbandonedListener;
+import org.bukkit.conversations.ConversationCanceller;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
@@ -48,9 +51,7 @@ public class InteractInventory implements Listener {
                     PlayerState state = PlayerState.getPlayerState(player);
                     VMGUI ui = (VMGUI) state.getShopGUI();
                     ItemStack item = ui.getItem(evt.getSlot());
-                    state.startPurchase(item);
-                    Conversation conversation = purchasingConversation.buildConversation(player);
-                    conversation.begin();
+                    state.startPurchase(item, purchasingConversation);
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }
             }
@@ -65,7 +66,20 @@ public class InteractInventory implements Listener {
      */
     public static void initConversationFactory(Plugin plugin) {
         purchasingConversation = new ConversationFactory(plugin).withFirstPrompt(new AmountPrompt()).withModality(false)
-                .withLocalEcho(false);
+                .withLocalEcho(false)
+                .withConversationCanceller(new InactivityConversationCanceller(CustomShop.getPlugin(), 10))
+                .addConversationAbandonedListener(new ConversationAbandonedListener() {
+                    @Override
+                    public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
+                        ConversationCanceller canceller = abandonedEvent.getCanceller();
+                        if (canceller != null) {
+                            Player player = (Player) abandonedEvent.getContext().getForWhom();
+                            VMGUI.saveInventory(player);
+                            player.sendMessage("§cShop purchase cancelled...");
+                        }
+                    }
+                });
+        ;
     }
 
     /**

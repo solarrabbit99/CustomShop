@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Map.Entry;
 import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,8 +23,10 @@ public class PlayerState {
     private ShopGUI shopGUI;
     private ItemStack purchase;
     private Conversation conversation;
+    private Player player;
 
     private PlayerState(Player player) {
+        this.player = player;
         playerStates.put(player, this);
     }
 
@@ -34,10 +37,6 @@ public class PlayerState {
         } else {
             return result;
         }
-    }
-
-    public Conversation getConversation() {
-        return this.conversation;
     }
 
     public void setShopGUI(ShopGUI gui) {
@@ -86,12 +85,56 @@ public class PlayerState {
     }
 
     /**
-     * Assign item to a player that the player is purchasing.
+     * Assign item to a player that the player is purchasing and begin purchase
+     * conversation if the player is not already conversing.
      *
-     * @param item that the player is purchasing
+     * @param item    that the player is purchasing
+     * @param factory {@link ConversationFactory} to build conversation for the
+     *                player
+     * @return {@code true} if player was not conversing
      */
-    public void startPurchase(ItemStack item) {
-        this.purchase = item;
+    public boolean startPurchase(ItemStack item, ConversationFactory factory) {
+        if (!player.isConversing()) {
+            this.purchase = item;
+            conversation = factory.buildConversation(player);
+            conversation.begin();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Begin conversation if the player is not already conversing.
+     *
+     * @param factory {@link ConversationFactory} to build conversation for the
+     *                player
+     * @return {@code true} if player was not conversing
+     */
+    public boolean startConversation(ConversationFactory factory) {
+        if (!player.isConversing()) {
+            conversation = factory.buildConversation(player);
+            conversation.begin();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Abandons conversation if there is one assigned to the player.
+     *
+     * @return {@code true} if there was a CustomShop conversation assigned to the
+     *         player
+     */
+    public boolean abandonConversation() {
+        if (conversation != null) {
+            player.abandonConversation(conversation);
+            this.conversation = null;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

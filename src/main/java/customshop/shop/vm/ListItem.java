@@ -4,7 +4,6 @@ import java.util.Collection;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationCanceller;
@@ -61,8 +60,7 @@ public class ListItem implements Listener {
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
                 ui.openOwnerUI(player);
             } else {
-                Conversation conversation = listingConversation.buildConversation(player);
-                conversation.begin();
+                state.startConversation(listingConversation);
             }
             state.setShopGUI(ui);
         }
@@ -81,7 +79,7 @@ public class ListItem implements Listener {
                     @Override
                     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
-                        if (canceller instanceof InactivityConversationCanceller) {
+                        if (canceller != null) {
                             Player player = (Player) abandonedEvent.getContext().getForWhom();
                             VMGUI.saveInventory(player);
                             player.sendMessage("§cShop listing cancelled...");

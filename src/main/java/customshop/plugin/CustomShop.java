@@ -16,7 +16,7 @@ import customshop.database.Database;
 import customshop.database.SQLite;
 import customshop.gui.CreationGUI;
 import customshop.player.PlayerState;
-
+import customshop.player.PlayerTeleport;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,6 +56,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new ListItem(), this);
         pluginManager.registerEvents(new ShopCreation(), this);
         pluginManager.registerEvents(new OpenCrate(), this);
+        pluginManager.registerEvents(new PlayerTeleport(), this);
         getCommand("newshop").setExecutor(new ShopCreation());
         getCommand("removeshop").setExecutor(new ShopRemoval());
         getCommand("setcrate").setExecutor(new SetCrate(this));
