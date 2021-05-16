@@ -1,4 +1,4 @@
-package shop.vm;
+package customshop.shop.vm;
 
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -15,9 +15,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import plugin.CustomShop;
-import utils.UUIDMaps;
-import gui.VMGUI;
+import customshop.plugin.CustomShop;
+import customshop.utils.UUIDMaps;
+import customshop.gui.VMGUI;
 
 /**
  * Listener for players interacting with custom shops' GUI, containing handlers

@@ -1,4 +1,4 @@
-package shop;
+package customshop.shop;
 
 import java.util.Collection;
 import org.bukkit.Location;
@@ -10,9 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import plugin.CustomShop;
-import shop.vm.VMRemover;
+import customshop.plugin.CustomShop;
+import customshop.shop.vm.VMRemover;
 
 public class ShopRemoval implements CommandExecutor {
     @Override

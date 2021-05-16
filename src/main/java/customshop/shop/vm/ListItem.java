@@ -1,4 +1,4 @@
-package shop.vm;
+package customshop.shop.vm;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -20,10 +20,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import plugin.CustomShop;
-import utils.UIUtils;
-import utils.UUIDMaps;
-import gui.VMGUI;
+import customshop.plugin.CustomShop;
+import customshop.utils.UIUtils;
+import customshop.utils.UUIDMaps;
+import customshop.gui.VMGUI;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for

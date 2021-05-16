@@ -1,4 +1,4 @@
-package gui;
+package customshop.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import plugin.CustomShop;
-import utils.UIUtils;
+import customshop.plugin.CustomShop;
+import customshop.utils.UIUtils;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {

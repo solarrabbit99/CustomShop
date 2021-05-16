@@ -1,4 +1,4 @@
-package shop.vm;
+package customshop.shop.vm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 
-import gui.VMGUI;
-import utils.UUIDMaps;
+import customshop.gui.VMGUI;
+import customshop.utils.UUIDMaps;
 
 /**
  * Listener for {@link InventoryCloseEvent} and saves player's inventory, this

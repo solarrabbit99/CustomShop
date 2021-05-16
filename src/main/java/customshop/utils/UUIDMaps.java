@@ -1,9 +1,9 @@
-package utils;
+package customshop.utils;
 
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
-import gui.VMGUI;
+import customshop.gui.VMGUI;
 
 /**
  * Contains all the mappings from player's UUID to corresponding interacting

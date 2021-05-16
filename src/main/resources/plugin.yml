@@ -1,4 +1,4 @@
-main: plugin.CustomShop
+main: customshop.plugin.CustomShop
 name: CustomShop
 version: 1.0
 author: SolarRabbit

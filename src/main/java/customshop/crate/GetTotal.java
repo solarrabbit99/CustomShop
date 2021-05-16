@@ -1,10 +1,10 @@
-package crate;
+package customshop.crate;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 /**
  * A command executor that returns the number of custom shops owned by the

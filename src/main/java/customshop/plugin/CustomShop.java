@@ -1,25 +1,23 @@
-package plugin;
+package customshop.plugin;
 
 import net.milkbowl.vault.economy.Economy;
-import shop.ShopCreation;
-import shop.ShopRemoval;
-import shop.vm.CloseInventory;
-import shop.vm.InteractInventory;
-import shop.vm.ListItem;
-import shop.vm.OpenInventory;
-
+import customshop.shop.ShopCreation;
+import customshop.shop.ShopRemoval;
+import customshop.shop.vm.CloseInventory;
+import customshop.shop.vm.InteractInventory;
+import customshop.shop.vm.ListItem;
+import customshop.shop.vm.OpenInventory;
+import customshop.crate.GetTotal;
+import customshop.crate.GiveKey;
+import customshop.crate.LockAll;
+import customshop.crate.OpenCrate;
+import customshop.crate.SetCrate;
+import customshop.database.Database;
+import customshop.database.SQLite;
+import customshop.gui.CreationGUI;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import crate.GetTotal;
-import crate.GiveKey;
-import crate.LockAll;
-import crate.OpenCrate;
-import crate.SetCrate;
-import database.Database;
-import database.SQLite;
-import gui.CreationGUI;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.

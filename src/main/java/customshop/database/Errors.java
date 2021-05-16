@@ -1,7 +1,7 @@
-package database;
+package customshop.database;
 
 import java.util.logging.Level;
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 /** Error loggers. */
 public class Errors {

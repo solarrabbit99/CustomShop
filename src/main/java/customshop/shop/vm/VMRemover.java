@@ -1,11 +1,10 @@
-package shop.vm;
+package customshop.shop.vm;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-
-import shop.ShopRemover;
+import customshop.shop.ShopRemover;
 
 /**
  * Vending machine's shop remover.

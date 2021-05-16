@@ -1,4 +1,4 @@
-package crate;
+package customshop.crate;
 
 import java.util.HashMap;
 import org.bukkit.Bukkit;

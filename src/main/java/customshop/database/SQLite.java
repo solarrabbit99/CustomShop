@@ -1,4 +1,4 @@
-package database;
+package customshop.database;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 public class SQLite extends Database {
     private static String dbname = "player_data";

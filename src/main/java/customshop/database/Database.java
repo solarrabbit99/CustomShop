@@ -1,4 +1,4 @@
-package database;
+package customshop.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.entity.Player;
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 /**
  * Parent class of a database loader. Contains implementation of data retrieval

@@ -1,4 +1,4 @@
-package crate;
+package customshop.crate;
 
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 /** Locks and resets all unlocked custom shops of the specified player. */
 public class LockAll implements CommandExecutor {

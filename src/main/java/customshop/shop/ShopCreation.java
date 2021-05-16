@@ -1,4 +1,4 @@
-package shop;
+package customshop.shop;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,10 +12,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import plugin.CustomShop;
-import shop.vm.VMCreator;
-import gui.CreationGUI;
+import customshop.plugin.CustomShop;
+import customshop.shop.vm.VMCreator;
+import customshop.gui.CreationGUI;
 
 /**
  * Encapsulates a shop creation process. Player runs {@code /newshop} to spawn a

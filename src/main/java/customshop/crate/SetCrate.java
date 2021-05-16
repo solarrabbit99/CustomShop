@@ -1,4 +1,4 @@
-package crate;
+package customshop.crate;
 
 import java.io.File;
 import java.io.IOException;

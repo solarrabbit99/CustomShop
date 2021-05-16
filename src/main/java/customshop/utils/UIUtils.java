@@ -1,4 +1,4 @@
-package utils;
+package customshop.utils;
 
 import java.util.ArrayList;
 import java.util.List;

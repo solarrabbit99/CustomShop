@@ -1,4 +1,4 @@
-package crate;
+package customshop.crate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import plugin.CustomShop;
+import customshop.plugin.CustomShop;
 
 /** Encapsulated an event of player attempting to open a custom shop crate. */
 public class OpenCrate implements Listener {

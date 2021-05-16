@@ -1,4 +1,4 @@
-package shop;
+package customshop.shop;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
