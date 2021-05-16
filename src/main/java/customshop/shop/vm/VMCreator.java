@@ -22,7 +22,8 @@ import customshop.utils.UIUtils;
 public class VMCreator implements ShopCreator {
     @Override
     public String createShop(Location location, Player owner, ItemStack item) {
-        if (item.getItemMeta().getCustomModelData() == 100000) {
+        if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
+                .getInt("defaults.vending-machine")) {
             return "§cYou have yet to unlock the selected Vending Machine!";
         }
 

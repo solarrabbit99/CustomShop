@@ -1,6 +1,8 @@
 package customshop.shop.vm;
 
 import java.util.Collection;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,9 +21,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import customshop.plugin.CustomShop;
 import customshop.utils.UIUtils;
 import customshop.gui.VMGUI;
@@ -51,6 +55,10 @@ public class ListItem implements Listener {
             evt.setCancelled(true);
             ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
             Player player = evt.getPlayer();
+            if (!isOwner(armorStand, player)) {
+                player.sendMessage("§cYou do not own the vending machine!");
+                return;
+            }
             PlayerState state = PlayerState.getPlayerState(player);
             if (!state.setArmorStand(armorStand)) {
                 player.sendMessage("§cVending machine current in use, please wait...");
@@ -93,7 +101,6 @@ public class ListItem implements Listener {
      * to the item in hand.
      */
     private static class PricePrompt extends StringPrompt {
-        // TODO: Set cancel to true for teleportation/movement/timer/leave.
         @Override
         public String getPromptText(ConversationContext context) {
             return "§aEnter the price of the item that you want to list...";
@@ -122,6 +129,33 @@ public class ListItem implements Listener {
                 context.getForWhom().sendRawMessage("This is a player-only command.");
             }
             return END_OF_CONVERSATION;
+        }
+    }
+
+    private static boolean isOwner(ArmorStand armorStand, Player player) {
+        String customName = armorStand.getCustomName();
+        if (customName == null || !customName.equals("§5§lVending Machine"))
+            return false;
+        else {
+            EntityEquipment equipment = armorStand.getEquipment();
+            ItemStack item = equipment.getChestplate();
+            if (item != null && item.getType() == Material.SHULKER_BOX) {
+                BlockStateMeta blockMeta = (BlockStateMeta) item.getItemMeta();
+                if (!blockMeta.hasDisplayName()) {
+                    Location standLocation = armorStand.getLocation();
+                    Bukkit.getServer().getConsoleSender().sendMessage(
+                            "§6§l[CustomShop] Vending machine's shulker box without display name detected at "
+                                    + standLocation + "!");
+                    return false;
+                }
+                String ownerUUID = blockMeta.getDisplayName();
+                return player.getUniqueId().toString().equals(ownerUUID);
+            } else {
+                Location standLocation = armorStand.getLocation();
+                Bukkit.getServer().getConsoleSender().sendMessage(
+                        "§6§l[CustomShop] Vending machine without shulker box detected at " + standLocation + "!");
+                return false;
+            }
         }
     }
 }
