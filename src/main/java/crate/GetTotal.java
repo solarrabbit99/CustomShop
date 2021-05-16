@@ -1,4 +1,4 @@
-package commands;
+package crate;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

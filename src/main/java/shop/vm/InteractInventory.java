@@ -1,4 +1,4 @@
-package events.vm;
+package shop.vm;
 
 import java.util.UUID;
 import org.bukkit.Bukkit;

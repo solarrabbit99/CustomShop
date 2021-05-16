@@ -1,4 +1,4 @@
-package commands;
+package crate;
 
 import java.util.ArrayList;
 import org.bukkit.Bukkit;

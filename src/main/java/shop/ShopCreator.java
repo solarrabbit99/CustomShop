@@ -1,4 +1,4 @@
-package events;
+package shop;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

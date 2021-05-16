@@ -1,4 +1,4 @@
-package events.vm;
+package shop.vm;
 
 import java.util.List;
 import org.bukkit.Location;
@@ -12,8 +12,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
-import events.ShopCreator;
 import plugin.CustomShop;
+import shop.ShopCreator;
 import utils.UIUtils;
 
 /**

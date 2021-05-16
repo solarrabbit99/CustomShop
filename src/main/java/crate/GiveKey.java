@@ -1,4 +1,4 @@
-package commands;
+package crate;
 
 import java.util.HashMap;
 import org.bukkit.Bukkit;
@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import events.OpenCrate;
 
 /**
  * Gives specified player in the first position of args when using

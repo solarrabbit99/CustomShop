@@ -1,4 +1,4 @@
-package events;
+package shop;
 
 import org.bukkit.block.Block;
 

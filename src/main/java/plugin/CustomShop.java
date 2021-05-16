@@ -1,22 +1,24 @@
 package plugin;
 
 import net.milkbowl.vault.economy.Economy;
+import shop.ShopCreation;
+import shop.ShopRemoval;
+import shop.vm.CloseInventory;
+import shop.vm.InteractInventory;
+import shop.vm.ListItem;
+import shop.vm.OpenInventory;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import commands.GetTotal;
-import commands.GiveKey;
-import commands.LockAll;
-import commands.SetCrate;
+
+import crate.GetTotal;
+import crate.GiveKey;
+import crate.LockAll;
+import crate.OpenCrate;
+import crate.SetCrate;
 import database.Database;
 import database.SQLite;
-import events.OpenCrate;
-import events.ShopCreation;
-import events.ShopRemoval;
-import events.vm.CloseInventory;
-import events.vm.InteractInventory;
-import events.vm.ListItem;
-import events.vm.OpenInventory;
 import gui.CreationGUI;
 
 /**

@@ -1,4 +1,4 @@
-package events;
+package shop;
 
 import java.util.Collection;
 import org.bukkit.Location;
@@ -10,8 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import events.vm.VMRemover;
+
 import plugin.CustomShop;
+import shop.vm.VMRemover;
 
 public class ShopRemoval implements CommandExecutor {
     @Override
@@ -57,7 +58,7 @@ public class ShopRemoval implements CommandExecutor {
                 ShopRemover result;
                 switch (customName) {
                     case "§5§lVending Machine":
-                        result = new VMRemover(targetBlock);
+                        result = new VMRemover(targetBlock, shopEntity);
                         break;
                     default:
                         result = null;

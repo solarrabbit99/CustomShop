@@ -1,4 +1,4 @@
-package events.vm;
+package shop.vm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

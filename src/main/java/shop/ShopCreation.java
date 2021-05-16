@@ -1,4 +1,4 @@
-package events;
+package shop;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,8 +12,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import events.vm.VMCreator;
+
 import plugin.CustomShop;
+import shop.vm.VMCreator;
 import gui.CreationGUI;
 
 /**
