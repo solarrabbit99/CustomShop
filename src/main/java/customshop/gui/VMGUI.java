@@ -16,21 +16,22 @@ import customshop.plugin.CustomShop;
 import customshop.utils.UIUtils;
 import net.milkbowl.vault.economy.Economy;
 
-/** Custom UI for vending machines. */
+/** Custom GUI for vending machines. */
 public class VMGUI implements ShopGUI {
     /**
-     * Inventory that is viewed by the player, possibly consisting of UI elements
-     * such as exit buttons, next page etc. Each item for sale is also labelled with
-     * their respective prices.
+     * Inventory viewed by normal players, consisting of UI elements such as exit
+     * buttons, next page etc. Each item for sale is also labelled with their
+     * respective prices.
      */
     private Inventory inventoryView;
     /**
-     * A copy of the original inventory of the shulker. This is where the true items
-     * are retrieve in event of purchases.
+     * A copy of the original inventory of the shulker, also inventory viewed by
+     * owners. This is where the true items are retrieve in event of purchases.
      */
     private Inventory inventory;
     /**
-     * A copy of the block state from source container (Shulker Box). Any changes to
+     * A copy of the block state from source container (Shulker Box), required to
+     * save items from {@link #inventory} to the true ShulkerBox. Any changes to
      * this block state does not translate to that of the original source.
      */
     private ShulkerBox sourceImage;
@@ -43,9 +44,13 @@ public class VMGUI implements ShopGUI {
      * String representation of the UUID of the player who owns the shop.
      */
     private final String ownerID;
-
+    /**
+     * Armor stand associated with the shop.
+     */
     private final ArmorStand armorStand;
-
+    /**
+     * Player viewing the GUI.
+     */
     private final Player viewer;
 
     /**
@@ -53,6 +58,7 @@ public class VMGUI implements ShopGUI {
      * container that the armor stand holds.
      *
      * @param armorStand armor stand containing source container
+     * @param player     player viewing the GUI
      */
     public VMGUI(ArmorStand armorStand, Player player) {
         this.armorStand = armorStand;
@@ -86,8 +92,7 @@ public class VMGUI implements ShopGUI {
     }
 
     /**
-     * Save vending machine inventory, and remove the corresponding mapping in the
-     * two HashMaps. This method attempts to replace the original shulker in the
+     * {@inheritDoc} This method attempts to replace the original shulker in the
      * armor stand's chestplate slot with a duplicate of the same name and updated
      * contents, as the original copy is not retrievable.
      * <p>
@@ -95,8 +100,6 @@ public class VMGUI implements ShopGUI {
      * of the same item listed. As the prices of the items are saved according to
      * their positions in the inventory, it is possible to swap two or more items in
      * established slots to make differing prices among items of the same type.
-     *
-     * @param player player viewing the inventory
      */
     public void saveInventories() {
         // Does non-null armorStand imply non-null ShopGUI?
@@ -237,28 +240,22 @@ public class VMGUI implements ShopGUI {
         return this.inventory.getItem(index).clone();
     }
 
-    /**
-     * Open vending machine's UI on specified player.
-     *
-     * @param player player to view the inventory
-     */
+    @Override
     public void openUI() {
         viewer.openInventory(inventoryView);
     }
 
-    /**
-     * Open vending machine's UI on the owner.
-     *
-     * @param player player to view the inventory
-     */
+    @Override
     public void openOwnerUI() {
         viewer.openInventory(inventory);
     }
 
+    @Override
     public ArmorStand getArmorStand() {
         return this.armorStand;
     }
 
+    @Override
     public boolean isOwner() {
         return this.viewer.getUniqueId().toString().equals(this.ownerID);
     }

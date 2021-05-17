@@ -79,7 +79,7 @@ public final class CustomShop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        PlayerState.saveAll();
+        PlayerState.clearAllShopInteractions();
         super.onDisable();
     }
 

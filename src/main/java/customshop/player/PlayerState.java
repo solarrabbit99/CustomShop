@@ -8,6 +8,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import customshop.gui.ShopGUI;
+import customshop.plugin.CustomShop;
 
 /**
  * Contains all the references from player to corresponding interacting
@@ -44,7 +45,16 @@ public class PlayerState {
         }
     }
 
+    /**
+     * Setter for ShopGUI if there isn't already one assigned to the player.
+     *
+     * @param gui a {@link ShopGUI} object
+     */
     public void setShopGUI(ShopGUI gui) {
+        if (this.shopGUI != null) {
+            CustomShop.getPlugin().getServer().getConsoleSender().sendMessage(
+                    "§c§l[CustomShop] Assigning a ShopGUI to player when player has already another ShopGUI assigned!");
+        }
         this.shopGUI = gui;
     }
 
@@ -70,17 +80,6 @@ public class PlayerState {
                         .equals(Optional.ofNullable(e.getValue().shopGUI).map(gui -> gui.getArmorStand())
                                 .map(stand -> stand.getUniqueId()).orElse(null)))
                 .findFirst().map(e -> e.getKey()).orElse(null);
-    }
-
-    // public ArmorStand getArmorStand() {
-    // return this.armorStand;
-    // }
-
-    public void clearShopInteractions() {
-        if (this.shopGUI != null) {
-            this.shopGUI.saveInventories();
-            this.shopGUI = null;
-        }
     }
 
     /**
@@ -148,7 +147,20 @@ public class PlayerState {
         return clone;
     }
 
-    public static void saveAll() {
+    /**
+     * Clear player's shop interactions, if any.
+     */
+    public void clearShopInteractions() {
+        if (this.shopGUI != null) {
+            this.shopGUI.saveInventories();
+            this.shopGUI = null;
+        }
+    }
+
+    /**
+     * Clear all players' shop interactions, if any.
+     */
+    public static void clearAllShopInteractions() {
         playerStates.forEach((player, state) -> state.clearShopInteractions());
     }
 }
