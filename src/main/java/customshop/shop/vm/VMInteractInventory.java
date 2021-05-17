@@ -25,9 +25,8 @@ import customshop.player.PlayerState;
  * Listener for players interacting with custom shops' GUI, containing handlers
  * for which the player (owner or not) purchases items.
  */
-public class InteractInventory implements Listener {
+public class VMInteractInventory implements Listener {
     private static ConversationFactory purchasingConversation;
-    private static final String CLOSE = "§cClose";
 
     /**
      * Event handler for interactions with shop's GUI.
@@ -45,7 +44,7 @@ public class InteractInventory implements Listener {
         if (title.equalsIgnoreCase("§5§lVending Machine")) {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(CLOSE)) {
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
                     PlayerState state = PlayerState.getPlayerState(player);

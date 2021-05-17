@@ -1,12 +1,12 @@
 package customshop.plugin;
 
 import net.milkbowl.vault.economy.Economy;
+import customshop.shop.ShopExit;
 import customshop.shop.ShopCreation;
 import customshop.shop.ShopOpening;
 import customshop.shop.ShopRemoval;
-import customshop.shop.vm.CloseInventory;
-import customshop.shop.vm.InteractInventory;
-import customshop.shop.vm.ListItem;
+import customshop.shop.vm.VMInteractInventory;
+import customshop.shop.vm.VMListItem;
 import customshop.crate.GetTotal;
 import customshop.crate.GiveKey;
 import customshop.crate.LockAll;
@@ -53,9 +53,9 @@ public final class CustomShop extends JavaPlugin {
         }
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new ShopOpening(), this);
-        pluginManager.registerEvents(new CloseInventory(), this);
-        pluginManager.registerEvents(new InteractInventory(), this);
-        pluginManager.registerEvents(new ListItem(), this);
+        pluginManager.registerEvents(new ShopExit(), this);
+        pluginManager.registerEvents(new VMInteractInventory(), this);
+        pluginManager.registerEvents(new VMListItem(), this);
         pluginManager.registerEvents(new ShopCreation(), this);
         pluginManager.registerEvents(new OpenCrate(), this);
         pluginManager.registerEvents(new PlayerTeleport(), this);
@@ -67,8 +67,8 @@ public final class CustomShop extends JavaPlugin {
         getCommand("gettotal").setExecutor(new GetTotal());
         getCommand("givekey").setExecutor(new GiveKey());
         getCommand("lockall").setExecutor(new LockAll());
-        InteractInventory.initConversationFactory(this);
-        ListItem.initConversationFactory(this);
+        VMInteractInventory.initConversationFactory(this);
+        VMListItem.initConversationFactory(this);
 
         this.database = new SQLite(this);
         this.database.load();

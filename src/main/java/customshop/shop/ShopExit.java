@@ -1,4 +1,4 @@
-package customshop.shop.vm;
+package customshop.shop;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,9 +9,9 @@ import customshop.player.PlayerState;
 /**
  * Listener for {@link InventoryCloseEvent} and saves player's inventory.
  */
-public class CloseInventory implements Listener {
+public class ShopExit implements Listener {
     /**
-     * Event handler for vending machine inventory close event.
+     * Event handler for shop GUI's close event.
      *
      * @param evt event of inventory clicking.
      */

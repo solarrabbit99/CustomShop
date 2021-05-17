@@ -28,7 +28,7 @@ import customshop.player.PlayerState;
  * Listener for players interacting with custom shops, containing handlers for
  * which the owner left clicks on shops to list items.
  */
-public class ListItem implements Listener {
+public class VMListItem implements Listener {
     private static ConversationFactory listingConversation;
 
     @EventHandler
