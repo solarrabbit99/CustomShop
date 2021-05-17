@@ -60,7 +60,7 @@ public class ListItem implements Listener {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
-            VMGUI ui = new VMGUI(armorStand);
+            VMGUI ui = new VMGUI(armorStand, player);
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
                 ui.openOwnerUI(player);
             } else {
@@ -85,7 +85,7 @@ public class ListItem implements Listener {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
                         if (canceller != null) {
                             Player player = (Player) abandonedEvent.getContext().getForWhom();
-                            VMGUI.saveInventory(player);
+                            PlayerState.getPlayerState(player).clearShopInteractions();
                             player.sendMessage("§cShop listing cancelled...");
                         }
                     }
@@ -106,6 +106,8 @@ public class ListItem implements Listener {
         public Prompt acceptInput(ConversationContext context, String input) {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
+                PlayerState state = PlayerState.getPlayerState(player);
+                VMGUI ui = (VMGUI) state.getShopGUI();
                 try {
                     double price = Math.round(Double.parseDouble(input) * 100) / 100;
                     if (price <= 0) {
@@ -113,13 +115,12 @@ public class ListItem implements Listener {
                     } else {
                         PlayerInventory playerInventory = player.getInventory();
                         ItemStack item = playerInventory.getItemInMainHand();
-                        VMGUI ui = (VMGUI) PlayerState.getPlayerState(player).getShopGUI();
-                        player.sendMessage(ui.listPrice(player, item, price));
+                        player.sendMessage(ui.listPrice(item, price));
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
                 }
-                VMGUI.saveInventory(player);
+                state.clearShopInteractions();
             } else {
                 // Should not get here.
                 context.getForWhom().sendRawMessage("This is a player-only command.");

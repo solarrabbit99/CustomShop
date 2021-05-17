@@ -74,7 +74,7 @@ public class InteractInventory implements Listener {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
                         if (canceller != null) {
                             Player player = (Player) abandonedEvent.getContext().getForWhom();
-                            VMGUI.saveInventory(player);
+                            PlayerState.getPlayerState(player).clearShopInteractions();
                             player.sendMessage("§cShop purchase cancelled...");
                         }
                     }
@@ -97,6 +97,7 @@ public class InteractInventory implements Listener {
                 Player player = (Player) context.getForWhom();
                 PlayerState state = PlayerState.getPlayerState(player);
                 ItemStack purchasingItem = state.removePurchase();
+                VMGUI ui = (VMGUI) state.getShopGUI();
                 try {
                     int inputInt = Integer.parseInt(input);
                     double inputDouble = Double.parseDouble(input);
@@ -104,13 +105,13 @@ public class InteractInventory implements Listener {
                     if (inputInt != inputDouble || inputDouble <= 0) {
                         player.sendMessage("§cInvalid input!");
                     } else if (context.getForWhom() instanceof Player) {
-                        VMGUI ui = (VMGUI) state.getShopGUI();
-                        player.sendMessage(ui.purchaseItem(player, purchasingItem, inputInt));
+
+                        player.sendMessage(ui.purchaseItem(purchasingItem, inputInt));
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
                 }
-                VMGUI.saveInventory(player);
+                state.clearShopInteractions();
             } else {
                 // Should not get here.
                 context.getForWhom().sendRawMessage("This is a player-only command.");

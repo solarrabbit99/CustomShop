@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import customshop.gui.VMGUI;
+import customshop.player.PlayerState;
 
 /**
  * Listener for {@link InventoryCloseEvent} and saves player's inventory.
@@ -18,7 +18,7 @@ public class CloseInventory implements Listener {
     @EventHandler
     public void closeShop(InventoryCloseEvent evt) {
         if (!((Player) evt.getPlayer()).isConversing()) {
-            VMGUI.saveInventory((Player) evt.getPlayer());
+            PlayerState.getPlayerState((Player) evt.getPlayer()).clearShopInteractions();
         }
     }
 }

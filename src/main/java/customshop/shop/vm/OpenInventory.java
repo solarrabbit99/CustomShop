@@ -46,8 +46,8 @@ public class OpenInventory implements Listener {
                 evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
-            VMGUI ui = new VMGUI(armorStand);
-            ui.openUI(evt.getPlayer());
+            VMGUI ui = new VMGUI(armorStand, evt.getPlayer());
+            ui.openUI();
             state.setShopGUI(ui);
         }
     }

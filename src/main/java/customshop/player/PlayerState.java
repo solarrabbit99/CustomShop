@@ -8,7 +8,6 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import customshop.gui.ShopGUI;
-import customshop.gui.VMGUI;
 
 /**
  * Contains all the references from player to corresponding interacting
@@ -91,9 +90,12 @@ public class PlayerState {
         return this.armorStand;
     }
 
-    public void clearShopInteraction() {
-        this.armorStand = null;
-        this.shopGUI = null;
+    public void clearShopInteractions() {
+        if (this.shopGUI != null) {
+            this.shopGUI.saveInventories();
+            this.armorStand = null;
+            this.shopGUI = null;
+        }
     }
 
     /**
@@ -162,6 +164,6 @@ public class PlayerState {
     }
 
     public static void saveAll() {
-        playerStates.forEach((player, state) -> VMGUI.saveInventory(player));
+        playerStates.forEach((player, state) -> state.clearShopInteractions());
     }
 }

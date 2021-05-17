@@ -4,7 +4,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import customshop.gui.VMGUI;
 
 public class PlayerLeave implements Listener {
     /**
@@ -16,7 +15,7 @@ public class PlayerLeave implements Listener {
     public void playerKick(PlayerKickEvent evt) {
         PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
         if (!state.abandonConversation()) {
-            VMGUI.saveInventory(evt.getPlayer());
+            state.clearShopInteractions();
         }
     }
 
@@ -29,7 +28,7 @@ public class PlayerLeave implements Listener {
     public void playerLeave(PlayerQuitEvent evt) {
         PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
         if (!state.abandonConversation()) {
-            VMGUI.saveInventory(evt.getPlayer());
+            state.clearShopInteractions();
         }
     }
 }
