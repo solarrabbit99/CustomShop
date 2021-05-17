@@ -100,7 +100,7 @@ public class ListItem implements Listener {
                 PlayerState state = PlayerState.getPlayerState(player);
                 VMGUI ui = (VMGUI) state.getShopGUI();
                 try {
-                    double price = Math.round(Double.parseDouble(input) * 100) / 100;
+                    double price = ((Double) (Double.parseDouble(input) * 100)).intValue() / 100.0;
                     if (price <= 0) {
                         player.sendMessage("§cPrice must be more than 0!");
                     } else {

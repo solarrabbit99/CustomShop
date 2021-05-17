@@ -174,6 +174,8 @@ public final class UIUtils {
      *
      * @param lore lore list obtained from item's meta
      * @return double array
+     * @throws NullPointerException  if any of the String is null
+     * @throws NumberFormatException if any of the String is not of double format
      */
     public static double[] stringListToDoubleArray(List<String> lore) {
         double[] prices = new double[lore.size()];

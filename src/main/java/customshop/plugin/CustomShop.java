@@ -2,11 +2,11 @@ package customshop.plugin;
 
 import net.milkbowl.vault.economy.Economy;
 import customshop.shop.ShopCreation;
+import customshop.shop.ShopOpening;
 import customshop.shop.ShopRemoval;
 import customshop.shop.vm.CloseInventory;
 import customshop.shop.vm.InteractInventory;
 import customshop.shop.vm.ListItem;
-import customshop.shop.vm.OpenInventory;
 import customshop.crate.GetTotal;
 import customshop.crate.GiveKey;
 import customshop.crate.LockAll;
@@ -52,7 +52,7 @@ public final class CustomShop extends JavaPlugin {
             }
         }
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new OpenInventory(), this);
+        pluginManager.registerEvents(new ShopOpening(), this);
         pluginManager.registerEvents(new CloseInventory(), this);
         pluginManager.registerEvents(new InteractInventory(), this);
         pluginManager.registerEvents(new ListItem(), this);
