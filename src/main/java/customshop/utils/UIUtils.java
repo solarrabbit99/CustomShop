@@ -255,17 +255,41 @@ public final class UIUtils {
         }
     }
 
+    /**
+     * Checks if a custom shop is in the block targeted by the player. This is done
+     * by checking if:
+     * <ul>
+     * <li>the target block is of type {@link Material#BARRIER}
+     * <li>there exists exactly one entity in the barrier block
+     * <li>the entity is an instance of {@link ArmorStand}
+     * <li>the armor stand has a custom name corresponding to a type of custom shop
+     * </ul>
+     * Returns {@code null} if any of the above conditions are not satisfied.
+     *
+     * @param targetBlock block targeted by player, presumably a barrier block
+     * @return {@link ArmorStand} entity associated with a custom shop
+     */
     public static ArmorStand getArmorStand(Block targetBlock) {
         Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
                 targetBlock.getZ() + 0.5);
         Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
-        if (targetBlock.getType() != Material.BARRIER || list.isEmpty()) {
+        if (targetBlock.getType() != Material.BARRIER || list.size() != 1) {
             return null;
         } else {
             Entity shopEntity = (Entity) list.toArray()[0];
             if (shopEntity instanceof ArmorStand) {
                 ArmorStand armorStand = (ArmorStand) shopEntity;
-                return armorStand;
+                String name = armorStand.getCustomName();
+                boolean valid;
+                switch (name == null ? null : name) {
+                    case "§5§lVending Machine":
+                        valid = true;
+                        break;
+                    default:
+                        valid = false;
+                        break;
+                }
+                return valid ? armorStand : null;
             } else {
                 return null;
             }
