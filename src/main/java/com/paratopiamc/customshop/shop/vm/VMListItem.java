@@ -54,14 +54,15 @@ public class VMListItem implements Listener {
     @EventHandler
     public void listItem(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
-        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+        Player player = evt.getPlayer();
+        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.LEFT_CLICK_BLOCK)
+                || !player.isSneaking()) {
             return;
         }
         Block targetBlock = evt.getClickedBlock();
         ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
         if (armorStand != null) {
             evt.setCancelled(true);
-            Player player = evt.getPlayer();
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!UIUtils.hasShopPermission(armorStand, player)) {

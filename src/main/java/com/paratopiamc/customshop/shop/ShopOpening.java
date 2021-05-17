@@ -19,12 +19,10 @@
 package com.paratopiamc.customshop.shop;
 
 import java.util.Optional;
-
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -43,12 +41,12 @@ public class ShopOpening implements Listener {
     @EventHandler
     public void openShop(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
-        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        Player player = evt.getPlayer();
+        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                || player.isSneaking()) {
             return;
         }
         Block targetBlock = evt.getClickedBlock();
-        Player player = evt.getPlayer();
-
         ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
         if (armorStand != null) {
             ShopGUI gui = getShopOpener(armorStand, player);
