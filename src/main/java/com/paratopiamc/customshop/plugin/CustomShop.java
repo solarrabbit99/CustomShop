@@ -24,6 +24,7 @@ import com.paratopiamc.customshop.crate.GetTotal;
 import com.paratopiamc.customshop.crate.GiveKey;
 import com.paratopiamc.customshop.crate.LockAll;
 import com.paratopiamc.customshop.crate.OpenCrate;
+import com.paratopiamc.customshop.crate.PlaceKey;
 import com.paratopiamc.customshop.crate.SetCrate;
 import com.paratopiamc.customshop.database.Database;
 import com.paratopiamc.customshop.database.SQLite;
@@ -81,6 +82,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new PlayerTeleport(), this);
         pluginManager.registerEvents(new PlayerMove(), this);
         pluginManager.registerEvents(new PlayerLeave(), this);
+        pluginManager.registerEvents(new PlaceKey(), this);
         getCommand("newshop").setExecutor(new ShopCreation());
         getCommand("removeshop").setExecutor(new ShopRemoval());
         getCommand("setcrate").setExecutor(new SetCrate(this));
