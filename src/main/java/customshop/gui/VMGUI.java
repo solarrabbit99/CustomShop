@@ -251,7 +251,15 @@ public class VMGUI implements ShopGUI {
      *
      * @param player player to view the inventory
      */
-    public void openOwnerUI(Player player) {
-        player.openInventory(inventory);
+    public void openOwnerUI() {
+        viewer.openInventory(inventory);
+    }
+
+    public ArmorStand getArmorStand() {
+        return this.armorStand;
+    }
+
+    public boolean isOwner() {
+        return this.viewer.getUniqueId().toString().equals(this.ownerID);
     }
 }

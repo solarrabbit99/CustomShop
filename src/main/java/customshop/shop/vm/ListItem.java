@@ -1,7 +1,5 @@
 package customshop.shop.vm;
 
-import java.util.Collection;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -13,7 +11,6 @@ import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,29 +37,23 @@ public class ListItem implements Listener {
         if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             return;
         }
-        Block clickedBlock = evt.getClickedBlock();
-        Location loc = new Location(clickedBlock.getWorld(), clickedBlock.getX() + 0.5, clickedBlock.getY(),
-                clickedBlock.getZ() + 0.5);
-        Collection<Entity> list = clickedBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
-        if (clickedBlock.getType() != Material.BARRIER || list.size() != 1 || !evt.getPlayer().isSneaking()) {
-            return;
-        }
-        if (UIUtils.validate((Entity) list.toArray()[0])) {
+        Block targetBlock = evt.getClickedBlock();
+        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
+        if (armorStand != null) {
             evt.setCancelled(true);
-            ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
             Player player = evt.getPlayer();
             if (!UIUtils.hasShopPermission(armorStand, player)) {
                 player.sendMessage("§cYou do not own the vending machine!");
                 return;
             }
-            PlayerState state = PlayerState.getPlayerState(player);
-            if (!state.setArmorStand(armorStand)) {
+            if (PlayerState.getInteractingPlayer(armorStand) != null) {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
+            PlayerState state = PlayerState.getPlayerState(player);
             VMGUI ui = new VMGUI(armorStand, player);
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
-                ui.openOwnerUI(player);
+                ui.openOwnerUI();
             } else {
                 state.startConversation(listingConversation);
             }

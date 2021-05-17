@@ -1,14 +1,10 @@
 package customshop.shop;
 
-import java.util.Collection;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import customshop.plugin.CustomShop;
 import customshop.shop.vm.VMRemover;
@@ -48,26 +44,20 @@ public class ShopRemoval implements CommandExecutor {
      * @return correspond remover for the type of shop
      */
     private static ShopRemover getShopRemover(Block targetBlock, Player player) {
-        Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
-                targetBlock.getZ() + 0.5);
-        Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
-        if (targetBlock.getType() != Material.BARRIER && !list.isEmpty()) {
-            return null;
-        } else {
-            Entity shopEntity = (Entity) list.toArray()[0];
-            if (shopEntity instanceof ArmorStand && UIUtils.hasShopPermission((ArmorStand) shopEntity, player)) {
-                String customName = shopEntity.getCustomName();
-                ShopRemover result;
-                switch (customName) {
-                    case "§5§lVending Machine":
-                        result = new VMRemover(targetBlock, shopEntity);
-                        break;
-                    default:
-                        result = null;
-                        break;
-                }
-                return result;
+        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
+        if (armorStand != null && UIUtils.hasShopPermission(armorStand, player)) {
+            String customName = armorStand.getCustomName();
+            ShopRemover result;
+            switch (customName) {
+                case "§5§lVending Machine":
+                    result = new VMRemover(targetBlock, armorStand);
+                    break;
+                default:
+                    result = null;
+                    break;
             }
+            return result;
+        } else {
             return null;
         }
     }

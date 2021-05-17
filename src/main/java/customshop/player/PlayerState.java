@@ -18,7 +18,6 @@ public class PlayerState {
     /** Mapping of player to player state. */
     private static HashMap<Player, PlayerState> playerStates = new HashMap<>();
 
-    private ArmorStand armorStand;
     private ShopGUI shopGUI;
     private ItemStack purchase;
     private Conversation conversation;
@@ -60,40 +59,26 @@ public class PlayerState {
     }
 
     /**
-     * Sets the armor stand of a {@link PlayerState} if there are no players have
-     * the armor stand set in their state.
-     *
-     * @param armorStand
-     * @return {@code true} if there were no players interacting with the ArmorStand
-     */
-    public boolean setArmorStand(ArmorStand armorStand) {
-        if (getInteractingPlayer(armorStand) != null)
-            return false;
-        this.armorStand = armorStand;
-        return true;
-    }
-
-    /**
      * Get the player interacting with it.
      *
      * @param armorStand the target {@link ArmorStand}
      * @return player interacting with the armor stand
      */
-    private static Player getInteractingPlayer(ArmorStand armorStand) {
+    public static Player getInteractingPlayer(ArmorStand armorStand) {
         return playerStates.entrySet().stream()
-                .filter(e -> armorStand.getUniqueId().equals(
-                        Optional.ofNullable(e.getValue().armorStand).map(stand -> stand.getUniqueId()).orElse(null)))
+                .filter(e -> armorStand.getUniqueId()
+                        .equals(Optional.ofNullable(e.getValue().shopGUI).map(gui -> gui.getArmorStand())
+                                .map(stand -> stand.getUniqueId()).orElse(null)))
                 .findFirst().map(e -> e.getKey()).orElse(null);
     }
 
-    public ArmorStand getArmorStand() {
-        return this.armorStand;
-    }
+    // public ArmorStand getArmorStand() {
+    // return this.armorStand;
+    // }
 
     public void clearShopInteractions() {
         if (this.shopGUI != null) {
             this.shopGUI.saveInventories();
-            this.armorStand = null;
             this.shopGUI = null;
         }
     }

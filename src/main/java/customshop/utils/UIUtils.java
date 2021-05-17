@@ -1,12 +1,13 @@
 package customshop.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -216,7 +217,7 @@ public final class UIUtils {
     }
 
     /**
-     * Checks if the playuer has permission to access the shop's listing and removal
+     * Checks if the player has permission to access the shop's listing and removal
      * features. Currently only owners, OPs or player with {@code customshop.admin}
      * permission can access the shop.
      *
@@ -250,6 +251,23 @@ public final class UIUtils {
                 Bukkit.getServer().getConsoleSender().sendMessage(
                         "§6§l[CustomShop] Vending machine without shulker box detected at " + standLocation + "!");
                 return false;
+            }
+        }
+    }
+
+    public static ArmorStand getArmorStand(Block targetBlock) {
+        Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
+                targetBlock.getZ() + 0.5);
+        Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
+        if (targetBlock.getType() != Material.BARRIER || list.isEmpty()) {
+            return null;
+        } else {
+            Entity shopEntity = (Entity) list.toArray()[0];
+            if (shopEntity instanceof ArmorStand) {
+                ArmorStand armorStand = (ArmorStand) shopEntity;
+                return armorStand;
+            } else {
+                return null;
             }
         }
     }

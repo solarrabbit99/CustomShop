@@ -1,11 +1,7 @@
 package customshop.shop.vm;
 
-import java.util.Collection;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -31,18 +27,12 @@ public class OpenInventory implements Listener {
         if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
         }
-        Block clickedBlock = evt.getClickedBlock();
-        Location loc = new Location(clickedBlock.getWorld(), clickedBlock.getX() + 0.5, clickedBlock.getY(),
-                clickedBlock.getZ() + 0.5);
-        Collection<Entity> list = clickedBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
-        if (clickedBlock.getType() != Material.BARRIER || list.size() != 1 || evt.getPlayer().isSneaking()) {
-            return;
-        }
-        if (UIUtils.validate((Entity) list.toArray()[0])) {
+        Block targetBlock = evt.getClickedBlock();
+        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
+        if (armorStand != null) {
             evt.setCancelled(true);
-            ArmorStand armorStand = ((ArmorStand) list.toArray()[0]);
             PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
-            if (!state.setArmorStand(armorStand)) {
+            if (PlayerState.getInteractingPlayer(armorStand) != null) {
                 evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
