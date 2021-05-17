@@ -1,4 +1,4 @@
-# CustomShops
+# CustomShop
 
 A Minecraft plugin that implements custom shop designs as a complement to
 chest-shops.
