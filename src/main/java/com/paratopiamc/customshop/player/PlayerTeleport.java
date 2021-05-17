@@ -25,6 +25,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class PlayerTeleport implements Listener {
     @EventHandler
     public void onTeleport(PlayerTeleportEvent evt) {
-        PlayerState.getPlayerState(evt.getPlayer()).abandonConversation();
+        PlayerState.getPlayerState(evt.getPlayer()).clearShopInteractions();
     }
 }

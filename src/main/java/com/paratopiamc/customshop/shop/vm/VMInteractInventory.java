@@ -90,11 +90,11 @@ public class VMInteractInventory implements Listener {
                     @Override
                     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
+                        Player player = (Player) abandonedEvent.getContext().getForWhom();
                         if (canceller != null) {
-                            Player player = (Player) abandonedEvent.getContext().getForWhom();
-                            PlayerState.getPlayerState(player).clearShopInteractions();
                             player.sendMessage("§cShop purchase cancelled...");
                         }
+                        PlayerState.getPlayerState(player).clearShopInteractions();
                     }
                 });
         ;
@@ -129,7 +129,6 @@ public class VMInteractInventory implements Listener {
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
                 }
-                state.clearShopInteractions();
             } else {
                 // Should not get here.
                 context.getForWhom().sendRawMessage("This is a player-only command.");

@@ -40,7 +40,7 @@ public class PlayerMove implements Listener {
             Location loc1 = armorStand.get().getLocation();
             Location loc2 = player.getLocation();
             if (!loc1.getWorld().equals(loc2.getWorld()) || loc1.distanceSquared(loc2) > 25) {
-                state.abandonConversation();
+                state.clearShopInteractions();
             }
         }
     }

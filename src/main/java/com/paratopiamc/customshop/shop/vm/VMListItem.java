@@ -23,6 +23,7 @@ import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.UIUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -61,6 +62,8 @@ public class VMListItem implements Listener {
         if (armorStand != null) {
             evt.setCancelled(true);
             Player player = evt.getPlayer();
+            PlayerState state = PlayerState.getPlayerState(player);
+            state.clearShopInteractions();
             if (!UIUtils.hasShopPermission(armorStand, player)) {
                 player.sendMessage("§cYou do not own the vending machine!");
                 return;
@@ -69,12 +72,13 @@ public class VMListItem implements Listener {
                 player.sendMessage("§cVending machine current in use, please wait...");
                 return;
             }
-            PlayerState state = PlayerState.getPlayerState(player);
             VMGUI ui = new VMGUI(armorStand, player);
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
                 ui.openOwnerUI();
             } else {
-                state.startConversation(listingConversation);
+                // New conversation must begin in a different tick that cancelled conversation
+                Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
+                        () -> state.startConversation(listingConversation));
             }
             state.setShopGUI(ui);
         }
@@ -93,11 +97,11 @@ public class VMListItem implements Listener {
                     @Override
                     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
+                        Player player = (Player) abandonedEvent.getContext().getForWhom();
                         if (canceller != null) {
-                            Player player = (Player) abandonedEvent.getContext().getForWhom();
-                            PlayerState.getPlayerState(player).clearShopInteractions();
                             player.sendMessage("§cShop listing cancelled...");
                         }
+                        PlayerState.getPlayerState(player).clearShopInteractions();
                     }
                 });
     }
@@ -130,7 +134,6 @@ public class VMListItem implements Listener {
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
                 }
-                state.clearShopInteractions();
             } else {
                 // Should not get here.
                 context.getForWhom().sendRawMessage("This is a player-only command.");

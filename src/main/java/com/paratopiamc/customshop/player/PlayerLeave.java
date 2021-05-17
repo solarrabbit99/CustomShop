@@ -31,10 +31,7 @@ public class PlayerLeave implements Listener {
      */
     @EventHandler
     public void playerKick(PlayerKickEvent evt) {
-        PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
-        if (!state.abandonConversation()) {
-            state.clearShopInteractions();
-        }
+        PlayerState.getPlayerState(evt.getPlayer()).clearShopInteractions();
     }
 
     /**
@@ -44,9 +41,6 @@ public class PlayerLeave implements Listener {
      */
     @EventHandler
     public void playerLeave(PlayerQuitEvent evt) {
-        PlayerState state = PlayerState.getPlayerState(evt.getPlayer());
-        if (!state.abandonConversation()) {
-            state.clearShopInteractions();
-        }
+        PlayerState.getPlayerState(evt.getPlayer()).clearShopInteractions();
     }
 }

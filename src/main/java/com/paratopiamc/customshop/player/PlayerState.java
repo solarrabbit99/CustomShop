@@ -20,10 +20,7 @@ package com.paratopiamc.customshop.player;
 
 import java.util.HashMap;
 import java.util.Optional;
-
 import com.paratopiamc.customshop.gui.ShopGUI;
-import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
@@ -66,15 +63,12 @@ public class PlayerState {
     }
 
     /**
-     * Setter for ShopGUI if there isn't already one assigned to the player.
+     * Setter for ShopGUI if there isn't already one assigned to the player. It is
+     * expected for {@link #clearShopInteractions()} to be called before this.
      *
      * @param gui a {@link ShopGUI} object
      */
     public void setShopGUI(ShopGUI gui) {
-        if (this.shopGUI != null) {
-            CustomShop.getPlugin().getServer().getConsoleSender().sendMessage(
-                    "§c§l[CustomShop] Assigning a ShopGUI to player when player has already another ShopGUI assigned!");
-        }
         this.shopGUI = gui;
     }
 
@@ -145,7 +139,7 @@ public class PlayerState {
      * @return {@code true} if there was a CustomShop conversation assigned to the
      *         player
      */
-    public boolean abandonConversation() {
+    private boolean abandonConversation() {
         if (conversation != null) {
             player.abandonConversation(conversation);
             this.conversation = null;
@@ -171,6 +165,7 @@ public class PlayerState {
      * Clear player's shop interactions, if any.
      */
     public void clearShopInteractions() {
+        abandonConversation();
         if (this.shopGUI != null) {
             this.shopGUI.saveInventories();
             this.shopGUI = null;
