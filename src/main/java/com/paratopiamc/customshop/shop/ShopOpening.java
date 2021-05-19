@@ -54,7 +54,7 @@ public class ShopOpening implements Listener {
                 PlayerState state = PlayerState.getPlayerState(player);
                 state.clearShopInteractions();
                 if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                    evt.getPlayer().sendMessage("§cVending machine current in use, please wait...");
+                    player.sendMessage("§cVending machine current in use, please wait...");
                     return;
                 } else {
                     gui.openUI();

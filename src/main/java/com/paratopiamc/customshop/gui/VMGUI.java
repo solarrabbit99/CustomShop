@@ -22,19 +22,17 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.block.ShulkerBox;
 import java.util.HashMap;
 import java.util.UUID;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import net.milkbowl.vault.economy.Economy;
 
 /** Custom GUI for vending machines. */
@@ -263,11 +261,13 @@ public class VMGUI implements ShopGUI {
 
     @Override
     public void openUI() {
+        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 1.0F, 1.0F);
         viewer.openInventory(inventoryView);
     }
 
     @Override
     public void openOwnerUI() {
+        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 1.0F, 1.0F);
         viewer.openInventory(inventory);
     }
 

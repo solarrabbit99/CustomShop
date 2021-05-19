@@ -61,7 +61,8 @@ public class ShopRemoval implements CommandExecutor, Listener {
                     if (!evt.isCancelled()) {
                         PlayerState.getPlayerState(player).clearShopInteractions();
                         remover.removeShop();
-                        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F, 1.0F);
+                        targetBlock.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F,
+                                1.0F);
                         CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
                     }
                 }

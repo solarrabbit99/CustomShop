@@ -72,6 +72,7 @@ The following IDs for `Material.PAPER` are used for custom shops. Change
 | 100001 | wooden_vending_machine  |
 | 100002 | stone_vending_machine   |
 | 100003 | nether_vending_machine  |
+| 100004 | sand_vending_machine    |
 
 ### Display Names
 
@@ -98,5 +99,5 @@ with other plugins.
 
 ## Dependencies
 
-The plugin requires **Vault** and one of its supporting economy plugins to be
+The plugin requires **ProtocolLib**, **Vault** and one of its supporting economy plugins to be
 enabled.
