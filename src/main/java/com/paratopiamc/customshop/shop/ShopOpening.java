@@ -49,6 +49,7 @@ public class ShopOpening implements Listener {
         Block targetBlock = evt.getClickedBlock();
         ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
         if (armorStand != null) {
+            evt.setCancelled(true);
             ShopGUI gui = getShopOpener(armorStand, player);
             if (gui != null) {
                 PlayerState state = PlayerState.getPlayerState(player);

@@ -261,13 +261,13 @@ public class VMGUI implements ShopGUI {
 
     @Override
     public void openUI() {
-        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 1.0F, 1.0F);
+        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
         viewer.openInventory(inventoryView);
     }
 
     @Override
     public void openOwnerUI() {
-        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 1.0F, 1.0F);
+        viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
         viewer.openInventory(inventory);
     }
 
