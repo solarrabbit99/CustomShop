@@ -191,7 +191,7 @@ public class VMGUI implements ShopGUI {
             }
         }
 
-        Economy economy = CustomShop.getEconomy();
+        Economy economy = CustomShop.getPlugin().getEconomy();
         double bal = economy.getBalance(viewer);
         double totalCost = amount * prices[inventory.first(item)];
 

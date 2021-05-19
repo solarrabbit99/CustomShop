@@ -29,7 +29,7 @@ import net.milkbowl.vault.economy.Economy;
 public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent evt) {
-        Economy economy = CustomShop.getEconomy();
+        Economy economy = CustomShop.getPlugin().getEconomy();
         // TODO: Send message for all shop interactions
     }
 }

@@ -19,7 +19,8 @@
 package com.paratopiamc.customshop.plugin;
 
 import net.milkbowl.vault.economy.Economy;
-
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.paratopiamc.customshop.crate.GetTotal;
 import com.paratopiamc.customshop.crate.GiveKey;
 import com.paratopiamc.customshop.crate.LockAll;
@@ -39,7 +40,6 @@ import com.paratopiamc.customshop.shop.ShopOpening;
 import com.paratopiamc.customshop.shop.ShopRemoval;
 import com.paratopiamc.customshop.shop.vm.VMInteractInventory;
 import com.paratopiamc.customshop.shop.vm.VMListItem;
-
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,13 +50,16 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author SolarRabbit
  */
 public final class CustomShop extends JavaPlugin {
-    private static Economy economy;
     private static CustomShop pluginInstance;
+    private Economy economy;
+    private ProtocolManager protocolManager;
     private Database database;
 
     @Override
     public void onEnable() {
         pluginInstance = this;
+        protocolManager = ProtocolLibrary.getProtocolManager();
+
         if (!setUpEconomy()) {
             getServer().getConsoleSender()
                     .sendMessage("§c§l[CustomShop] No Vault dependencies found! Disabling plugin...");
@@ -78,6 +81,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new VMInteractInventory(), this);
         pluginManager.registerEvents(new VMListItem(), this);
         pluginManager.registerEvents(new ShopCreation(), this);
+        pluginManager.registerEvents(new ShopRemoval(), this);
         pluginManager.registerEvents(new OpenCrate(), this);
         pluginManager.registerEvents(new PlayerTeleport(), this);
         pluginManager.registerEvents(new PlayerMove(), this);
@@ -125,15 +129,6 @@ public final class CustomShop extends JavaPlugin {
     }
 
     /**
-     * Get the current economy that the plugin is using.
-     *
-     * @return economy instance
-     */
-    public static Economy getEconomy() {
-        return economy;
-    }
-
-    /**
      * Return instance of plugin that is running.
      *
      * @return plugin instance
@@ -143,11 +138,29 @@ public final class CustomShop extends JavaPlugin {
     }
 
     /**
+     * Get the current economy that the plugin is using.
+     *
+     * @return economy instance
+     */
+    public Economy getEconomy() {
+        return this.economy;
+    }
+
+    /**
      * Return database used by the plugin.
      *
      * @return database
      */
     public Database getDatabase() {
         return this.database;
+    }
+
+    /**
+     * Return {@code ProtocolManager} of the plugin instance.
+     *
+     * @return ProtocolManager
+     */
+    public ProtocolManager getProtocolManager() {
+        return this.protocolManager;
     }
 }

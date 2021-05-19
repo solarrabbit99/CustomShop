@@ -4,6 +4,8 @@ version: 1.0
 author: SolarRabbit
 api-version: 1.16
 
+depend: [ProtocolLib, Vault]
+
 commands:
     removeshop:
         alias: [rm]

@@ -18,19 +18,67 @@
 
 package com.paratopiamc.customshop.shop;
 
+import com.comphenix.protocol.PacketType.Play.Client;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
+import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
-/** Player removing shop by command. */
-public class ShopRemoval implements CommandExecutor {
+/** Player removing shop, either by breaking or by command. */
+public class ShopRemoval implements CommandExecutor, Listener {
+
+    /**
+     * Event of player breaking the shop, specifically the barrier blocks in which
+     * the armor stands are held within.
+     *
+     * @param evt player damaging block (particularly barrier blocks) event
+     */
+    @EventHandler
+    public void onBarrierBreak(BlockDamageEvent evt) {
+        Player player = evt.getPlayer();
+        Block targetBlock = evt.getBlock();
+        ShopRemover remover = getShopRemover(targetBlock, player);
+        if (remover != null) {
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!evt.isCancelled()) {
+                        PlayerState.getPlayerState(player).clearShopInteractions();
+                        remover.removeShop();
+                        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
+                    }
+                }
+            };
+            runnable.runTaskLater(CustomShop.getPlugin(), 75);
+        }
+
+        CustomShop.getPlugin().getProtocolManager()
+                .addPacketListener(new PacketAdapter(CustomShop.getPlugin(), Client.BLOCK_DIG) {
+                    @Override
+                    public void onPacketReceiving(PacketEvent e) {
+                        PacketContainer packet = e.getPacket();
+                        PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
+                        if (digType.name().equals("ABORT_DESTROY_BLOCK")) {
+                            evt.setCancelled(true);
+                        }
+                    }
+                });
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
