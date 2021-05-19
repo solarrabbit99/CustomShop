@@ -23,11 +23,14 @@ defaults:
 
 vending-machine:
     wooden:
-        name: Wooden Vending Machine
+        name: §r§6Wooden Vending Machine
         model-data: 100001
     stone:
-        name: Stone Vending Machine
+        name: §r§6Stone Vending Machine
         model-data: 100002
     nether:
-        name: Nether Vending Machine
+        name: §r§6Nether Vending Machine
         model-data: 100003
+    sand:
+        name: §r§6Sand Vending Machine
+        model-data: 100004

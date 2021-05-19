@@ -42,11 +42,16 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td scope="col" style="width:68px">
 <a href="https://imgur.com/SyNNdEH" title="Nether Vending Machine">
 <img src="https://i.imgur.com/SyNNdEH.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width:68px">
+<a href="https://imgur.com/L9KKCZD" title="Sand Vending Machine">
+<img src="https://i.imgur.com/L9KKCZD.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Wooden Vending Machine</td>
 <td>Stone Vending Machine</td>
 <td>Nether Vending Machine</td>
+<td>Sand Vending Machine</td>
 </tr>
 </tbody></table>
 
