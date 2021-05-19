@@ -87,7 +87,7 @@ public class OpenCrate implements Listener {
                 int unlocked = CreationGUI.modelData.get(index);
                 String name = CreationGUI.names.get(index);
                 List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
-                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.0F);
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.5F, 1.0F);
                 if (lst.contains(unlocked)) {
                     player.sendMessage("§6You already have " + name + " unlocked :(");
                 } else {

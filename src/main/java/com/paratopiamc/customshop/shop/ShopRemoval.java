@@ -27,6 +27,8 @@ import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.UIUtils;
+
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -59,6 +61,7 @@ public class ShopRemoval implements CommandExecutor, Listener {
                     if (!evt.isCancelled()) {
                         PlayerState.getPlayerState(player).clearShopInteractions();
                         remover.removeShop();
+                        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F, 1.0F);
                         CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
                     }
                 }
