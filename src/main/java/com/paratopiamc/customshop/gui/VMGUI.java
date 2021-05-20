@@ -21,22 +21,21 @@ package com.paratopiamc.customshop.gui;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.block.ShulkerBox;
 import java.util.HashMap;
-import java.util.UUID;
+
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.milkbowl.vault.economy.Economy;
 
 /** Custom GUI for vending machines. */
-public class VMGUI implements ShopGUI {
+public class VMGUI extends ShopGUI {
     /**
      * Inventory viewed by normal players, consisting of UI elements such as exit
      * buttons, next page etc. Each item for sale is also labelled with their
@@ -59,18 +58,6 @@ public class VMGUI implements ShopGUI {
      * and eventually synced with the lure of the shulker box.
      */
     private double[] prices;
-    /**
-     * String representation of the UUID of the player who owns the shop.
-     */
-    private final String ownerID;
-    /**
-     * Armor stand associated with the shop.
-     */
-    private final ArmorStand armorStand;
-    /**
-     * Player viewing the GUI.
-     */
-    private final Player viewer;
 
     /**
      * Constructor method for vending machine. Retrieves the items from the source
@@ -80,11 +67,9 @@ public class VMGUI implements ShopGUI {
      * @param player     player viewing the GUI
      */
     public VMGUI(ArmorStand armorStand, Player player) {
-        this.armorStand = armorStand;
-        this.viewer = player;
+        super(player, armorStand);
         ItemStack block = armorStand.getEquipment().getChestplate();
         BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
-        ownerID = blockMeta.getDisplayName();
         this.sourceImage = (ShulkerBox) blockMeta.getBlockState();
 
         String title = "§5§lVending Machine";
@@ -167,16 +152,19 @@ public class VMGUI implements ShopGUI {
      * </ul>
      * Returns the outcome message of this event.
      *
-     * @param player player purchasing item
      * @param item   item to be purchased
      * @param amount amount of item the player intended to purchase
      * @return outcome message of the purchase, to be sent to the player involved
      */
-    public String purchaseItem(ItemStack item, int amount) {
+    public void purchaseItem(ItemStack item, int amount) {
         if (item == null) {
-            return "§cItem is null...";
+            viewer.sendMessage("§cItem is null...");
+            return;
         } else if (!inventory.containsAtLeast(item, amount)) {
-            return "§cShop does not have the specified amount of the selected item!";
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
+                            ownerID, viewer, 0, item, amount));
+            return;
         }
         Inventory pInventory = viewer.getInventory();
         int totalSpace = 0;
@@ -189,17 +177,14 @@ public class VMGUI implements ShopGUI {
             }
         }
 
-        Economy economy = CustomShop.getPlugin().getEconomy();
-        double bal = economy.getBalance(viewer);
         double totalCost = amount * prices[inventory.first(item)];
 
         if (totalSpace < amount) {
-            return "§cYou do not have enough space in your inventory!";
-        } else if (bal < totalCost) {
-            return "§cYou need at least $" + totalCost + " to make the purchase!";
-        } else { // Valid transaction
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
+                            ownerID, viewer, totalCost, item, amount));
+        } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
-            final int printAmount = amount;
             pInventory.addItem(item);
             for (int i = 26; i >= 0 && amount > 0; i--) {
                 ItemStack sItem = inventory.getItem(i);
@@ -215,12 +200,6 @@ public class VMGUI implements ShopGUI {
                     }
                 }
             }
-            OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(ownerID));
-            economy.withdrawPlayer(viewer, totalCost);
-            economy.depositPlayer(owner, totalCost);
-            String itemName = item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
-                    : item.getType() + "";
-            return "§aSuccessfully purchased " + printAmount + "x" + itemName + "§a for $" + totalCost + "!";
         }
     }
 
@@ -269,15 +248,5 @@ public class VMGUI implements ShopGUI {
     public void openOwnerUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
         viewer.openInventory(inventory);
-    }
-
-    @Override
-    public ArmorStand getArmorStand() {
-        return this.armorStand;
-    }
-
-    @Override
-    public boolean isOwner() {
-        return this.viewer.getUniqueId().toString().equals(this.ownerID);
     }
 }

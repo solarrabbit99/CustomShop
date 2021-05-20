@@ -123,8 +123,7 @@ public class VMInteractInventory implements Listener {
                     if (inputInt != inputDouble || inputDouble <= 0) {
                         player.sendMessage("§cInvalid input!");
                     } else if (context.getForWhom() instanceof Player) {
-
-                        player.sendMessage(ui.purchaseItem(purchasingItem, inputInt));
+                        ui.purchaseItem(purchasingItem, inputInt);
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");

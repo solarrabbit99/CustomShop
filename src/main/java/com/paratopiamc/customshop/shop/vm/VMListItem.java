@@ -62,6 +62,7 @@ public class VMListItem implements Listener {
         Block targetBlock = evt.getClickedBlock();
         ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
         if (armorStand != null) {
+            // For creative mode
             evt.setCancelled(true);
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
