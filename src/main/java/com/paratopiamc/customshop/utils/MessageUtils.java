@@ -11,7 +11,7 @@ public class MessageUtils {
             int amount) {
         ItemMeta meta = item.getItemMeta();
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
-        message = message.replaceAll("\\{%owner%\\}", Bukkit.getPlayer(UUID.fromString(ownerID)).getName());
+        message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
         message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadablePriceFromNumber(total));
         message = message.replaceAll("\\{%item%\\}",
                 item == null ? "" : meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString());

@@ -19,9 +19,7 @@
 package com.paratopiamc.customshop.crate;
 
 import java.util.ArrayList;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

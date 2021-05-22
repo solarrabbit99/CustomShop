@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.entity.Player;
 
 /**

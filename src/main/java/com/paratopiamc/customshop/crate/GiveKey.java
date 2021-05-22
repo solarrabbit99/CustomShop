@@ -45,7 +45,7 @@ public class GiveKey implements CommandExecutor {
         }
         try {
             int amount = Integer.parseInt(args[1]);
-            ItemStack keys = OpenCrate.getCrateKey(amount);
+            ItemStack keys = new Key(amount);
             HashMap<Integer, ItemStack> remain = player.getInventory().addItem(keys);
             if (remain.isEmpty()) {
                 sender.sendMessage("§aGiven " + amount + " keys to specified player!");

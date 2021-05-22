@@ -21,7 +21,6 @@ package com.paratopiamc.customshop.gui;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.block.ShulkerBox;
 import java.util.HashMap;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;

@@ -26,7 +26,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class PlaceKey implements Listener {
     @EventHandler
     public void placeKey(BlockPlaceEvent evt) {
-        if (OpenCrate.getCrateKey(1).isSimilar(evt.getItemInHand()))
+        if (Key.isKey(evt.getItemInHand()))
             evt.setCancelled(true);
     }
 }

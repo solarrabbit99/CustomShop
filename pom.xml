@@ -409,6 +409,9 @@
 					<include>
 						crate-location.yml
 					</include>
+					<include>
+						saved-messages.yml
+					</include>
 				</includes>
 			</resource>
 		</resources>
