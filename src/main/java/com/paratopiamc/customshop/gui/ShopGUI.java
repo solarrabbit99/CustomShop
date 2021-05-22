@@ -18,24 +18,15 @@
 
 package com.paratopiamc.customshop.gui;
 
-import java.util.List;
-// import java.util.Set;
-// import java.io.File;
-// import java.io.IOException;
-import java.util.HashMap;
 import java.util.UUID;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-// import org.bukkit.configuration.InvalidConfigurationException;
-// import org.bukkit.configuration.file.FileConfiguration;
-// import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-// import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.economy.Economy;
 
 /**
@@ -56,9 +47,6 @@ public abstract class ShopGUI {
      * Player viewing the GUI.
      */
     protected final Player viewer;
-    protected static HashMap<String, List<String>> savedMessages;
-    // private static File messagesFile;
-    // private static FileConfiguration messages;
 
     public ShopGUI(Player player, ArmorStand armorStand) {
         this.armorStand = armorStand;
@@ -108,43 +96,11 @@ public abstract class ShopGUI {
             if (owner.isOnline()) {
                 owner.getPlayer().sendMessage(ownerMessage);
             } else {
-                // TODO: save owner messages
+                CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer, true, item, amount, totalCost);
             }
             return true;
         }
     }
-
-    // public static void initialize(JavaPlugin plugin) {
-    // messagesFile = new File(plugin.getDataFolder(), "saved-messages.yml");
-    // if (!messagesFile.exists()) {
-    // messagesFile.getParentFile().mkdirs();
-    // plugin.saveResource("saved-messages.yml", false);
-    // }
-    // messages = new YamlConfiguration();
-    // try {
-    // messages.load(messagesFile);
-    // } catch (IOException | InvalidConfigurationException e) {
-    // e.printStackTrace();
-    // }
-    // Set<String> listOfPlayers = messages.getDefaultSection().getKeys(false);
-    // savedMessages = new HashMap<>();
-    // for (String player : listOfPlayers) {
-    // List<String> queue = messages.getStringList(player);
-    // savedMessages.put(player, queue);
-    // }
-    // }
-
-    // public static void saveUnsentMessages() {
-    // try {
-    // messages.save(messagesFile);
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // public HashMap<String, List<String>> getSavedMessages() {
-    // return savedMessages;
-    // }
 
     /**
      * Opens public InventoryView of the shop that facilitates purchasing or selling

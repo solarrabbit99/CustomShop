@@ -7,15 +7,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 
 public class SQLite extends Database {
     // Player is 36 characters as we are using UUID to represent a player.
-    private String SQLiteCreateTotalShopsOwnedTable = "CREATE TABLE IF NOT EXISTS " + totalShopOwned + " ("
-            + "`player` varchar(36) NOT NULL," + "`total_shops_owned` int(2) NOT NULL," + "PRIMARY KEY (`player`));";
-    private String SQLiteCreateShopsUnlockedTable = "CREATE TABLE IF NOT EXISTS " + shopsUnlocked + " ("
-            + "`player` varchar(36) NOT NULL," + "`shops_unlocked` int(6) NOT NULL);";
+    private String SQLiteCreateTotalShopsOwnedTable = "CREATE TABLE IF NOT EXISTS " + totalShopOwned
+            + " (`player` varchar(36) NOT NULL, `total_shops_owned` INTEGER NOT NULL, PRIMARY KEY (`player`));";
+    private String SQLiteCreateShopsUnlockedTable = "CREATE TABLE IF NOT EXISTS " + shopsUnlocked
+            + " (`player` varchar(36) NOT NULL, `shops_unlocked` INTEGER NOT NULL);";
+    private String SQLiteCreatePendingTransactionMessagesTable = "CREATE TABLE IF NOT EXISTS " + pendingTransactions
+            + " (`player` varchar(36) NOT NULL, `customer` varchar(36) NOT NULL, `selling` INTEGER NOT NULL, "
+            + "`item_name` TEXT NOT NULL, `amount` INTEGER NOT NULL, `total_cost` REAL NOT NULL);";
 
     public SQLite(CustomShop instance) {
         super(instance);
@@ -53,6 +55,7 @@ public class SQLite extends Database {
             Statement s = connection.createStatement();
             s.executeUpdate(SQLiteCreateTotalShopsOwnedTable);
             s.executeUpdate(SQLiteCreateShopsUnlockedTable);
+            s.executeUpdate(SQLiteCreatePendingTransactionMessagesTable);
             s.close();
         } catch (SQLException e) {
             e.printStackTrace();

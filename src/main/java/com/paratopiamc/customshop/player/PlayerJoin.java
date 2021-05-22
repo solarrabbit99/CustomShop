@@ -18,18 +18,17 @@
 
 package com.paratopiamc.customshop.player;
 
+import java.util.List;
 import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import net.milkbowl.vault.economy.Economy;
-
 public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent evt) {
-        Economy economy = CustomShop.getPlugin().getEconomy();
-        // TODO: Send message for all shop interactions
+        List<String> messages = CustomShop.getPlugin().getDatabase()
+                .getMessages(evt.getPlayer().getUniqueId().toString());
+        messages.forEach(e -> evt.getPlayer().sendMessage(e));
     }
 }

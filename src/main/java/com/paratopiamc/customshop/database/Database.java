@@ -6,9 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Parent class of a database loader. Contains implementation of data retrieval
@@ -21,6 +26,7 @@ public abstract class Database {
     static String dbname = "player_data";
     static String totalShopOwned = "total_shops_owned";
     static String shopsUnlocked = "shops_unlocked";
+    static String pendingTransactions = "pending_transaction_messages";
 
     /**
      * Constuctor for database.
@@ -45,7 +51,8 @@ public abstract class Database {
     public abstract void load();
 
     /**
-     * Initializes SQL connection.
+     * Initializes SQL connection by attempting to execute select statements from
+     * respective tables in the database.
      */
     public void initialize() {
         connection = getSQLConnection();
@@ -54,6 +61,9 @@ public abstract class Database {
             ResultSet rs = ps.executeQuery();
             close(ps, rs);
             ps = connection.prepareStatement("SELECT * FROM " + shopsUnlocked + " WHERE player = ?");
+            rs = ps.executeQuery();
+            close(ps, rs);
+            ps = connection.prepareStatement("SELECT * FROM " + pendingTransactions + " WHERE player = ?");
             rs = ps.executeQuery();
             close(ps, rs);
         } catch (SQLException ex) {
@@ -84,14 +94,7 @@ public abstract class Database {
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
+            close(ps, conn);
         }
         return result;
     }
@@ -118,14 +121,7 @@ public abstract class Database {
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
+            close(ps, conn);
         }
         return result;
     }
@@ -148,14 +144,7 @@ public abstract class Database {
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
+            close(ps, conn);
         }
     }
 
@@ -176,14 +165,7 @@ public abstract class Database {
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
+            close(ps, conn);
         }
     }
 
@@ -209,15 +191,64 @@ public abstract class Database {
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
+            close(ps, conn);
         }
+    }
+
+    public void storeMessage(String ownerID, Player customer, boolean selling, ItemStack item, int amount,
+            double totalCost) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int sell = selling ? 1 : 0;
+        ItemMeta meta = item.getItemMeta();
+        String itemName = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("INSERT INTO " + pendingTransactions
+                    + " (player,customer,selling,item_name,amount,total_cost) VALUES('" + ownerID + "', '"
+                    + customer.getUniqueId().toString() + "'," + sell + ", '" + itemName + "', " + amount + ", "
+                    + totalCost + ");");
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            close(ps, conn);
+        }
+    }
+
+    public List<String> getMessages(String ownerID) {
+        List<String> messages = new ArrayList<>();
+        String sellMessage = plugin.getConfig().getString("customer-buy-success-owner");
+        String buyMessage = plugin.getConfig().getString("customer-sell-success-owner");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + pendingTransactions + " WHERE player = '" + ownerID + "';");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Player customer = Bukkit.getPlayer(UUID.fromString(rs.getString("customer")));
+                String itemName = rs.getString("item_name");
+                int amount = rs.getInt("amount");
+                double totalCost = rs.getDouble("total_cost");
+                String message;
+                if (rs.getBoolean("selling")) {
+                    message = MessageUtils.convertMessage(sellMessage, ownerID, customer, totalCost, itemName, amount);
+                } else {
+                    message = MessageUtils.convertMessage(buyMessage, ownerID, customer, totalCost, itemName, amount);
+                }
+                messages.add(message);
+            }
+            close(ps, rs);
+            ps = conn.prepareStatement("DELETE FROM " + pendingTransactions + " WHERE player = '" + ownerID + "';");
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            close(ps, conn);
+        }
+        return messages;
     }
 
     /**
@@ -235,6 +266,17 @@ public abstract class Database {
                 rs.close();
         } catch (SQLException ex) {
             Errors.close(plugin, ex);
+        }
+    }
+
+    public void close(PreparedStatement ps, Connection conn) {
+        try {
+            if (ps != null)
+                ps.close();
+            if (conn != null)
+                conn.close();
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
         }
     }
 }

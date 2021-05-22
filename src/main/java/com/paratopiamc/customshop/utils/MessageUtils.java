@@ -10,11 +10,16 @@ public class MessageUtils {
     public static String convertMessage(String message, String ownerID, Player viewer, double total, ItemStack item,
             int amount) {
         ItemMeta meta = item.getItemMeta();
+        String itemName = item == null ? "" : meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
+        return convertMessage(message, ownerID, viewer, total, itemName, amount);
+    }
+
+    public static String convertMessage(String message, String ownerID, Player viewer, double total, String itemName,
+            int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
         message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
         message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadablePriceFromNumber(total));
-        message = message.replaceAll("\\{%item%\\}",
-                item == null ? "" : meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString());
+        message = message.replaceAll("\\{%item%\\}", itemName == null ? "" : itemName);
         message = message.replaceAll("\\{%amount%\\}", "" + amount);
         return message;
     }
