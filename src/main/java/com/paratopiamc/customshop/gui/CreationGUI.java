@@ -24,10 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
