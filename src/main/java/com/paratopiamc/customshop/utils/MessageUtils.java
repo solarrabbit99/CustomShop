@@ -2,6 +2,7 @@ package com.paratopiamc.customshop.utils;
 
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,8 +15,8 @@ public class MessageUtils {
         return convertMessage(message, ownerID, viewer, total, itemName, amount);
     }
 
-    public static String convertMessage(String message, String ownerID, Player viewer, double total, String itemName,
-            int amount) {
+    public static String convertMessage(String message, String ownerID, OfflinePlayer viewer, double total,
+            String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
         message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
         message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadablePriceFromNumber(total));

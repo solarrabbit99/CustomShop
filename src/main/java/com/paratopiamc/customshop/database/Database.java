@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -246,7 +247,7 @@ public abstract class Database {
             ps = conn.prepareStatement("SELECT * FROM " + pendingTransactions + " WHERE player = '" + ownerID + "';");
             rs = ps.executeQuery();
             while (rs.next()) {
-                Player customer = Bukkit.getPlayer(UUID.fromString(rs.getString("customer")));
+                OfflinePlayer customer = Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("customer")));
                 String itemName = rs.getString("item_name");
                 int amount = rs.getInt("amount");
                 double totalCost = rs.getDouble("total_cost");

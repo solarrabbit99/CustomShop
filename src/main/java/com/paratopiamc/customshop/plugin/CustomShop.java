@@ -27,6 +27,7 @@ import com.paratopiamc.customshop.crate.SetCrate;
 import com.paratopiamc.customshop.database.Database;
 import com.paratopiamc.customshop.database.SQLite;
 import com.paratopiamc.customshop.gui.CreationGUI;
+import com.paratopiamc.customshop.player.PlayerJoin;
 import com.paratopiamc.customshop.player.PlayerLeave;
 import com.paratopiamc.customshop.player.PlayerMove;
 import com.paratopiamc.customshop.player.PlayerState;
@@ -37,7 +38,6 @@ import com.paratopiamc.customshop.shop.ShopOpening;
 import com.paratopiamc.customshop.shop.ShopRemoval;
 import com.paratopiamc.customshop.shop.vm.VMInteractInventory;
 import com.paratopiamc.customshop.shop.vm.VMListItem;
-
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -86,6 +86,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new PlayerMove(), this);
         pluginManager.registerEvents(new PlayerLeave(), this);
         pluginManager.registerEvents(new PlaceKey(), this);
+        pluginManager.registerEvents(new PlayerJoin(), this);
         PluginCommand mainCommand = getCommand("customshop");
         mainCommand.setExecutor(new CSComdExec());
         mainCommand.setTabCompleter(new AutoComplete());

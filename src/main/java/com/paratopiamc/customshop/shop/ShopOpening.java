@@ -70,8 +70,7 @@ public class ShopOpening implements Listener {
      * Checker for which subtype of {@link ShopGUI} to be used. It is assumed that a
      * custom shop, if there is any, is the only entity within a particular barrier
      * block. Conversely, each custom shop has an armor stand embedded in at least a
-     * barrier block. Return {@code null} if player is not owner of the shop or no
-     * ShopGUI can be used.
+     * barrier block. Return {@code null} if no ShopGUI can be used.
      *
      * @param armorStand {@link ArmorStand} targeted by player
      * @param player     player attempting to access shop
@@ -88,6 +87,6 @@ public class ShopOpening implements Listener {
                 result = Optional.empty();
                 break;
         }
-        return result.filter(gui -> gui.isOwner()).orElse(null);
+        return result.orElse(null);
     }
 }
