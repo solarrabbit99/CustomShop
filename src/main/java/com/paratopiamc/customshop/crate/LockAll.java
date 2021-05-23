@@ -44,7 +44,7 @@ public class LockAll extends CSComd {
             sender.sendMessage("§cInvalid number of arguments!");
             return false;
         }
-        Player player = Bukkit.getPlayerExact(args[0]);
+        Player player = Bukkit.getPlayerExact(args[1]);
         if (player == null) {
             sender.sendMessage("§cCannot find specified player!");
             return false;

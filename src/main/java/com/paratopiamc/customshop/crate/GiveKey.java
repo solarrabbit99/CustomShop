@@ -46,17 +46,17 @@ public class GiveKey extends CSComd {
             sender.sendMessage("§cYou do not have permission to use this command.");
             return false;
         }
-        if (args.length < 2) {
+        if (args.length < 3) {
             sender.sendMessage("§cInvalid number of arguments!");
             return false;
         }
-        Player player = Bukkit.getPlayerExact(args[0]);
+        Player player = Bukkit.getPlayerExact(args[1]);
         if (player == null) {
             sender.sendMessage("§cCannot find specified player!");
             return true;
         }
         try {
-            int amount = Integer.parseInt(args[1]);
+            int amount = Integer.parseInt(args[2]);
             ItemStack keys = new Key(amount);
             HashMap<Integer, ItemStack> remain = player.getInventory().addItem(keys);
             if (remain.isEmpty()) {

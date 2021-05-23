@@ -18,8 +18,10 @@
 
 package com.paratopiamc.customshop.plugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -28,18 +30,25 @@ public class AutoComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        String[] array = new String[] { "newshop", "removeshop", "gettotal" };
-        List<String> subCommands = Arrays.asList(array);
-        if (sender.hasPermission("customshop.setcrate")) {
-            subCommands.add("setcrate");
+        if (args.length == 1) {
+            String[] array = new String[] { "newshop", "removeshop", "gettotal" };
+            List<String> subCommands = new ArrayList<>(Arrays.asList(array));
+            if (sender.hasPermission("customshop.setcrate")) {
+                subCommands.add("setcrate");
+            }
+            if (sender.hasPermission("customshop.givekey")) {
+                subCommands.add("givekey");
+            }
+            if (sender.hasPermission("customshop.lockall")) {
+                subCommands.add("lockall");
+            }
+            return subCommands;
+        } else if (args.length == 2 && ((args[0].equals("givekey") && sender.hasPermission("customshop.givekey"))
+                || (args[0].equals("lockall") && sender.hasPermission("customshop.lockall")))) {
+            return CustomShop.getPlugin().getServer().getOnlinePlayers().stream().map(p -> p.getName())
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
         }
-        if (sender.hasPermission("customshop.givekey")) {
-            subCommands.add("givekey");
-        }
-        if (sender.hasPermission("customshop.lockall")) {
-            subCommands.add("lockall");
-        }
-        return subCommands;
     }
-
 }
