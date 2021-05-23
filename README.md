@@ -14,6 +14,20 @@ chest-shops.
 A shop design with 27 available slots used only for selling items. The shop is
 capable of selling different types of items at once, each with its own price.
 
+#### Steps to buy items
+
+1.  Right click on the vending machine.
+2.  Select the item to purchase.
+3.  Type the amount of item to purchase in chat.
+
+#### Steps to list items
+
+1.  Sneak + punch the vending machine that you own with **empty main hand**.
+2.  Put items into the shop, leaving one sample in main hand.
+3.  Close inventory view and sneak + punch the vending machine again with
+    the **item in main hand**.
+4.  Type the price that you want to sell it for in chat.
+
 ### Newt's Briefcase
 
 A shop capable of holding virtually as much items of the same type as you want
@@ -54,6 +68,35 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td>Sand Vending Machine</td>
 </tr>
 </tbody></table>
+
+## Commands
+
+The plugin provides the following commands:
+
+-   `/customshop newshop` - Opens up a shop creation GUI with available designs
+    for players to choose from.
+-   `/customshop removeshop` - An alternative way of removing shops that you own
+    other than breaking the shop manually.
+-   `/customshop gettotal` - Get the total number of shops that you owned.
+-   `/customshop setcrate` - Set a block as a crate to use the custom shop crate
+    key on.
+-   `/customshop lockall <player>` - Locks all the available designs of a player.
+-   `/customshop givekey <player> <amount>` - Give player the specifide amount
+    of crate keys.
+
+## Dependencies
+
+The plugin requires **ProtocolLib**, **Vault** and one of its supporting economy
+plugins to be enabled.
+
+## Installation
+
+1.  Download the latest version of the plugin .jar file and put it into the
+    `plugins` folder.
+2.  Download the resource pack needed to render the custom shop's textures here,
+    and combine it with your server resource pack or put it in your personal
+    resource pack folder.
+3.  Start/restart the server.
 
 ## Deconflicts
 
@@ -97,7 +140,10 @@ with other plugins.
 1. `§e§lCustom Shops`
 2. `§5§lVending Machine`
 
-## Dependencies
+## Adding Custom Models
 
-The plugin requires **ProtocolLib**, **Vault** and one of its supporting economy plugins to be
-enabled.
+You can design your own custom models. To do that, you just have to put the JSON
+file into the resource pack and update `paper.json` with additional predicate
+mapping to a custom model data (integer). Afterwhich, update the `config.yml`
+file to include new model with its corresponding custom model data. More
+informative instructions will be added _soon_.

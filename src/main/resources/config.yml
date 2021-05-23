@@ -7,6 +7,9 @@
 # How many custom shops can a player own?
 max-shops: 5
 
+# Unlock all designs for all players? (`/customshop lockall <player>` command will have no effect if enabled)
+unlock-all: true
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                      Crate Key                       | #

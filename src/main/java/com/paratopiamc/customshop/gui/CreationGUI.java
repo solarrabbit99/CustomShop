@@ -52,7 +52,9 @@ public class CreationGUI {
      */
     private CreationGUI(Player player) {
         this.currentPage = 0;
-        unlockedShops = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
+        if (!CustomShop.getPlugin().getConfig().getBoolean("unlock-all")) {
+            unlockedShops = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
+        }
         this.setUpGUI(player);
     }
 
@@ -103,7 +105,9 @@ public class CreationGUI {
         LinkedList<String> iterNames = (LinkedList<String>) names.clone();
         @SuppressWarnings("unchecked")
         LinkedList<Integer> iterModelData = (LinkedList<Integer>) modelData.clone();
-        iterModelData.replaceAll(e -> unlockedShops.contains(e) ? e : getDefault(e));
+        if (unlockedShops != null) {
+            iterModelData.replaceAll(e -> unlockedShops.contains(e) ? e : getDefault(e));
+        }
         pages = new Inventory[noOfPages];
 
         int item = 0;
