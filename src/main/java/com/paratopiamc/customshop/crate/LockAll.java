@@ -19,18 +19,28 @@
 package com.paratopiamc.customshop.crate;
 
 import java.util.ArrayList;
+import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /** Locks and resets all unlocked custom shops of the specified player. */
-public class LockAll implements CommandExecutor {
+public class LockAll extends CSComd {
+    private String[] args;
+
+    public LockAll(CommandSender sender, String[] args) {
+        this.sender = sender;
+        this.args = args;
+    }
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1) {
+    public boolean exec() {
+        if (!sender.hasPermission("customshop.lockall")) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
+            return false;
+        }
+        if (args.length < 2) {
             sender.sendMessage("§cInvalid number of arguments!");
             return false;
         }

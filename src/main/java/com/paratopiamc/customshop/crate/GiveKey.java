@@ -19,21 +19,33 @@
 package com.paratopiamc.customshop.crate;
 
 import java.util.HashMap;
+
+import com.paratopiamc.customshop.plugin.CSComd;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Gives specified player in the first position of args when using
- * {@code /givekey} the amount of crate keys specified in the second position of
- * args. Process fails if target player doesn't have enough inventory space.
+ * {@code /customshop givekey} the amount of crate keys specified in the second
+ * position of args. Process fails if target player doesn't have enough
+ * inventory space.
  */
-public class GiveKey implements CommandExecutor {
+public class GiveKey extends CSComd {
+    private String[] args;
+
+    public GiveKey(CommandSender sender, String[] args) {
+        this.sender = sender;
+        this.args = args;
+    }
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean exec() {
+        if (!sender.hasPermission("customshop.givekey")) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
+            return false;
+        }
         if (args.length < 2) {
             sender.sendMessage("§cInvalid number of arguments!");
             return false;

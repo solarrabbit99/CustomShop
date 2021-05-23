@@ -21,9 +21,6 @@ package com.paratopiamc.customshop.plugin;
 import net.milkbowl.vault.economy.Economy;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.paratopiamc.customshop.crate.GetTotal;
-import com.paratopiamc.customshop.crate.GiveKey;
-import com.paratopiamc.customshop.crate.LockAll;
 import com.paratopiamc.customshop.crate.OpenCrate;
 import com.paratopiamc.customshop.crate.PlaceKey;
 import com.paratopiamc.customshop.crate.SetCrate;
@@ -40,6 +37,8 @@ import com.paratopiamc.customshop.shop.ShopOpening;
 import com.paratopiamc.customshop.shop.ShopRemoval;
 import com.paratopiamc.customshop.shop.vm.VMInteractInventory;
 import com.paratopiamc.customshop.shop.vm.VMListItem;
+
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -87,12 +86,10 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new PlayerMove(), this);
         pluginManager.registerEvents(new PlayerLeave(), this);
         pluginManager.registerEvents(new PlaceKey(), this);
-        getCommand("newshop").setExecutor(new ShopCreation());
-        getCommand("removeshop").setExecutor(new ShopRemoval());
-        getCommand("setcrate").setExecutor(new SetCrate(this));
-        getCommand("gettotal").setExecutor(new GetTotal());
-        getCommand("givekey").setExecutor(new GiveKey());
-        getCommand("lockall").setExecutor(new LockAll());
+        PluginCommand mainCommand = getCommand("customshop");
+        mainCommand.setExecutor(new CSComdExec());
+        mainCommand.setTabCompleter(new AutoComplete());
+        SetCrate.createCustomConfig(this);
         VMInteractInventory.initConversationFactory(this);
         VMListItem.initConversationFactory(this);
 

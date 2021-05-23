@@ -20,11 +20,10 @@ package com.paratopiamc.customshop.crate;
 
 import java.io.File;
 import java.io.IOException;
+import com.paratopiamc.customshop.plugin.CSComd;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,23 +32,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /** Set the position of custom shop crate in {@code config.yml}. */
-public class SetCrate implements CommandExecutor {
+public class SetCrate extends CSComd {
     private static File crateLocationFile;
     private static FileConfiguration crateLocation;
 
-    /**
-     * Constructor that calls {@link #createCustomConfig(JavaPlugin)} given plugin
-     * instance.
-     *
-     * @param plugin plugin instance
-     */
-    public SetCrate(JavaPlugin plugin) {
-        createCustomConfig(plugin);
+    public SetCrate(CommandSender sender) {
+        this.sender = sender;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean exec() {
+        if (!(sender instanceof Player) || !sender.hasPermission("customshop.setcrate")) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
             return false;
         }
         Player player = (Player) sender;
@@ -81,7 +75,7 @@ public class SetCrate implements CommandExecutor {
      *
      * @param plugin plugin instance
      */
-    private void createCustomConfig(JavaPlugin plugin) {
+    public static void createCustomConfig(JavaPlugin plugin) {
         crateLocationFile = new File(plugin.getDataFolder(), "crate-location.yml");
         if (!crateLocationFile.exists()) {
             crateLocationFile.getParentFile().mkdirs();

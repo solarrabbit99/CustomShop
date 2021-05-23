@@ -16,29 +16,18 @@
  *
  */
 
-package com.paratopiamc.customshop.crate;
+package com.paratopiamc.customshop.plugin;
 
-import com.paratopiamc.customshop.plugin.CSComd;
-import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-/**
- * A command executor that returns the number of custom shops owned by the
- * sender.
- */
-public class GetTotal extends CSComd {
-    public GetTotal(CommandSender sender) {
-        this.sender = sender;
-    }
+/** Commands that are under the extension of {@code /customshop} command. */
+public abstract class CSComd {
+    protected CommandSender sender;
 
-    @Override
-    public boolean exec() {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            Integer totalShopsOwned = CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId());
-            player.sendMessage("§9Total custom shops owned: " + totalShopsOwned);
-        }
-        return false;
-    }
+    /**
+     * Calls for execution of respective commands.
+     *
+     * @return {@code true} if command is executed succesfully
+     */
+    public abstract boolean exec();
 }

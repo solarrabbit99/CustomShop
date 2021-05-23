@@ -19,12 +19,11 @@
 package com.paratopiamc.customshop.shop;
 
 import com.paratopiamc.customshop.gui.CreationGUI;
+import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,13 +34,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Encapsulates a shop creation process. Player runs {@code /newshop} to spawn a
- * GUI with the {@link CommandExecutor}. Afterwhich, a shop will attempt to
- * spawn if player clicks on a design listed in the GUI.
+ * Encapsulates a shop creation process. Player runs {@code /customshop newshop}
+ * to spawn a GUI. Afterwhich, a shop will attempt to spawn if player clicks on
+ * a design listed in the GUI.
  */
-public class ShopCreation implements CommandExecutor, Listener {
+public class ShopCreation extends CSComd implements Listener {
+    public ShopCreation() {
+    }
+
+    public ShopCreation(CommandSender sender) {
+        this.sender = sender;
+    }
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean exec() {
         if (!(sender instanceof Player)) {
             return false;
         }

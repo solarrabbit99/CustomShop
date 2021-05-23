@@ -25,13 +25,12 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.paratopiamc.customshop.player.PlayerState;
+import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -41,7 +40,13 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /** Player removing shop, either by breaking or by command. */
-public class ShopRemoval implements CommandExecutor, Listener {
+public class ShopRemoval extends CSComd implements Listener {
+    public ShopRemoval() {
+    }
+
+    public ShopRemoval(CommandSender sender) {
+        this.sender = sender;
+    }
 
     /**
      * Event of player breaking the shop, specifically the barrier blocks in which
@@ -84,7 +89,7 @@ public class ShopRemoval implements CommandExecutor, Listener {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean exec() {
         if (!(sender instanceof Player)) {
             return true;
         }
