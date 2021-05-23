@@ -81,7 +81,7 @@ The plugin provides the following commands:
 -   `/customshop setcrate` - Set a block as a crate to use the custom shop crate
     key on.
 -   `/customshop lockall <player>` - Locks all the available designs of a player.
--   `/customshop givekey <player> <amount>` - Give player the specifide amount
+-   `/customshop givekey <player> <amount>` - Give player the specified amount
     of crate keys.
 
 ## Dependencies
