@@ -18,7 +18,9 @@
 
 package com.paratopiamc.customshop.shop;
 
+import java.util.UUID;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 
 /**
  * Encapsulates a remover of a shop. Each type of custom shops should have a
@@ -33,14 +35,14 @@ public abstract class ShopRemover {
      * containing the custom shop's armor stand entity.
      */
     protected Block targetBlock;
-
-    public ShopRemover(Block targetBlock) {
-        this.targetBlock = targetBlock;
-    }
+    protected ArmorStand armorStand;
+    protected UUID ownerUUID;
 
     /**
      * Main method of the removal to search and remove all relevant entities/blocks
      * related to the custom shop that is currently being removed.
+     *
+     * @return shop owner's UUID
      */
-    public abstract void removeShop();
+    public abstract UUID removeShop();
 }

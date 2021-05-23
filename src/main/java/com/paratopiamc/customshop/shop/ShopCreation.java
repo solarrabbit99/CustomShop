@@ -21,7 +21,6 @@ package com.paratopiamc.customshop.shop;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -84,7 +83,8 @@ public class ShopCreation implements CommandExecutor, Listener {
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);
                     int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
-                    if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player).intValue() >= maxShops) {
+                    if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId())
+                            .intValue() >= maxShops) {
                         player.sendMessage("§cYou have reached the maximum number of custom shops created!");
                         CreationGUI.closeGUI(player);
                         return;

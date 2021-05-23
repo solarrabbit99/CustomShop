@@ -19,11 +19,9 @@
 package com.paratopiamc.customshop.shop.vm;
 
 import java.util.List;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopCreator;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -73,7 +71,7 @@ public class VMCreator implements ShopCreator {
 
         lockArmorStand(armorStand);
 
-        CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner);
+        CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());
 
         return "§aVending machine successfully created!";
     }

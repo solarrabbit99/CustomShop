@@ -18,6 +18,7 @@
 
 package com.paratopiamc.customshop.shop;
 
+import java.util.UUID;
 import com.comphenix.protocol.PacketType.Play.Client;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -27,7 +28,6 @@ import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.UIUtils;
-
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -60,10 +60,10 @@ public class ShopRemoval implements CommandExecutor, Listener {
                 public void run() {
                     if (!evt.isCancelled()) {
                         PlayerState.getPlayerState(player).clearShopInteractions();
-                        remover.removeShop();
+                        UUID ownerID = remover.removeShop();
                         targetBlock.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F,
                                 1.0F);
-                        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
+                        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
                     }
                 }
             };
@@ -96,8 +96,8 @@ public class ShopRemoval implements CommandExecutor, Listener {
         }
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
-            remover.removeShop();
-            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(player);
+            UUID ownerID = remover.removeShop();
+            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
         } else {
             player.sendMessage("§cInvalid target...");
         }

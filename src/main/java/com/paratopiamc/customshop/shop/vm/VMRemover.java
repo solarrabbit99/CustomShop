@@ -18,9 +18,9 @@
 
 package com.paratopiamc.customshop.shop.vm;
 
+import java.util.UUID;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopRemover;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,33 +33,48 @@ import org.bukkit.inventory.meta.BlockStateMeta;
  * Vending machine's shop remover.
  */
 public class VMRemover extends ShopRemover {
-    ArmorStand armorStand;
+    private Location bottom;
+    private Location top;
+    private BlockStateMeta meta;
 
     public VMRemover(Block targetBlock, ArmorStand armorStand) {
-        super(targetBlock);
+        this.targetBlock = targetBlock;
         this.armorStand = armorStand;
-    }
 
-    @Override
-    public void removeShop() {
-        Location bottom = armorStand.getLocation();
-        Location top = armorStand.getLocation();
+        bottom = armorStand.getLocation();
+        top = armorStand.getLocation();
         top.setY(top.getY() + 1);
-        bottom.getBlock().setType(Material.AIR);
-        top.getBlock().setType(Material.AIR);
+
         ItemStack chestItem = armorStand.getEquipment().getChestplate();
         if (chestItem == null || !(chestItem.getItemMeta() instanceof BlockStateMeta)
                 || !(((BlockStateMeta) chestItem.getItemMeta()).getBlockState() instanceof ShulkerBox)) {
             CustomShop.getPlugin().getServer().getConsoleSender()
                     .sendMessage("§c§l[CustomShop] Attempting to remove vending machine at " + bottom
-                            + " with missing shulker box!");
+                            + " with missing shulker box! Report this error!");
         } else {
-            ShulkerBox shulker = (ShulkerBox) ((BlockStateMeta) chestItem.getItemMeta()).getBlockState();
-            shulker.getInventory().forEach(item -> {
-                if (item != null)
-                    armorStand.getWorld().dropItemNaturally(armorStand.getLocation(), item);
-            });
+            meta = (BlockStateMeta) chestItem.getItemMeta();
+            if (meta.hasDisplayName()) {
+                this.ownerUUID = UUID.fromString(meta.getDisplayName());
+            } else {
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Attempting to remove vending machine at " + bottom
+                                + " with shulker box with missing display name! Report this error!");
+            }
         }
+    }
+
+    @Override
+    public UUID removeShop() {
+        bottom.getBlock().setType(Material.AIR);
+        top.getBlock().setType(Material.AIR);
+
+        ShulkerBox shulker = (ShulkerBox) this.meta.getBlockState();
+        shulker.getInventory().forEach(item -> {
+            if (item != null)
+                armorStand.getWorld().dropItemNaturally(armorStand.getLocation(), item);
+        });
+
         armorStand.remove();
+        return this.ownerUUID;
     }
 }

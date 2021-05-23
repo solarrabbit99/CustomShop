@@ -103,11 +103,11 @@ public abstract class Database {
      * Returns the total number of shops owned by player. The number of shops is
      * capped at 99, due to SQL {@code int(2)} declaration.
      *
-     * @param player player of interest
+     * @param playerID UUUID of player of interest
      * @return total custom shops owned by player
      */
-    public Integer getTotalShopOwned(Player player) {
-        String string = player.getUniqueId().toString();
+    public Integer getTotalShopOwned(UUID playerID) {
+        String string = playerID.toString();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -130,16 +130,16 @@ public abstract class Database {
      * Decrements the total number of custom shops owned by the player. Lower limit
      * set to 0.
      *
-     * @param player player of interest
+     * @param playerID UUID of player of interest
      */
-    public void decrementTotalShopsOwned(Player player) {
-        Integer previousTotal = getTotalShopOwned(player);
+    public void decrementTotalShopsOwned(UUID playerID) {
+        Integer previousTotal = getTotalShopOwned(playerID);
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("REPLACE INTO " + totalShopOwned + " (player,total_shops_owned) VALUES('"
-                    + player.getUniqueId().toString() + "', " + (previousTotal - 1) + ")");
+                    + playerID.toString() + "', " + (previousTotal - 1) + ")");
             ps.executeUpdate();
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
@@ -151,16 +151,16 @@ public abstract class Database {
     /**
      * Increments the total number of custom shops owned by the player.
      *
-     * @param player player of interest
+     * @param playerID UUID of player of interest
      */
-    public void incrementTotalShopsOwned(Player player) {
-        Integer previousTotal = getTotalShopOwned(player);
+    public void incrementTotalShopsOwned(UUID playerID) {
+        Integer previousTotal = getTotalShopOwned(playerID);
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("REPLACE INTO " + totalShopOwned + " (player,total_shops_owned) VALUES('"
-                    + player.getUniqueId().toString() + "', " + (previousTotal + 1) + ")");
+                    + playerID.toString() + "', " + (previousTotal + 1) + ")");
             ps.executeUpdate();
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
