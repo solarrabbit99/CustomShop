@@ -70,9 +70,8 @@ customer-sell-fail-item: §cYou do not have the specified amount of the specifie
 #                                                          #
 #   Deconflict your custom model data here. Make sure      #
 #   that the data here correctly corresponds to the data   #
-#   in the resource pack. Keep custom model data to no     #
-#   than 6 digits. DO NOT change it once players start     #
-#   unlocking shops!                                       #
+#   in the resource pack. DO NOT change it once players    #
+#   start unlocking shops!                                 #
 #                                                          #
 ############################################################
 

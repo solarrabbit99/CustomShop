@@ -36,6 +36,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -86,6 +87,22 @@ public class ShopRemoval extends CSComd implements Listener {
                         }
                     }
                 });
+    }
+
+    /**
+     * Event of player breaking the shop in creative, specifically the barrier
+     * blocks in which the armor stands are held within.
+     *
+     * @param evt player breaking block (particularly barrier blocks) event
+     */
+    @EventHandler
+    public void onBarrierBreak(BlockBreakEvent evt) {
+        Player player = evt.getPlayer();
+        Block targetBlock = evt.getBlock();
+        ShopRemover remover = getShopRemover(targetBlock, player);
+        PlayerState.getPlayerState(player).clearShopInteractions();
+        UUID ownerID = remover.removeShop();
+        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
     }
 
     @Override
