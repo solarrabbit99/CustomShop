@@ -145,6 +145,21 @@ public abstract class Database {
         return result;
     }
 
+    public void setShopsOwned(UUID playerID, int number) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO " + totalShopOwned + " (player,total_shops_owned) VALUES('"
+                    + playerID.toString() + "', " + number + ")");
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            close(ps, conn);
+        }
+    }
+
     /**
      * Decrements the total number of custom shops owned by the player. Lower limit
      * set to 0.

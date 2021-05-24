@@ -16,12 +16,13 @@
  *
  */
 
-package com.paratopiamc.customshop.shop.vm;
+package com.paratopiamc.customshop.crate;
 
-import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
+import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationCanceller;
@@ -31,49 +32,44 @@ import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-/**
- * Listener for players interacting with custom shops' GUI, containing handlers
- * for which the player (owner or not) purchases items.
- */
-public class VMInteractInventory implements Listener {
-    private static ConversationFactory purchasingConversation;
+public class SetShopCount extends CSComd {
+    private static ConversationFactory confirmingConversation;
+    private int newCount;
 
-    /**
-     * Event handler for interactions with shop's GUI.
-     *
-     * @param evt event of inventory clicking
-     */
-    @EventHandler
-    public void clickShop(InventoryClickEvent evt) {
-        if (evt.getCurrentItem() == null) {
-            return;
+    public SetShopCount(CommandSender sender, String[] args) {
+        this.sender = sender;
+        this.args = args;
+        initConversationFactory();
+    }
+
+    @Override
+    public boolean exec() {
+        if (!sender.hasPermission("customshop.resetshop") || !(sender instanceof Player)) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
+            return false;
         }
-        InventoryHolder holder = evt.getClickedInventory().getHolder();
-        Player player = (Player) evt.getWhoClicked();
-        String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§5§lVending Machine")) {
-            if (holder == null) {
-                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                } else if (evt.getSlot() < 27) {
-                    PlayerState state = PlayerState.getPlayerState(player);
-                    VMGUI ui = (VMGUI) state.getShopGUI();
-                    ItemStack item = ui.getItem(evt.getSlot());
-                    state.startPurchase(item, purchasingConversation);
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                }
-            }
-            evt.setCancelled(true);
+        if (args.length < 3) {
+            sender.sendMessage("§cInvalid number of arguments!");
+            return false;
         }
+        Player player = Bukkit.getPlayerExact(args[1]);
+        if (player == null) {
+            sender.sendMessage("§cCannot find specified player or the player is not online!");
+            return true;
+        }
+        try {
+            this.newCount = Integer.parseInt(SetShopCount.this.args[2]);
+        } catch (NumberFormatException e) {
+            player.sendMessage("§cInvalid number input!");
+            return false;
+        }
+        PlayerState state = PlayerState.getPlayerState(player);
+        if (!state.startConversation(confirmingConversation)) {
+            player.sendMessage("§cYou are still engaged in another conversation!");
+        }
+        return true;
     }
 
     /**
@@ -81,8 +77,9 @@ public class VMInteractInventory implements Listener {
      *
      * @param plugin instance of plugin that owns the factory
      */
-    public static void initConversationFactory(Plugin plugin) {
-        purchasingConversation = new ConversationFactory(plugin).withFirstPrompt(new AmountPrompt()).withModality(false)
+    private void initConversationFactory() {
+        Plugin plugin = CustomShop.getPlugin();
+        confirmingConversation = new ConversationFactory(plugin).withFirstPrompt(new AmountPrompt()).withModality(false)
                 .withLocalEcho(false)
                 .withConversationCanceller(new InactivityConversationCanceller(CustomShop.getPlugin(), 10))
                 .addConversationAbandonedListener(new ConversationAbandonedListener() {
@@ -101,30 +98,33 @@ public class VMInteractInventory implements Listener {
     /**
      * Prompt when player attempts to purchase from Vending Machine.
      */
-    private static class AmountPrompt extends StringPrompt {
+    private class AmountPrompt extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "§aEnter the amount that you want to purchase...";
+            return "§9Be sure that the player has the correct number of existing shops before issuing the command."
+                    + "Confirm reset? (y/n)";
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
-                PlayerState state = PlayerState.getPlayerState(player);
-                ItemStack purchasingItem = state.removePurchase();
-                VMGUI ui = (VMGUI) state.getShopGUI();
-                try {
-                    int inputInt = Integer.parseInt(input);
-                    double inputDouble = Double.parseDouble(input);
-
-                    if (inputInt != inputDouble || inputDouble <= 0) {
+                switch (input) {
+                    case "y":
+                        try {
+                            CustomShop.getPlugin().getDatabase().setShopsOwned(player.getUniqueId(),
+                                    SetShopCount.this.newCount);
+                            player.sendMessage("§aPlayer total shop count set to " + SetShopCount.this.newCount + "!");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§cInvalid number input!");
+                        }
+                        break;
+                    case "n":
+                        player.sendMessage("§cOperation cancelled!");
+                        break;
+                    default:
                         player.sendMessage("§cInvalid input!");
-                    } else if (context.getForWhom() instanceof Player) {
-                        ui.purchaseItem(purchasingItem, inputInt);
-                    }
-                } catch (NumberFormatException e) {
-                    player.sendMessage("§cInvalid input!");
+                        break;
                 }
             } else {
                 // Should not get here.
@@ -133,4 +133,5 @@ public class VMInteractInventory implements Listener {
             return END_OF_CONVERSATION;
         }
     }
+
 }

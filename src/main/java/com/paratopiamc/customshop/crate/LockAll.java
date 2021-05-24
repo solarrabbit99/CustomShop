@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 
 /** Locks and resets all unlocked custom shops of the specified player. */
 public class LockAll extends CSComd {
-    private String[] args;
 
     public LockAll(CommandSender sender, String[] args) {
         this.sender = sender;

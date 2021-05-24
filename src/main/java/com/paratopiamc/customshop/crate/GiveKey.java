@@ -33,7 +33,6 @@ import org.bukkit.inventory.ItemStack;
  * inventory space.
  */
 public class GiveKey extends CSComd {
-    private String[] args;
 
     public GiveKey(CommandSender sender, String[] args) {
         this.sender = sender;

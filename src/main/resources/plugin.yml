@@ -20,6 +20,8 @@ permissions:
     customshop.lockall:
         description: User able to lock all custom shops of a player.
         default: op
+    customshop.setcount:
+        description: User able to set the shop count of a player.
     customshop.admin:
         description: User able to perform all commands.
         default: op
@@ -27,3 +29,4 @@ permissions:
             customshop.setcrate: true
             customshop.givekey: true
             customshop.lockall: true
+            customshop.setcount: true

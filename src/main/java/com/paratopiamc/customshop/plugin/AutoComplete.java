@@ -42,9 +42,13 @@ public class AutoComplete implements TabCompleter {
             if (sender.hasPermission("customshop.lockall")) {
                 subCommands.add("lockall");
             }
+            if (sender.hasPermission("customshop.setcount")) {
+                subCommands.add("setcount");
+            }
             return subCommands;
         } else if (args.length == 2 && ((args[0].equals("givekey") && sender.hasPermission("customshop.givekey"))
-                || (args[0].equals("lockall") && sender.hasPermission("customshop.lockall")))) {
+                || (args[0].equals("lockall") && sender.hasPermission("customshop.lockall"))
+                || (args[0].equals("setcount") && sender.hasPermission("customshop.setcount")))) {
             return CustomShop.getPlugin().getServer().getOnlinePlayers().stream().map(p -> p.getName())
                     .collect(Collectors.toList());
         } else {

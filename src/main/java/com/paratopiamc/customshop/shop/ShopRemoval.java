@@ -100,9 +100,11 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = evt.getPlayer();
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
-        PlayerState.getPlayerState(player).clearShopInteractions();
-        UUID ownerID = remover.removeShop();
-        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+        if (remover != null) {
+            PlayerState.getPlayerState(player).clearShopInteractions();
+            UUID ownerID = remover.removeShop();
+            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+        }
     }
 
     @Override
