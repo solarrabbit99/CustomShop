@@ -104,6 +104,8 @@ public class ShopRemoval extends CSComd implements Listener {
             PlayerState.getPlayerState(player).clearShopInteractions();
             UUID ownerID = remover.removeShop();
             CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+        } else if (UIUtils.getArmorStand(targetBlock) != null) {
+            evt.setCancelled(true);
         }
     }
 

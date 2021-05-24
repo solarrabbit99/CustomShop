@@ -88,7 +88,7 @@ public class SetShopCount extends CSComd {
                         ConversationCanceller canceller = abandonedEvent.getCanceller();
                         Player player = (Player) abandonedEvent.getContext().getForWhom();
                         if (canceller != null) {
-                            player.sendMessage("§cShop purchase cancelled...");
+                            player.sendMessage("§cOperation cancelled...");
                         }
                         PlayerState.getPlayerState(player).clearShopInteractions();
                     }
@@ -101,7 +101,7 @@ public class SetShopCount extends CSComd {
     private class AmountPrompt extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "§9Be sure that the player has the correct number of existing shops before issuing the command."
+            return "§9Be sure that the player has the correct number of existing shops before issuing the command. "
                     + "Confirm reset? (y/n)";
         }
 
