@@ -67,6 +67,14 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td>Nether Vending Machine</td>
 <td>Sand Vending Machine</td>
 </tr>
+<tr>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/1Jj8Gc6" title="Prismarine Vending Machine">
+<img src="https://i.imgur.com/1Jj8Gc6.png" decoding="async" width="128"></a>
+</td></tr>
+<tr>
+<td>Prismarine Vending Machine</td>
+</tr>
 </tbody></table>
 
 ## Commands
