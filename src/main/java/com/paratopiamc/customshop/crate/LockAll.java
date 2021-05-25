@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.crate;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
@@ -48,8 +50,10 @@ public class LockAll extends CSComd {
             sender.sendMessage("§cCannot find specified player!");
             return false;
         }
-        CustomShop.getPlugin().getDatabase().setUnlockedShops(player, new ArrayList<>());
-        sender.sendMessage("§aSuccessfully locked all custom shops of the specified player!");
+        CompletableFuture.runAsync(() -> {
+            CustomShop.getPlugin().getDatabase().setUnlockedShops(player, new ArrayList<>());
+            sender.sendMessage("§aSuccessfully locked all custom shops of the specified player!");
+        });
         return true;
     }
 }

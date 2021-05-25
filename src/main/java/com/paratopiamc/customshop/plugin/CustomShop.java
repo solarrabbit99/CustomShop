@@ -42,6 +42,8 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChainFactory;
 
 /**
  * A custom chestshop plugin that implements custom shop designs.
@@ -53,6 +55,7 @@ public final class CustomShop extends JavaPlugin {
     private Economy economy;
     private ProtocolManager protocolManager;
     private Database database;
+    private TaskChainFactory taskChainFactory;
 
     @Override
     public void onEnable() {
@@ -96,6 +99,8 @@ public final class CustomShop extends JavaPlugin {
 
         this.database = new SQLite(this);
         this.database.load();
+
+        this.taskChainFactory = BukkitTaskChainFactory.create(this);
 
         saveDefaultConfig();
         CreationGUI.initialize();
@@ -160,5 +165,14 @@ public final class CustomShop extends JavaPlugin {
      */
     public ProtocolManager getProtocolManager() {
         return this.protocolManager;
+    }
+
+    /**
+     * Return {@link TaskChainFactory} of the plugin instance.
+     *
+     * @return TaskChainFactory
+     */
+    public TaskChainFactory getTaskChainFactory() {
+        return this.taskChainFactory;
     }
 }

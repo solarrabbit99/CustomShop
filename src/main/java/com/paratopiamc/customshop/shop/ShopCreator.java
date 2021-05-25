@@ -36,7 +36,6 @@ public interface ShopCreator {
      * @param location location in which the shop will attempt on top of
      * @param owner    owner of the shop
      * @param item     design of the shop
-     * @return feedback message to be sent to the player involved
      */
-    public String createShop(Location location, Player owner, ItemStack item);
+    public void createShop(Location location, Player owner, ItemStack item);
 }

@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.gui;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -96,7 +98,8 @@ public abstract class ShopGUI {
             if (owner.isOnline()) {
                 owner.getPlayer().sendMessage(ownerMessage);
             } else {
-                CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer, true, item, amount, totalCost);
+                CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer,
+                        true, item, amount, totalCost));
             }
             return true;
         }

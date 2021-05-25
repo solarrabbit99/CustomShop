@@ -36,8 +36,9 @@ public class GetTotal extends CSComd {
     public boolean exec() {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            Integer totalShopsOwned = CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId());
-            player.sendMessage("§9Total custom shops owned: " + totalShopsOwned);
+            CustomShop.getPlugin().getTaskChainFactory().newSharedChain("GETTOTAL").<Integer>asyncFirstCallback(
+                    task -> task.accept(CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId())))
+                    .syncLast(total -> player.sendMessage("§9Total custom shops owned: " + total)).execute();
         }
         return false;
     }

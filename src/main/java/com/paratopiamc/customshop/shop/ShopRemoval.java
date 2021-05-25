@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.shop;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 import com.comphenix.protocol.PacketType.Play.Client;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -69,7 +71,8 @@ public class ShopRemoval extends CSComd implements Listener {
                         UUID ownerID = remover.removeShop();
                         targetBlock.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F,
                                 1.0F);
-                        CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+                        CompletableFuture
+                                .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
                     }
                 }
             };
@@ -103,7 +106,7 @@ public class ShopRemoval extends CSComd implements Listener {
         if (remover != null) {
             PlayerState.getPlayerState(player).clearShopInteractions();
             UUID ownerID = remover.removeShop();
-            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+            CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
         } else if (UIUtils.getArmorStand(targetBlock) != null) {
             evt.setCancelled(true);
         }
@@ -123,7 +126,7 @@ public class ShopRemoval extends CSComd implements Listener {
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
             UUID ownerID = remover.removeShop();
-            CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID);
+            CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
         } else {
             player.sendMessage("§cInvalid target...");
         }

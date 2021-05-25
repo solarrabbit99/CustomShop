@@ -112,15 +112,19 @@ public class SetShopCount extends CSComd {
                 switch (input) {
                     case "y":
                         try {
-                            CustomShop.getPlugin().getDatabase().setShopsOwned(player.getUniqueId(),
-                                    SetShopCount.this.newCount);
-                            player.sendMessage("§aPlayer total shop count set to " + SetShopCount.this.newCount + "!");
+                            CustomShop.getPlugin().getTaskChainFactory().newSharedChain("SETSHOPCOUNT")
+                                    .async(() -> CustomShop.getPlugin().getDatabase()
+                                            .setShopsOwned(player.getUniqueId(), SetShopCount.this.newCount))
+                                    .sync(() -> player.sendMessage(
+                                            "§aPlayer total shop count set to " + SetShopCount.this.newCount + "!"))
+                                    .execute();
+                            ;
                         } catch (NumberFormatException e) {
                             player.sendMessage("§cInvalid number input!");
                         }
                         break;
                     case "n":
-                        player.sendMessage("§cOperation cancelled!");
+                        player.sendMessage("§cOperation cancelled...");
                         break;
                     default:
                         player.sendMessage("§cInvalid input!");

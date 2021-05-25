@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.player;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,8 +29,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent evt) {
-        List<String> messages = CustomShop.getPlugin().getDatabase()
-                .getMessages(evt.getPlayer().getUniqueId().toString());
-        messages.forEach(e -> evt.getPlayer().sendMessage(e));
+        CompletableFuture.runAsync(() -> {
+            List<String> messages = CustomShop.getPlugin().getDatabase()
+                    .getMessages(evt.getPlayer().getUniqueId().toString());
+            messages.forEach(e -> evt.getPlayer().sendMessage(e));
+        });
     }
 }

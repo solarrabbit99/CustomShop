@@ -20,6 +20,8 @@ package com.paratopiamc.customshop.crate;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Sound;
@@ -30,6 +32,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import co.aikar.taskchain.TaskChain;
 
 /** Encapsulated an event of player attempting to open a custom shop crate. */
 public class OpenCrate implements Listener {
@@ -61,15 +64,23 @@ public class OpenCrate implements Listener {
                 int index = rng.nextInt(CreationGUI.noOfItems);
                 int unlocked = CreationGUI.modelData.get(index);
                 String name = CreationGUI.names.get(index);
-                List<Integer> lst = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
-                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.5F, 1.0F);
-                if (lst.contains(unlocked)) {
-                    player.sendMessage("§6You already have " + name + " unlocked :(");
-                } else {
-                    lst.add(unlocked);
-                    CustomShop.getPlugin().getDatabase().setUnlockedShops(player, lst);
-                    player.sendMessage("§aNew custom shop unlocked! " + name);
-                }
+
+                TaskChain<?> task = CustomShop.getPlugin().getTaskChainFactory().newSharedChain("OPENCRATE")
+                        .<List<Integer>>asyncFirstCallback(
+                                next -> next.accept(CustomShop.getPlugin().getDatabase().getUnlockedShops(player)))
+                        .syncLast(list -> {
+                            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.5F, 1.0F);
+                            if (list.contains(unlocked)) {
+                                player.sendMessage("§6You already have " + name + " unlocked :(");
+                            } else {
+                                list.add(unlocked);
+                                CompletableFuture.runAsync(() -> {
+                                    CustomShop.getPlugin().getDatabase().setUnlockedShops(player, list);
+                                    player.sendMessage("§aNew custom shop unlocked! " + name);
+                                });
+                            }
+                        });
+                task.execute();
             }
         }
     }

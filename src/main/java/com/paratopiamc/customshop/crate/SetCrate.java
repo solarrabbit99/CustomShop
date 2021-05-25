@@ -20,9 +20,8 @@ package com.paratopiamc.customshop.crate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CSComd;
-import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,7 +31,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /** Set the position of custom shop crate in {@code config.yml}. */
 public class SetCrate extends CSComd {
@@ -61,18 +59,16 @@ public class SetCrate extends CSComd {
             crateLocation.set("crate-location.x", targetBlock.getLocation().getX());
             crateLocation.set("crate-location.y", targetBlock.getLocation().getY());
             crateLocation.set("crate-location.z", targetBlock.getLocation().getZ());
-            player.sendMessage("§aSet chest as crate chest!");
-            BukkitRunnable saveConfig = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        crateLocation.save(crateLocationFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    crateLocation.save(crateLocationFile);
+                    player.sendMessage("§aSet chest as crate chest!");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            };
-            saveConfig.runTaskAsynchronously(CustomShop.getPlugin());
+            });
+
             return true;
         }
         return false;

@@ -89,20 +89,25 @@ public class ShopCreation extends CSComd implements Listener {
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);
                     int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
-                    if (CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId())
-                            .intValue() >= maxShops) {
-                        player.sendMessage("§cYou have reached the maximum number of custom shops created!");
-                        CreationGUI.closeGUI(player);
-                        return;
-                    }
-                    if (targetBlock == null) {
-                        player.sendMessage("§cYou are not targeting any block...");
-                        return;
-                    }
-                    Location location = getCreationLocation(targetBlock, player);
-                    ShopCreator creator = getShopCreator(itemMeta);
-                    player.sendMessage(creator.createShop(location, player, item));
-                    CreationGUI.closeGUI(player);
+                    CustomShop.getPlugin().getTaskChainFactory().newSharedChain("SHOPCREATION")
+                            .<Integer>asyncFirstCallback(task -> task.accept(
+                                    CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId())))
+                            .syncLast(number -> {
+                                if (number.intValue() >= maxShops) {
+                                    player.sendMessage(
+                                            "§cYou have reached the maximum number of custom shops created!");
+                                    CreationGUI.closeGUI(player);
+                                    return;
+                                }
+                                if (targetBlock == null) {
+                                    player.sendMessage("§cYou are not targeting any block...");
+                                    return;
+                                }
+                                Location location = getCreationLocation(targetBlock, player);
+                                ShopCreator creator = getShopCreator(itemMeta);
+                                creator.createShop(location, player, item);
+                                CreationGUI.closeGUI(player);
+                            }).execute();
                 }
             }
         }

@@ -31,6 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import co.aikar.taskchain.TaskChain;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -139,9 +140,12 @@ public class CreationGUI {
      * @see #setUpGUI()
      */
     public static void openFirstPage(Player player) {
-        CreationGUI gui = new CreationGUI(player);
-        playerToCreationGUI.put(player.getUniqueId(), gui);
-        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(gui.pages[gui.currentPage]));
+        TaskChain<?> task = CustomShop.getPlugin().getTaskChainFactory().newSharedChain("OPENINVENTORY")
+                .<CreationGUI>asyncFirstCallback(next -> next.accept(new CreationGUI(player))).syncLast(gui -> {
+                    playerToCreationGUI.put(player.getUniqueId(), gui);
+                    player.openInventory(gui.pages[gui.currentPage]);
+                });
+        task.execute();
     }
 
     /**
