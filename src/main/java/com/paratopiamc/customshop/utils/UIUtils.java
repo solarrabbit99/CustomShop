@@ -167,7 +167,7 @@ public final class UIUtils {
      * @return new instance of ItemStack
      */
     public static ItemStack setPrice(ItemStack item, double price) {
-        return item == null ? null : loreItem(item, "§9Price: " + Double.toString(price));
+        return item == null ? null : loreItem(item, "§9Price: $" + MessageUtils.getHumanReadablePriceFromNumber(price));
     }
 
     /**

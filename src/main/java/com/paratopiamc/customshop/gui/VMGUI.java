@@ -223,7 +223,8 @@ public class VMGUI extends ShopGUI {
             }
             ItemMeta meta = item.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
-            return "§aSuccessfully listed " + name + "§a for $" + price + "!";
+            return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadablePriceFromNumber(price)
+                    + "!";
         }
     }
 

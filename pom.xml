@@ -420,6 +420,9 @@
 					3.1.1
 				</version>
 				<configuration>
+					<minimizeJar>
+						true
+					</minimizeJar>
 					<dependencyReducedPomLocation>
 						${project.build.directory}/dependency-reduced-pom.xml
 					</dependencyReducedPomLocation>
