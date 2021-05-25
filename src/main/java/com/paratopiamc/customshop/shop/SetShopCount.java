@@ -16,7 +16,7 @@
  *
  */
 
-package com.paratopiamc.customshop.crate;
+package com.paratopiamc.customshop.shop;
 
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;

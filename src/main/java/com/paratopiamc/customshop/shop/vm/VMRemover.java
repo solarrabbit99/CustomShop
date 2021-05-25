@@ -71,7 +71,7 @@ public class VMRemover extends ShopRemover {
         ShulkerBox shulker = (ShulkerBox) this.meta.getBlockState();
         shulker.getInventory().forEach(item -> {
             if (item != null)
-                armorStand.getWorld().dropItemNaturally(armorStand.getLocation(), item);
+                armorStand.getWorld().dropItem(armorStand.getLocation(), item);
         });
 
         armorStand.remove();
