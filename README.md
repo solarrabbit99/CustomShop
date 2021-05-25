@@ -73,6 +73,10 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <img src="https://i.imgur.com/1Jj8Gc6.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
+<a href="https://imgur.com/4WOLtzt" title="Ice Vending Machine">
+<img src="https://i.imgur.com/4WOLtzt.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
 <a href="https://imgur.com/69eXO9J" title="Copper Vending Machine">
 <img src="https://i.imgur.com/69eXO9J.png" decoding="async" width="128"></a>
 </td>
@@ -82,6 +86,7 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 </td></tr>
 <tr>
 <td>Prismarine Vending Machine</td>
+<td>Ice Vending Machine</td>
 <td>Copper Vending Machine</td>
 <td>Amethyst Vending Machine</td>
 </tr>
