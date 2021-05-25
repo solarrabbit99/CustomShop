@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.crate;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
-
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;

@@ -22,6 +22,10 @@ permissions:
         default: op
     customshop.setcount:
         description: User able to set the shop count of a player.
+        default: op
+    customshop.reload:
+        description: User able to reload configuration of the plugin.
+        default: op
     customshop.admin:
         description: User able to perform all commands.
         default: op
@@ -30,3 +34,4 @@ permissions:
             customshop.givekey: true
             customshop.lockall: true
             customshop.setcount: true
+            customshop.reload: true

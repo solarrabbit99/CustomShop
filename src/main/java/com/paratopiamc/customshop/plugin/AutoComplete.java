@@ -45,6 +45,9 @@ public class AutoComplete implements TabCompleter {
             if (sender.hasPermission("customshop.setcount")) {
                 subCommands.add("setcount");
             }
+            if (sender.hasPermission("customshop.reload")) {
+                subCommands.add("reload");
+            }
             return subCommands;
         } else if (args.length == 2 && ((args[0].equals("givekey") && sender.hasPermission("customshop.givekey"))
                 || (args[0].equals("lockall") && sender.hasPermission("customshop.lockall"))

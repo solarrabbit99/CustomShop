@@ -59,6 +59,9 @@ public class CSComdExec implements CommandExecutor {
                 case "setcount":
                     comd = new SetShopCount(sender, args);
                     break;
+                case "reload":
+                    comd = new Reload(sender);
+                    break;
                 default:
                     comd = null;
                     break;
