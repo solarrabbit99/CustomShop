@@ -98,9 +98,12 @@ vending-machine:
     ice:
         name: §r§6Ice Vending Machine
         model-data: 100006
+    blackstone:
+        name: §r§6Blackstone Vending Machine
+        model-data: 100007
     copper:
         name: §r§6Copper Vending Machine
-        model-data: 100007
+        model-data: 100008
     amethyst:
         name: §r§6Amethyst Vending Machine
-        model-data: 100008
+        model-data: 100009

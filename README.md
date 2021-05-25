@@ -77,17 +77,25 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <img src="https://i.imgur.com/4WOLtzt.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/69eXO9J" title="Copper Vending Machine">
-<img src="https://i.imgur.com/69eXO9J.png" decoding="async" width="128"></a>
+<a href="https://imgur.com/Fq7LxFY" title="Blackstone Vending Machine">
+<img src="https://i.imgur.com/Fq7LxFY.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/1TPxvTB" title="Amethyst Vending Machine">
-<img src="https://i.imgur.com/1TPxvTB.png" decoding="async" width="128"></a>
+<a href="https://imgur.com/69eXO9J" title="Copper Vending Machine">
+<img src="https://i.imgur.com/69eXO9J.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Prismarine Vending Machine</td>
 <td>Ice Vending Machine</td>
+<td>Blackstone Vending Machine</td>
 <td>Copper Vending Machine</td>
+</tr>
+<tr>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/aPEKYGf" title="Amethyst Vending Machine">
+<img src="https://i.imgur.com/aPEKYGf.png" decoding="async" width="128"></a>
+</td></tr>
+<tr>
 <td>Amethyst Vending Machine</td>
 </tr>
 </tbody></table>
@@ -140,8 +148,10 @@ The following IDs for `Material.PAPER` are used for custom shops. Change
 | 100003 | nether_vending_machine     |
 | 100004 | sand_vending_machine       |
 | 100005 | prismarine_vending_machine |
-| 100006 | copper_vending_machine     |
-| 100007 | amethyst_vending_machine   |
+| 100006 | ice_vending_machine        |
+| 100007 | blackstone_vending_machine |
+| 100008 | copper_vending_machine     |
+| 100009 | amethyst_vending_machine   |
 
 ### Display Names
 
