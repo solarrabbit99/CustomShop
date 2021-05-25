@@ -71,9 +71,19 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td scope="col" style="width: 68px;">
 <a href="https://imgur.com/1Jj8Gc6" title="Prismarine Vending Machine">
 <img src="https://i.imgur.com/1Jj8Gc6.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/69eXO9J" title="Copper Vending Machine">
+<img src="https://i.imgur.com/69eXO9J.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/1TPxvTB" title="Amethyst Vending Machine">
+<img src="https://i.imgur.com/1TPxvTB.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Prismarine Vending Machine</td>
+<td>Copper Vending Machine</td>
+<td>Amethyst Vending Machine</td>
 </tr>
 </tbody></table>
 
@@ -117,13 +127,16 @@ The following IDs for `Material.PAPER` are used for custom shops. Change
 **BOTH** the conflicting IDs in the items' JSON and the respective IDs in
 `config.yml`.
 
-| **ID** | **Model**               |
-| ------ | ----------------------- |
-| 100000 | default_vending_machine |
-| 100001 | wooden_vending_machine  |
-| 100002 | stone_vending_machine   |
-| 100003 | nether_vending_machine  |
-| 100004 | sand_vending_machine    |
+| **ID** | **Model**                  |
+| ------ | -------------------------- |
+| 100000 | default_vending_machine    |
+| 100001 | wooden_vending_machine     |
+| 100002 | stone_vending_machine      |
+| 100003 | nether_vending_machine     |
+| 100004 | sand_vending_machine       |
+| 100005 | prismarine_vending_machine |
+| 100006 | copper_vending_machine     |
+| 100007 | amethyst_vending_machine   |
 
 ### Display Names
 

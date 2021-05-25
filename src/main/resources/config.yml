@@ -91,3 +91,12 @@ vending-machine:
     sand:
         name: §r§6Sand Vending Machine
         model-data: 100004
+    prismarine:
+        name: §r§6Prismarine Vending Machine
+        model-data: 100005
+    copper:
+        name: §r§6Copper Vending Machine
+        model-data: 100006
+    amethyst:
+        name: §r§6Amethyst Vending Machine
+        model-data: 100007
