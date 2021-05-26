@@ -87,14 +87,6 @@
 				https://repo.dmulloy2.net/repository/public/
 			</url>
 		</repository>
-		<repository>
-			<id>
-				aikar
-			</id>
-			<url>
-				https://repo.aikar.co/content/groups/aikar/
-			</url>
-		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -134,17 +126,6 @@
 			</artifactId>
 			<version>
 				4.6.0
-			</version>
-		</dependency>
-		<dependency>
-			<groupId>
-				co.aikar
-			</groupId>
-			<artifactId>
-				taskchain-bukkit
-			</artifactId>
-			<version>
-				3.7.2
 			</version>
 		</dependency>
 		<dependency>
@@ -406,47 +387,6 @@
 								true
 							</skip>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>
-					org.apache.maven.plugins
-				</groupId>
-				<artifactId>
-					maven-shade-plugin
-				</artifactId>
-				<version>
-					3.1.1
-				</version>
-				<configuration>
-					<minimizeJar>
-						true
-					</minimizeJar>
-					<dependencyReducedPomLocation>
-						${project.build.directory}/dependency-reduced-pom.xml
-					</dependencyReducedPomLocation>
-					<relocations>
-						<relocation>
-							<pattern>
-								co.aikar.taskchain
-							</pattern>
-							<shadedPattern>
-								com.paratopiamc.customshop.taskchain
-							</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>
-							package
-						</phase>
-						<goals>
-							<goal>
-								shade
-							</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>

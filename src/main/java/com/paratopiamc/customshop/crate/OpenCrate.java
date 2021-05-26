@@ -32,7 +32,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import co.aikar.taskchain.TaskChain;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /** Encapsulated an event of player attempting to open a custom shop crate. */
 public class OpenCrate implements Listener {
@@ -65,10 +65,12 @@ public class OpenCrate implements Listener {
                 int unlocked = CreationGUI.modelData.get(index);
                 String name = CreationGUI.names.get(index);
 
-                TaskChain<?> task = CustomShop.getPlugin().getTaskChainFactory().newSharedChain("OPENCRATE")
-                        .<List<Integer>>asyncFirstCallback(
-                                next -> next.accept(CustomShop.getPlugin().getDatabase().getUnlockedShops(player)))
-                        .syncLast(list -> {
+                CompletableFuture<List<Integer>> cf = CompletableFuture
+                        .supplyAsync(() -> CustomShop.getPlugin().getDatabase().getUnlockedShops(player));
+                cf.thenAccept(list -> {
+                    BukkitRunnable runnable = new BukkitRunnable() {
+                        @Override
+                        public void run() {
                             player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.5F, 1.0F);
                             if (list.contains(unlocked)) {
                                 player.sendMessage("§6You already have " + name + " unlocked :(");
@@ -79,8 +81,10 @@ public class OpenCrate implements Listener {
                                     player.sendMessage("§aNew custom shop unlocked! " + name);
                                 });
                             }
-                        });
-                task.execute();
+                        }
+                    };
+                    runnable.runTask(CustomShop.getPlugin());
+                });
             }
         }
     }

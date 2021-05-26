@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import co.aikar.taskchain.TaskChain;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -140,12 +141,17 @@ public class CreationGUI {
      * @see #setUpGUI()
      */
     public static void openFirstPage(Player player) {
-        TaskChain<?> task = CustomShop.getPlugin().getTaskChainFactory().newSharedChain("OPENINVENTORY")
-                .<CreationGUI>asyncFirstCallback(next -> next.accept(new CreationGUI(player))).syncLast(gui -> {
-                    playerToCreationGUI.put(player.getUniqueId(), gui);
+        CompletableFuture<CreationGUI> guicf = CompletableFuture.supplyAsync(() -> new CreationGUI(player));
+        guicf.thenAccept(gui -> {
+            playerToCreationGUI.put(player.getUniqueId(), gui);
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
                     player.openInventory(gui.pages[gui.currentPage]);
-                });
-        task.execute();
+                }
+            };
+            runnable.runTask(CustomShop.getPlugin());
+        });
     }
 
     /**

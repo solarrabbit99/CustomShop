@@ -18,6 +18,7 @@
 
 package com.paratopiamc.customshop.shop;
 
+import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
@@ -32,6 +33,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Encapsulates a shop creation process. Player runs {@code /customshop newshop}
@@ -89,10 +91,12 @@ public class ShopCreation extends CSComd implements Listener {
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);
                     int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
-                    CustomShop.getPlugin().getTaskChainFactory().newSharedChain("SHOPCREATION")
-                            .<Integer>asyncFirstCallback(task -> task.accept(
-                                    CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId())))
-                            .syncLast(number -> {
+                    CompletableFuture<Integer> numbercf = CompletableFuture.supplyAsync(
+                            () -> CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId()));
+                    numbercf.thenAccept(number -> {
+                        BukkitRunnable runnable = new BukkitRunnable() {
+                            @Override
+                            public void run() {
                                 if (number.intValue() >= maxShops) {
                                     player.sendMessage(
                                             "§cYou have reached the maximum number of custom shops created!");
@@ -107,7 +111,10 @@ public class ShopCreation extends CSComd implements Listener {
                                 ShopCreator creator = getShopCreator(itemMeta);
                                 creator.createShop(location, player, item);
                                 CreationGUI.closeGUI(player);
-                            }).execute();
+                            }
+                        };
+                        runnable.runTask(CustomShop.getPlugin());
+                    });
                 }
             }
         }
