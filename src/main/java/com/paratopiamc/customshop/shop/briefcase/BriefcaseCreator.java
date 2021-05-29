@@ -63,15 +63,13 @@ public class BriefcaseCreator extends ShopCreator {
         double price = 0;
         long amount = 0;
         boolean selling = true;
-        String ownerID = owner.getUniqueId().toString();
 
-        List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling),
-                ownerID);
+        List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling));
         meta.setDisplayName(owner.getUniqueId().toString());
         meta.setLore(lore);
 
         placeHolder.setItemMeta(meta);
-        armorStandBody.setLeggings(placeHolder);
+        armorStandBody.setChestplate(placeHolder);
 
         lockArmorStand(armorStand);
 

@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.shop;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
 import com.comphenix.protocol.PacketType.Play.Client;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -29,6 +28,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Sound;
@@ -149,12 +149,15 @@ public class ShopRemoval extends CSComd implements Listener {
             String customName = armorStand.getCustomName();
             ShopRemover result;
             switch (customName) {
-                case "§5§lVending Machine":
-                    result = new VMRemover(targetBlock, armorStand);
-                    break;
-                default:
-                    result = null;
-                    break;
+            case "§5§lVending Machine":
+                result = new VMRemover(targetBlock, armorStand);
+                break;
+            case "§5§lNewt's Briefcase":
+                result = new BriefcaseRemover(targetBlock, armorStand);
+                break;
+            default:
+                result = null;
+                break;
             }
             return result;
         } else {

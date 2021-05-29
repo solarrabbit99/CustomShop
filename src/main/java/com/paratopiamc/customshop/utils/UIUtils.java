@@ -33,7 +33,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -255,21 +254,21 @@ public final class UIUtils {
         else {
             EntityEquipment equipment = armorStand.getEquipment();
             ItemStack item = equipment.getChestplate();
-            if (item != null && item.getType() == Material.SHULKER_BOX) {
-                BlockStateMeta blockMeta = (BlockStateMeta) item.getItemMeta();
-                if (!blockMeta.hasDisplayName()) {
+            if (item != null && item.getType() != Material.AIR) {
+                ItemMeta meta = item.getItemMeta();
+                if (!meta.hasDisplayName()) {
                     Location standLocation = armorStand.getLocation();
-                    Bukkit.getServer().getConsoleSender().sendMessage(
-                            "§6§l[CustomShop] Vending machine's shulker box without display name detected at "
+                    Bukkit.getServer().getConsoleSender()
+                            .sendMessage("§6§l[CustomShop] Custom shop without owner's display name detected at "
                                     + standLocation + "!");
                     return false;
                 }
-                String ownerUUID = blockMeta.getDisplayName();
+                String ownerUUID = meta.getDisplayName();
                 return player.getUniqueId().toString().equals(ownerUUID);
             } else {
                 Location standLocation = armorStand.getLocation();
                 Bukkit.getServer().getConsoleSender().sendMessage(
-                        "§6§l[CustomShop] Vending machine without shulker box detected at " + standLocation + "!");
+                        "§6§l[CustomShop] Custom shop without owner item detected at " + standLocation + "!");
                 return false;
             }
         }

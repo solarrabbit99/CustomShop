@@ -41,15 +41,15 @@ public class BriefcaseGUI extends ShopGUI {
     private int quantity;
 
     public BriefcaseGUI(ArmorStand armorStand, Player player) {
-        super(player, armorStand, armorStand.getEquipment().getLeggings().getItemMeta().getLore().get(3));
+        super(player, armorStand, armorStand.getEquipment().getChestplate().getItemMeta().getDisplayName());
         EntityEquipment armorStandContent = armorStand.getEquipment();
-        ItemStack item = armorStandContent.getChestplate();
+        ItemStack item = armorStandContent.getLeggings();
         if (item != null && item.getType() != Material.AIR) {
             String title = "§5§lNewt's Briefcase";
             normalView = Bukkit.createInventory(null, 9 * 4, title);
             ownerView = Bukkit.createInventory(null, 9 * 4, title);
 
-            ItemStack placeHolder = armorStandContent.getLeggings();
+            ItemStack placeHolder = armorStandContent.getChestplate();
             List<String> info = placeHolder.getItemMeta().getLore();
             this.price = Double.parseDouble(info.get(0));
             this.quantity = Integer.parseInt(info.get(1));
@@ -63,12 +63,12 @@ public class BriefcaseGUI extends ShopGUI {
             }
             UIUtils.createItem(normalView, 3, 4, Material.BARRIER, 1, "§cClose", "");
 
-            UIUtils.createItem(ownerView, 3, 4, Material.OAK_SIGN, 1, "§6" + (this.selling ? "Selling" : "Buying"),
+            UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1, "§6" + (this.selling ? "Selling" : "Buying"),
                     "§2Click to toggle");
             UIUtils.createItem(ownerView, 3, 3, Material.NAME_TAG, 1, "§6Change Price", "§2Click to change");
             UIUtils.createItem(ownerView, 3, 4, Material.HOPPER_MINECART, 1, "§6Add Items",
                     "§2Click to add items to shop");
-            UIUtils.createItem(ownerView, 3, 4, Material.CHEST_MINECART, 1, "§6Retrieve Items",
+            UIUtils.createItem(ownerView, 3, 5, Material.CHEST_MINECART, 1, "§6Retrieve Items",
                     "§2Click to retrieve items from shop");
             UIUtils.createItem(ownerView, 3, 6, Material.BARRIER, 1, "§cClose", "");
 
@@ -112,9 +112,9 @@ public class BriefcaseGUI extends ShopGUI {
         } else {
             EntityEquipment armorStandContent = this.armorStand.getEquipment();
             item.setAmount(1);
-            armorStandContent.setChestplate(item);
+            armorStandContent.setLeggings(item);
 
-            ItemStack placeHolder = armorStandContent.getLeggings();
+            ItemStack placeHolder = armorStandContent.getChestplate();
             ItemMeta meta = placeHolder.getItemMeta();
             List<String> lore = meta.getLore();
 
@@ -123,7 +123,7 @@ public class BriefcaseGUI extends ShopGUI {
 
             meta.setLore(lore);
             placeHolder.setItemMeta(meta);
-            armorStandContent.setLeggings(placeHolder);
+            armorStandContent.setChestplate(placeHolder);
 
             ItemMeta itemMeta = item.getItemMeta();
 
