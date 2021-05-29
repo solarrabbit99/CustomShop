@@ -93,6 +93,26 @@ public class CreationGUI {
             defaults.add(defaultVM);
         }
 
+        int defaultBriefcase = CustomShop.getPlugin().getConfig().getInt("defaults.briefcase");
+        Set<String> bc = CustomShop.getPlugin().getConfig().getConfigurationSection("briefcase").getKeys(false);
+        for (String e : bc) {
+            String customModelName = CustomShop.getPlugin().getConfig().getString("briefcase." + e + ".name");
+            if (customModelName == null) {
+                logger.sendMessage(
+                        "§c§l[CustomShop] Name not set for at least one of the vending machines! Disabling plugin...");
+                Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
+            }
+            names.add(customModelName);
+            Integer customModelData = CustomShop.getPlugin().getConfig().getInt("briefcase." + e + ".model-data");
+            if (customModelData == 0) {
+                logger.sendMessage(
+                        "§c§l[CustomShop] Missing Custom Model Data or set to 0 for at least one of the vending machines! Disabling plugin...");
+                Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
+            }
+            modelData.add(customModelData);
+            defaults.add(defaultBriefcase);
+        }
+
         noOfItems = names.size();
         noOfPages = ((Double) Math.ceil(noOfItems / 27.0)).intValue();
     }

@@ -34,6 +34,6 @@ class AppTest {
 
     @Test
     public void yamlTest() {
-
+        System.out.println(String.format("%,.0f", Double.valueOf(123132)));
     }
 }

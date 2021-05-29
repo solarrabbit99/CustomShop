@@ -1,24 +1,6 @@
-/*
- *  This file is part of CustomShop. Copyright (c) 2021 Paratopia.
- *
- *  CustomShop is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CustomShop is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CustomShop. If not, see <https://www.gnu.org/licenses/>.
- *
- */
+package com.paratopiamc.customshop.shop.briefcase;
 
-package com.paratopiamc.customshop.shop.vm;
-
-import com.paratopiamc.customshop.gui.VMGUI;
+import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.UIUtils;
@@ -44,11 +26,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-/**
- * Listener for players interacting with custom shops, containing handlers for
- * which the owner left clicks on shops to list items.
- */
-public class VMListItem implements Listener {
+public class BriefcaseListItem implements Listener {
     private static ConversationFactory listingConversation;
 
     @EventHandler
@@ -64,7 +42,7 @@ public class VMListItem implements Listener {
         if (armorStand == null) {
             return;
         }
-        if (!armorStand.getCustomName().equals("§5§lVending Machine")) {
+        if (!armorStand.getCustomName().equals("§5§lNewt's Briefcase")) {
             return;
         } else {
             // For creative mode
@@ -72,22 +50,27 @@ public class VMListItem implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!UIUtils.hasShopPermission(armorStand, player)) {
-                player.sendMessage("§cYou do not own the vending machine!");
+                player.sendMessage("§cYou do not own the briefcase!");
                 return;
             }
             if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                player.sendMessage("§cVending machine current in use, please wait...");
+                player.sendMessage("§cShop current in use, please wait...");
                 return;
             }
-            VMGUI ui = new VMGUI(armorStand, player);
+            BriefcaseGUI ui = new BriefcaseGUI(armorStand, player);
             if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
                 ui.openOwnerUI();
+                state.setShopGUI(ui);
             } else {
-                // New conversation must begin in a different tick that cancelled conversation
-                Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                        () -> state.startConversation(listingConversation));
+                if (ui.hasItem()) {
+                    player.sendMessage("§cItem already set for the briefcase!");
+                } else {
+                    // New conversation must begin in a different tick that cancelled
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
+                            () -> state.startConversation(listingConversation));
+                    state.setShopGUI(ui);
+                }
             }
-            state.setShopGUI(ui);
         }
     }
 
@@ -128,7 +111,7 @@ public class VMListItem implements Listener {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 PlayerState state = PlayerState.getPlayerState(player);
-                VMGUI ui = (VMGUI) state.getShopGUI();
+                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 try {
                     double price = ((Double) (Double.parseDouble(input) * 100)).intValue() / 100.0;
                     if (price <= 0) {
@@ -136,7 +119,7 @@ public class VMListItem implements Listener {
                     } else {
                         PlayerInventory playerInventory = player.getInventory();
                         ItemStack item = playerInventory.getItemInMainHand();
-                        player.sendMessage(ui.listPrice(item, price));
+                        player.sendMessage(ui.initItem(item, price));
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");

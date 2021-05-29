@@ -30,7 +30,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Newt's Briefcase's shop creator. Player's target block must have at least 1
@@ -57,19 +57,21 @@ public class BriefcaseCreator extends ShopCreator {
         EntityEquipment armorStandBody = armorStand.getEquipment();
         armorStandBody.setHelmet(item);
 
-        ItemStack container = new ItemStack(Material.SHULKER_BOX);
-        BlockStateMeta blockMeta = (BlockStateMeta) container.getItemMeta();
+        ItemStack placeHolder = new ItemStack(Material.DIRT);
+        ItemMeta meta = placeHolder.getItemMeta();
 
         double price = 0;
         long amount = 0;
         boolean selling = true;
+        String ownerID = owner.getUniqueId().toString();
 
-        List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling));
-        blockMeta.setDisplayName(owner.getUniqueId().toString());
-        blockMeta.setLore(lore);
+        List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling),
+                ownerID);
+        meta.setDisplayName(owner.getUniqueId().toString());
+        meta.setLore(lore);
 
-        container.setItemMeta(blockMeta);
-        armorStandBody.setChestplate(container);
+        placeHolder.setItemMeta(meta);
+        armorStandBody.setLeggings(placeHolder);
 
         lockArmorStand(armorStand);
 

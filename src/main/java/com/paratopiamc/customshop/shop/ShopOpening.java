@@ -19,6 +19,7 @@
 package com.paratopiamc.customshop.shop;
 
 import java.util.Optional;
+import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
@@ -34,7 +35,8 @@ import org.bukkit.inventory.EquipmentSlot;
 
 public class ShopOpening implements Listener {
     /**
-     * Open vending machine's UI when player right clicks the armor stand.
+     * Open custom shop's GUI when player right clicks barrier containing valid
+     * armor stand.
      *
      * @param evt event of player right clicking entity
      */
@@ -55,7 +57,7 @@ public class ShopOpening implements Listener {
                 PlayerState state = PlayerState.getPlayerState(player);
                 state.clearShopInteractions();
                 if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                    player.sendMessage("§cVending machine current in use, please wait...");
+                    player.sendMessage("§cShop currently in use, please wait...");
                     return;
                 } else {
                     gui.openUI();
@@ -79,12 +81,15 @@ public class ShopOpening implements Listener {
         String customName = armorStand.getCustomName();
         Optional<ShopGUI> result;
         switch (customName) {
-            case "§5§lVending Machine":
-                result = Optional.ofNullable(new VMGUI(armorStand, player));
-                break;
-            default:
-                result = Optional.empty();
-                break;
+        case "§5§lVending Machine":
+            result = Optional.ofNullable(new VMGUI(armorStand, player));
+            break;
+        case "§5§lNewt's Briefcase":
+            result = Optional.ofNullable(new BriefcaseGUI(armorStand, player));
+            break;
+        default:
+            result = Optional.empty();
+            break;
         }
         return result.orElse(null);
     }

@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.gui;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -28,7 +27,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
 import net.milkbowl.vault.economy.Economy;
 
 /**
@@ -50,12 +48,10 @@ public abstract class ShopGUI {
      */
     protected final Player viewer;
 
-    public ShopGUI(Player player, ArmorStand armorStand) {
+    public ShopGUI(Player player, ArmorStand armorStand, String ownerID) {
         this.armorStand = armorStand;
         this.viewer = player;
-        ItemStack block = armorStand.getEquipment().getChestplate();
-        BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
-        this.ownerID = blockMeta.getDisplayName();
+        this.ownerID = ownerID;
     }
 
     /**

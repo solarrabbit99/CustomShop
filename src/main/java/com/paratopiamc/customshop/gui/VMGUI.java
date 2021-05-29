@@ -66,7 +66,7 @@ public class VMGUI extends ShopGUI {
      * @param player     player viewing the GUI
      */
     public VMGUI(ArmorStand armorStand, Player player) {
-        super(player, armorStand);
+        super(player, armorStand, armorStand.getEquipment().getChestplate().getItemMeta().getDisplayName());
         ItemStack block = armorStand.getEquipment().getChestplate();
         BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
         this.sourceImage = (ShulkerBox) blockMeta.getBlockState();
@@ -212,7 +212,7 @@ public class VMGUI extends ShopGUI {
      * @return outcome message of the purchase, to be sent to the player involved
      */
     public String listPrice(ItemStack item, double price) {
-        if (item == null) {
+        if (item == null || item.getType() == Material.AIR) {
             return "§cYou are not holding anything in your main hand!";
         } else {
             for (int i = 0; i < 27; i++) {

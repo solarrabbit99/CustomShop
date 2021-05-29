@@ -302,12 +302,15 @@ public final class UIUtils {
                 String name = armorStand.getCustomName();
                 boolean valid;
                 switch (name == null ? null : name) {
-                    case "§5§lVending Machine":
-                        valid = true;
-                        break;
-                    default:
-                        valid = false;
-                        break;
+                case "§5§lVending Machine":
+                    valid = true;
+                    break;
+                case "§5§lNewt's Briefcase":
+                    valid = true;
+                    break;
+                default:
+                    valid = false;
+                    break;
                 }
                 return valid ? armorStand : null;
             } else {

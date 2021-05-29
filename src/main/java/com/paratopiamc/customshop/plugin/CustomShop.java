@@ -36,6 +36,7 @@ import com.paratopiamc.customshop.shop.ShopCreation;
 import com.paratopiamc.customshop.shop.ShopExit;
 import com.paratopiamc.customshop.shop.ShopOpening;
 import com.paratopiamc.customshop.shop.ShopRemoval;
+import com.paratopiamc.customshop.shop.briefcase.BriefcaseListItem;
 import com.paratopiamc.customshop.shop.vm.VMInteractInventory;
 import com.paratopiamc.customshop.shop.vm.VMListItem;
 import org.bukkit.command.PluginCommand;
@@ -79,6 +80,7 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new ShopExit(), this);
         pluginManager.registerEvents(new VMInteractInventory(), this);
         pluginManager.registerEvents(new VMListItem(), this);
+        pluginManager.registerEvents(new BriefcaseListItem(), this);
         pluginManager.registerEvents(new ShopCreation(), this);
         pluginManager.registerEvents(new ShopRemoval(), this);
         pluginManager.registerEvents(new OpenCrate(), this);
@@ -90,9 +92,11 @@ public final class CustomShop extends JavaPlugin {
         PluginCommand mainCommand = getCommand("customshop");
         mainCommand.setExecutor(new CSComdExec());
         mainCommand.setTabCompleter(new AutoComplete());
+
         SetCrate.createCustomConfig(this);
         VMInteractInventory.initConversationFactory(this);
         VMListItem.initConversationFactory(this);
+        BriefcaseListItem.initConversationFactory(this);
 
         this.database = new SQLite(this);
         this.database.load();
