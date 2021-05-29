@@ -18,10 +18,12 @@
 
 package com.paratopiamc.customshop.shop;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -152,12 +154,25 @@ public class ShopCreation extends CSComd implements Listener {
     private static ShopCreator getShopCreator(ItemMeta meta) {
         if (!meta.hasDisplayName()) {
             throw new NoSuchShopException();
-        }
-        String name = meta.getDisplayName();
-        if (name.contains("Vending Machine")) {
-            return new VMCreator();
+        } else if (!meta.hasCustomModelData()) {
+            throw new NoSuchShopException(meta.getDisplayName());
         } else {
-            throw new NoSuchShopException(name);
+            int model = meta.getCustomModelData();
+
+            int defaultVM = CustomShop.getPlugin().getConfig().getInt("defaults.vending-machine");
+            if (defaultVM == model) {
+                return new VMCreator();
+            }
+            Set<String> vm = CustomShop.getPlugin().getConfig().getConfigurationSection("vending-machine")
+                    .getKeys(false);
+            for (String e : vm) {
+                int customModelData = CustomShop.getPlugin().getConfig().getInt("vending-machine." + e + ".model-data");
+                if (customModelData == model) {
+                    return new VMCreator();
+                }
+            }
+
+            return new BriefcaseCreator();
         }
     }
 
