@@ -19,15 +19,17 @@
 package com.paratopiamc.customshop.shop;
 
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ArmorStand.LockType;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Encapsulates a creator of a shop. Each type of custom shops should have a
  * creator of its own type that implements this interface.
  */
-@FunctionalInterface
-public interface ShopCreator {
+public abstract class ShopCreator {
     /**
      * The main method where the creator creates the shop with its own requirements
      * and specifications. A message is returned as a feedback to player on whether
@@ -37,5 +39,23 @@ public interface ShopCreator {
      * @param owner    owner of the shop
      * @param item     design of the shop
      */
-    public void createShop(Location location, Player owner, ItemStack item);
+    public abstract void createShop(Location location, Player owner, ItemStack item);
+
+    /**
+     * Locks armor stand to prevent accessibility of items within its slots.
+     *
+     * @param armorStand ArmorStand to lock
+     */
+    protected void lockArmorStand(ArmorStand armorStand) {
+        armorStand.setInvulnerable(true);
+        armorStand.setGravity(false);
+        armorStand.setVisible(false);
+
+        armorStand.addEquipmentLock(EquipmentSlot.HEAD, LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.CHEST, LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.LEGS, LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.FEET, LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.HAND, LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.OFF_HAND, LockType.ADDING_OR_CHANGING);
+    }
 }

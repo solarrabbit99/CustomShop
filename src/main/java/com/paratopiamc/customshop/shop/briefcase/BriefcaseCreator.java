@@ -16,13 +16,13 @@
  *
  */
 
-package com.paratopiamc.customshop.shop.vm;
+package com.paratopiamc.customshop.shop.briefcase;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopCreator;
-import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -33,37 +33,38 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
 /**
- * Vending machine's shop creator. Player's target block must have at least 2
- * blocks of air above for the shop to be spawned successfully.
+ * Newt's Briefcase's shop creator. Player's target block must have at least 1
+ * block of air above for the shop to be spawned successfully.
  */
-public class VMCreator extends ShopCreator {
+public class BriefcaseCreator extends ShopCreator {
     @Override
     public void createShop(Location location, Player owner, ItemStack item) {
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
-                .getInt("defaults.vending-machine")) {
-            owner.sendMessage("§cYou have yet to unlock the selected Vending Machine!");
+                .getInt("defaults.briefcase")) {
+            owner.sendMessage("§cYou have yet to unlock the selected Newt's Briefcase!");
             return;
         }
-
-        Location locationAddOne = location.clone();
-        locationAddOne.setY(location.getY() + 1);
-        if (location.getBlock().getType() != Material.AIR || locationAddOne.getBlock().getType() != Material.AIR) {
-            owner.sendMessage("§cTarget location must have at least 2 blocks of air above...");
+        if (location.getBlock().getType() != Material.AIR) {
+            owner.sendMessage("§cTarget location must have at least 1 block of air above...");
             return;
         }
 
         location.getBlock().setType(Material.BARRIER);
-        locationAddOne.getBlock().setType(Material.BARRIER);
 
         ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
-        armorStand.setCustomName("§5§lVending Machine");
+        armorStand.setSmall(true);
+        armorStand.setCustomName("§5§lNewt's Briefcase");
         EntityEquipment armorStandBody = armorStand.getEquipment();
         armorStandBody.setHelmet(item);
 
         ItemStack container = new ItemStack(Material.SHULKER_BOX);
         BlockStateMeta blockMeta = (BlockStateMeta) container.getItemMeta();
-        double[] prices = new double[27];
-        List<String> lore = UIUtils.doubleToStringList(prices);
+
+        double price = 0;
+        long amount = 0;
+        boolean selling = true;
+
+        List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling));
         blockMeta.setDisplayName(owner.getUniqueId().toString());
         blockMeta.setLore(lore);
 
@@ -74,7 +75,7 @@ public class VMCreator extends ShopCreator {
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());
-            owner.sendMessage("§aVending machine successfully created!");
+            owner.sendMessage("§aNewt's Briefcase successfully created!");
         });
     }
 }

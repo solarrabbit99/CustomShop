@@ -21,7 +21,6 @@ package com.paratopiamc.customshop.crate;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Sound;

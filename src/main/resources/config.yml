@@ -77,33 +77,42 @@ customer-sell-fail-item: §cYou do not have the specified amount of the specifie
 ############################################################
 
 defaults:
-    vending-machine: 100000
+    vending-machine: 100
+    briefcase: 200
 
 vending-machine:
     wooden:
         name: §r§6Wooden Vending Machine
-        model-data: 100001
+        model-data: 101
     stone:
         name: §r§6Stone Vending Machine
-        model-data: 100002
+        model-data: 102
     nether:
         name: §r§6Nether Vending Machine
-        model-data: 100003
+        model-data: 103
     sand:
         name: §r§6Sand Vending Machine
-        model-data: 100004
+        model-data: 104
     prismarine:
         name: §r§6Prismarine Vending Machine
-        model-data: 100005
+        model-data: 105
     ice:
         name: §r§6Ice Vending Machine
-        model-data: 100006
+        model-data: 106
     blackstone:
         name: §r§6Blackstone Vending Machine
-        model-data: 100007
+        model-data: 107
     copper:
         name: §r§6Copper Vending Machine
-        model-data: 100008
+        model-data: 108
     amethyst:
         name: §r§6Amethyst Vending Machine
-        model-data: 100009
+        model-data: 109
+
+briefcase:
+    wooden:
+        name: §r§6Wooden Newt's Briefcase
+        model-data: 201
+    stone:
+        name: §r§6Stone Newt's Briefcase
+        model-data: 202

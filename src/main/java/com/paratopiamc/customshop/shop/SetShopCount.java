@@ -19,7 +19,6 @@
 package com.paratopiamc.customshop.shop;
 
 import java.util.concurrent.CompletableFuture;
-
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
@@ -112,22 +111,22 @@ public class SetShopCount extends CSComd {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 switch (input) {
-                    case "y":
-                        try {
-                            CompletableFuture<Void> voidcf = CompletableFuture.runAsync(() -> CustomShop.getPlugin()
-                                    .getDatabase().setShopsOwned(player.getUniqueId(), SetShopCount.this.newCount));
-                            voidcf.thenRun(() -> player.sendMessage(
-                                    "§aPlayer total shop count set to " + SetShopCount.this.newCount + "!"));
-                        } catch (NumberFormatException e) {
-                            player.sendMessage("§cInvalid number input!");
-                        }
-                        break;
-                    case "n":
-                        player.sendMessage("§cOperation cancelled...");
-                        break;
-                    default:
-                        player.sendMessage("§cInvalid input!");
-                        break;
+                case "y":
+                    try {
+                        CompletableFuture<Void> voidcf = CompletableFuture.runAsync(() -> CustomShop.getPlugin()
+                                .getDatabase().setShopsOwned(player.getUniqueId(), SetShopCount.this.newCount));
+                        voidcf.thenRun(() -> player
+                                .sendMessage("§aPlayer total shop count set to " + SetShopCount.this.newCount + "!"));
+                    } catch (NumberFormatException e) {
+                        player.sendMessage("§cInvalid number input!");
+                    }
+                    break;
+                case "n":
+                    player.sendMessage("§cOperation cancelled...");
+                    break;
+                default:
+                    player.sendMessage("§cInvalid input!");
+                    break;
                 }
             } else {
                 // Should not get here.
