@@ -37,7 +37,7 @@ public class PlayerState {
     private static HashMap<Player, PlayerState> playerStates = new HashMap<>();
 
     private ShopGUI shopGUI;
-    private ItemStack purchase;
+    private ItemStack transactionItem;
     private Conversation conversation;
     private Player player;
 
@@ -105,9 +105,9 @@ public class PlayerState {
      *                player
      * @return {@code true} if player was not conversing
      */
-    public boolean startPurchase(ItemStack item, ConversationFactory factory) {
+    public boolean startTransaction(ItemStack item, ConversationFactory factory) {
         if (!player.isConversing()) {
-            this.purchase = item;
+            this.transactionItem = item;
             conversation = factory.buildConversation(player);
             conversation.begin();
             return true;
@@ -155,9 +155,9 @@ public class PlayerState {
      * @return item that the player is purchasing, {@code null} if player is not
      *         purchasing anything
      */
-    public ItemStack removePurchase() {
-        ItemStack clone = purchase.clone();
-        this.purchase = null;
+    public ItemStack removeTransactionItem() {
+        ItemStack clone = transactionItem.clone();
+        this.transactionItem = null;
         return clone;
     }
 

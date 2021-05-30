@@ -59,7 +59,7 @@ public class VMInteractInventory implements Listener {
                     PlayerState state = PlayerState.getPlayerState(player);
                     VMGUI ui = (VMGUI) state.getShopGUI();
                     ItemStack item = ui.getItem(evt.getSlot());
-                    state.startPurchase(item, new PurchaseConversationFactory());
+                    state.startTransaction(item, new PurchaseConversationFactory());
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }
             }

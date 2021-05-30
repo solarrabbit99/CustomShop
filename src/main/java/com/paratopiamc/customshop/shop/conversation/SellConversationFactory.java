@@ -30,12 +30,16 @@ import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-public class RetrieveConversationFactory extends ConversationFactory {
+/**
+ * Prompt when player attempts to purchase from Vending Machine.
+ */
+public class SellConversationFactory extends ConversationFactory {
 
-    public RetrieveConversationFactory() {
+    public SellConversationFactory() {
         super(CustomShop.getPlugin());
-        this.firstPrompt = new RetrieveConversation();
+        this.firstPrompt = new SellConversation();
         this.isModal = false;
         this.localEchoEnabled = false;
         this.abandonedListeners.add(new ConversationAbandonedListener() {
@@ -44,7 +48,7 @@ public class RetrieveConversationFactory extends ConversationFactory {
                 ConversationCanceller canceller = abandonedEvent.getCanceller();
                 Player player = (Player) abandonedEvent.getContext().getForWhom();
                 if (canceller != null) {
-                    player.sendMessage("§cItem retrieve cancelled...");
+                    player.sendMessage("§cShop selling cancelled...");
                 }
                 PlayerState.getPlayerState(player).clearShopInteractions();
             }
@@ -52,10 +56,10 @@ public class RetrieveConversationFactory extends ConversationFactory {
         this.cancellers.add(new InactivityConversationCanceller(plugin, 10));
     }
 
-    private static class RetrieveConversation extends StringPrompt {
+    private static class SellConversation extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "§aEnter the amount of item that you want to retrieve...";
+            return "§aEnter the amount that you want to sell...";
         }
 
         @Override
@@ -63,6 +67,7 @@ public class RetrieveConversationFactory extends ConversationFactory {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 PlayerState state = PlayerState.getPlayerState(player);
+                ItemStack sellingItem = state.removeTransactionItem();
                 BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 try {
                     int inputInt = Integer.parseInt(input);
@@ -71,7 +76,7 @@ public class RetrieveConversationFactory extends ConversationFactory {
                     if (inputInt != inputDouble || inputDouble <= 0) {
                         player.sendMessage("§cInvalid input!");
                     } else if (context.getForWhom() instanceof Player) {
-                        ui.retrieveItem(inputInt);
+                        ui.sellItem(sellingItem, inputInt);
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
@@ -83,4 +88,5 @@ public class RetrieveConversationFactory extends ConversationFactory {
             return END_OF_CONVERSATION;
         }
     }
+
 }

@@ -101,6 +101,35 @@ public abstract class ShopGUI {
         }
     }
 
+    protected boolean ownerBuy(int amount, double totalCost, ItemStack item) {
+        OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(this.ownerID));
+        Economy economy = CustomShop.getPlugin().getEconomy();
+        double bal = economy.getBalance(owner);
+
+        if (bal < totalCost) {
+            viewer.sendMessage(MessageUtils.convertMessage(
+                    CustomShop.getPlugin().getConfig().getString("customer-sell-fail-money"), ownerID, viewer,
+                    totalCost, item, amount));
+            return false;
+        } else { // Valid transaction
+            economy.withdrawPlayer(owner, totalCost);
+            economy.depositPlayer(viewer, totalCost);
+            viewer.sendMessage(MessageUtils.convertMessage(
+                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-customer"), ownerID, viewer,
+                    totalCost, item, amount));
+            String ownerMessage = MessageUtils.convertMessage(
+                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-owner"), ownerID, viewer,
+                    totalCost, item, amount);
+            if (owner.isOnline()) {
+                owner.getPlayer().sendMessage(ownerMessage);
+            } else {
+                CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer,
+                        false, item, amount, totalCost));
+            }
+            return true;
+        }
+    }
+
     /**
      * Returns the outcome message of this event.
      *

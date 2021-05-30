@@ -24,6 +24,7 @@ import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.AddConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.RetrieveConversationFactory;
+import com.paratopiamc.customshop.shop.conversation.SellConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -61,9 +62,9 @@ public class BriefcaseInteractInventory implements Listener {
                 } else if (evt.getSlot() < 27) {
                     ItemStack item = ui.getItem();
                     if (ui.isSelling()) {
-                        state.startPurchase(item, new PurchaseConversationFactory());
+                        state.startTransaction(item, new PurchaseConversationFactory());
                     } else {
-                        // TODO: Buy
+                        state.startTransaction(item, new SellConversationFactory());
                     }
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }

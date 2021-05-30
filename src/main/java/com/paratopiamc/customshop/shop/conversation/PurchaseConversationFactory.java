@@ -67,7 +67,7 @@ public class PurchaseConversationFactory extends ConversationFactory {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 PlayerState state = PlayerState.getPlayerState(player);
-                ItemStack purchasingItem = state.removePurchase();
+                ItemStack purchasingItem = state.removeTransactionItem();
                 ShopGUI ui = state.getShopGUI();
                 try {
                     int inputInt = Integer.parseInt(input);

@@ -1,8 +1,25 @@
+/*
+ *  This file is part of CustomShop. Copyright (c) 2021 Paratopia.
+ *
+ *  CustomShop is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CustomShop is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CustomShop. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
@@ -135,6 +152,70 @@ public class BriefcaseGUI extends ShopGUI {
             String name = itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : item.getType().toString();
             return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadablePriceFromNumber(price)
                     + "!";
+        }
+    }
+
+    public void sellItem(ItemStack item, int amount) {
+        if (item == null) {
+            viewer.sendMessage("§cItem is null...");
+            return;
+        }
+        Inventory pInventory = viewer.getInventory();
+        int amountAvailable = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack pItem = pInventory.getItem(i);
+            if (pItem != null && pItem.isSimilar(item)) {
+                amountAvailable += pItem.getAmount();
+            }
+        }
+
+        if (amountAvailable < amount) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
+                            ownerID, viewer, 0, item, amount));
+            return;
+        }
+
+        int remainingSpace = Integer.MAX_VALUE - this.quantity;
+        double totalCost = amount * price;
+
+        if (remainingSpace < amount) {
+            viewer.sendMessage(
+                    "§cShop limit reached! You are only able to sell " + remainingSpace + " more items to the shop!");
+        } else if (super.ownerBuy(amount, totalCost, item)) { // Valid transaction
+            EntityEquipment armorStandContent = this.armorStand.getEquipment();
+            ItemStack placeHolder = armorStandContent.getChestplate();
+            if (placeHolder.getType() == Material.AIR)
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+
+            ItemMeta meta = placeHolder.getItemMeta();
+            if (!meta.hasLore())
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+            List<String> lore = meta.getLore();
+            lore.set(1, String.valueOf(this.quantity + amount));
+            meta.setLore(lore);
+            placeHolder.setItemMeta(meta);
+            armorStandContent.setChestplate(placeHolder);
+
+            for (int i = pInventory.getSize() - 1; i >= 0 && amount > 0; i--) {
+                ItemStack sItem = pInventory.getItem(i);
+                if (sItem != null && sItem.isSimilar(item)) {
+                    int currentStackSize = sItem.getAmount();
+                    if (currentStackSize - amount > 0) {
+                        sItem.setAmount(currentStackSize - amount);
+                        amount = 0;
+                    } else {
+                        sItem.setAmount(0);
+                        amount -= currentStackSize;
+                    }
+                }
+            }
         }
     }
 
@@ -294,6 +375,8 @@ public class BriefcaseGUI extends ShopGUI {
             meta.setLore(lore);
             placeHolder.setItemMeta(meta);
             armorStandContent.setChestplate(placeHolder);
+
+            viewer.sendMessage("§aSuccessfully retrieved " + amount + " items!");
         }
     }
 
@@ -325,11 +408,9 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
 
-        long quantityLong = this.quantity;
-        long amountLong = amount;
-        if (quantityLong + amountLong > Integer.MAX_VALUE) {
-            viewer.sendMessage("§cShop limit reached! You are only able to add " + (Integer.MAX_VALUE - this.quantity)
-                    + " more items!");
+        int remainingSpace = Integer.MAX_VALUE - this.quantity;
+        if (remainingSpace < amount) {
+            viewer.sendMessage("§cShop limit reached! You are only able to add " + remainingSpace + " more items!");
         } else { // Valid operation
             EntityEquipment armorStandContent = this.armorStand.getEquipment();
             ItemStack placeHolder = armorStandContent.getChestplate();
@@ -351,6 +432,7 @@ public class BriefcaseGUI extends ShopGUI {
             placeHolder.setItemMeta(meta);
             armorStandContent.setChestplate(placeHolder);
 
+            viewer.sendMessage("§aSuccessfully added " + amount + " more items!");
             for (int i = pInventory.getSize() - 1; i >= 0 && amount > 0; i--) {
                 ItemStack sItem = pInventory.getItem(i);
                 if (sItem != null && sItem.isSimilar(item)) {
