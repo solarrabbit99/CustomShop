@@ -293,6 +293,9 @@ public final class UIUtils {
      * @return {@link ArmorStand} entity associated with a custom shop
      */
     public static ArmorStand getArmorStand(Block targetBlock) {
+        if (targetBlock == null) {
+            return null;
+        }
         Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
                 targetBlock.getZ() + 0.5);
         Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
