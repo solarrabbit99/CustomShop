@@ -31,12 +31,13 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public class SetPriceConversationFactory extends ConversationFactory {
+    private ItemStack item;
 
-    public SetPriceConversationFactory() {
+    public SetPriceConversationFactory(ItemStack item) {
         super(CustomShop.getPlugin());
+        this.item = item;
         this.firstPrompt = new PricePrompt();
         this.localEchoEnabled = false;
         this.isModal = false;
@@ -58,7 +59,7 @@ public class SetPriceConversationFactory extends ConversationFactory {
      * Prompt when player attempts to list a new price to all items in shop similar
      * to the item in hand.
      */
-    private static class PricePrompt extends StringPrompt {
+    private class PricePrompt extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
             return "§aEnter the price of the item that you want to list...";
@@ -75,8 +76,6 @@ public class SetPriceConversationFactory extends ConversationFactory {
                     if (price <= 0) {
                         player.sendMessage("§cPrice must be more than 0!");
                     } else {
-                        PlayerInventory playerInventory = player.getInventory();
-                        ItemStack item = playerInventory.getItemInMainHand();
                         player.sendMessage(ui.listPrice(item, price));
                     }
                 } catch (NumberFormatException e) {

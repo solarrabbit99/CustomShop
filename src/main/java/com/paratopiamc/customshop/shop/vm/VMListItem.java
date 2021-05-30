@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Listener for players interacting with custom shops, containing handlers for
@@ -68,12 +69,13 @@ public class VMListItem implements Listener {
                 return;
             }
             VMGUI ui = new VMGUI(armorStand, player);
-            if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
+            ItemStack itemInHand = player.getEquipment().getItemInMainHand();
+            if (itemInHand.getType().equals(Material.AIR)) {
                 ui.openOwnerUI();
             } else {
                 // New conversation must begin in a different tick that cancelled conversation
                 Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                        () -> state.startConversation(new SetPriceConversationFactory()));
+                        () -> state.startConversation(new SetPriceConversationFactory(itemInHand)));
             }
             state.setShopGUI(ui);
         }

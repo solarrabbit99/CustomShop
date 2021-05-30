@@ -22,6 +22,7 @@ import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
+import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,22 +54,47 @@ public class BriefcaseInteractInventory implements Listener {
                 BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
                     String displayName = itemMeta.getDisplayName();
+                    if (displayName.equals("§cClose"))
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                } else if (evt.getSlot() < 27) {
+                    ItemStack item = ui.getItem();
+                    if (ui.isSelling()) {
+                        state.startPurchase(item, new PurchaseConversationFactory());
+                    } else {
+                        // TODO: Buy
+                    }
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                }
+            }
+            evt.setCancelled(true);
+        } else if (title.equalsIgnoreCase("§5§lNewt's Briefcase Settings")) {
+            if (holder == null) {
+                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
+                PlayerState state = PlayerState.getPlayerState(player);
+                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
+                if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
+                    String displayName = itemMeta.getDisplayName();
                     switch (displayName) {
                     case "§cClose":
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                         break;
                     case "§6Selling":
+                        ui.setSelling(false);
+                        break;
                     case "§6Buying":
+                        ui.setSelling(true);
+                        break;
                     case "§6Change Price":
+                        // Don't have to start conversation in separate tick as player in GUI implies
+                        // player not conversing.
+                        state.startConversation(new SetPriceConversationFactory(ui.getItem()));
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                        break;
                     case "§6Add Items":
                     case "§6Retrieve Items":
                     default:
                         break;
                     }
-                } else if (evt.getSlot() < 27) {
-                    ItemStack item = ui.getItem();
-                    state.startPurchase(item, new PurchaseConversationFactory());
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }
             }
             evt.setCancelled(true);

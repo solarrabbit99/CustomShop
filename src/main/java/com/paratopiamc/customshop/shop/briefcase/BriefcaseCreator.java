@@ -61,7 +61,7 @@ public class BriefcaseCreator extends ShopCreator {
         ItemMeta meta = placeHolder.getItemMeta();
 
         double price = 0;
-        long amount = 0;
+        int amount = 0;
         boolean selling = true;
 
         List<String> lore = Arrays.asList(String.valueOf(price), String.valueOf(amount), String.valueOf(selling));

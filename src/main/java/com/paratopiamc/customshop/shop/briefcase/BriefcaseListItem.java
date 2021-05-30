@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 public class BriefcaseListItem implements Listener {
     @EventHandler
@@ -64,7 +65,8 @@ public class BriefcaseListItem implements Listener {
                 return;
             }
             BriefcaseGUI ui = new BriefcaseGUI(armorStand, player);
-            if (player.getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
+            ItemStack itemInHand = player.getEquipment().getItemInMainHand();
+            if (itemInHand.getType().equals(Material.AIR)) {
                 ui.openOwnerUI();
                 state.setShopGUI(ui);
             } else {
@@ -73,7 +75,7 @@ public class BriefcaseListItem implements Listener {
                 } else {
                     // New conversation must begin in a different tick that cancelled
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                            () -> state.startConversation(new SetPriceConversationFactory()));
+                            () -> state.startConversation(new SetPriceConversationFactory(itemInHand)));
                     state.setShopGUI(ui);
                 }
             }

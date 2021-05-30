@@ -71,9 +71,8 @@ public class VMGUI extends ShopGUI {
         BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
         this.sourceImage = (ShulkerBox) blockMeta.getBlockState();
 
-        String title = "§5§lVending Machine";
-        inventoryView = Bukkit.createInventory(null, 9 * 4, title);
-        inventory = Bukkit.createInventory(null, 9 * 3);
+        inventoryView = Bukkit.createInventory(null, 9 * 4, "§5§lVending Machine");
+        inventory = Bukkit.createInventory(null, 9 * 3, "§5§lVending Machine Content");
 
         // Setting up UI elemenets on the last row.
         int[] blackSlots = new int[] { 0, 1, 2, 3, 5, 6, 7, 8 };
