@@ -5,7 +5,7 @@
 ############################################################
 
 # How many custom shops can a player own?
-max-shops: 5
+max-shops: 3
 
 # Unlock all designs for all players? (`/customshop lockall <player>` command will have no effect if enabled)
 unlock-all: true
@@ -119,3 +119,6 @@ briefcase:
     stone:
         name: §r§6Stone Newt's Briefcase
         model-data: 202
+    nether:
+        name: §r§6Nether Newt's Briefcase
+        model-data: 203
