@@ -5,28 +5,14 @@ chest-shops.
 
 ## Type of Shops
 
-1. Vending Machines (The only type being implemented right now)
+1. Vending Machines
 2. Newt's Briefcase
-3. Salesman's Deal
+3. Salesman's Deal (Coming Soon)
 
 ### Vending Machines
 
 A shop design with 27 available slots used only for selling items. The shop is
 capable of selling different types of items at once, each with its own price.
-
-#### Steps to buy items
-
-1.  Right click on the vending machine.
-2.  Select the item to purchase.
-3.  Type the amount of item to purchase in chat.
-
-#### Steps to list items
-
-1.  Sneak + punch the vending machine that you own with **empty main hand**.
-2.  Put items into the shop, leaving one sample in main hand.
-3.  Close inventory view and sneak + punch the vending machine again with
-    the **item in main hand**.
-4.  Type the price that you want to sell it for in chat.
 
 ### Newt's Briefcase
 
@@ -100,6 +86,34 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 </tr>
 </tbody></table>
 
+### Newt's Briefcase
+
+<table style="margin: auto; text-align: center; max-width: 100%;">
+<tbody><tr>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/soK7Y7L" title="Wooden Newt's Briefcase">
+<img src="https://i.imgur.com/soK7Y7L.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width:68px">
+<a href="https://imgur.com/bFFDlsm" title="Stone Newt's Briefcase">
+<img src="https://i.imgur.com/bFFDlsm.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width:68px">
+<a href="https://imgur.com/mUPWOaR" title="Nether Newt's Briefcase">
+<img src="https://i.imgur.com/mUPWOaR.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width:68px">
+<a href="https://imgur.com/JTlBSW6" title="Sand Newt's Briefcase">
+<img src="https://i.imgur.com/JTlBSW6.png" decoding="async" width="128"></a>
+</td></tr>
+<tr>
+<td>Wooden Newt's Briefcase</td>
+<td>Stone Newt's Briefcase</td>
+<td>Nether Newt's Briefcase</td>
+<td>Sand Newt's Briefcase</td>
+</tr>
+</tbody></table>
+
 ## Commands
 
 The plugin provides the following commands:
@@ -142,16 +156,21 @@ The following IDs for `Material.PAPER` are used for custom shops. Change
 
 | **ID** | **Model**                  |
 | ------ | -------------------------- |
-| 100000 | default_vending_machine    |
-| 100001 | wooden_vending_machine     |
-| 100002 | stone_vending_machine      |
-| 100003 | nether_vending_machine     |
-| 100004 | sand_vending_machine       |
-| 100005 | prismarine_vending_machine |
-| 100006 | ice_vending_machine        |
-| 100007 | blackstone_vending_machine |
-| 100008 | copper_vending_machine     |
-| 100009 | amethyst_vending_machine   |
+| 100    | default_vending_machine    |
+| 101    | wooden_vending_machine     |
+| 102    | stone_vending_machine      |
+| 103    | nether_vending_machine     |
+| 104    | sand_vending_machine       |
+| 105    | prismarine_vending_machine |
+| 106    | ice_vending_machine        |
+| 107    | blackstone_vending_machine |
+| 108    | copper_vending_machine     |
+| 109    | amethyst_vending_machine   |
+| 200    | default_briefcase          |
+| 201    | wooden_briefcase           |
+| 202    | stone_briefcase            |
+| 203    | nether_briefcase           |
+| 204    | sand_briefcase             |
 
 ### Display Names
 
@@ -160,13 +179,14 @@ Blacklist these names so that players are not able to rename their items to the
 following to abuse the plugin. Also check if these display names affect other
 plugins.
 
-| **Material**             | **Display Name**      |
-| ------------------------ | --------------------- |
-| ARMOR_STAND              | `§5§lVending Machine` |
-| ARROW                    | `§eNext`              |
-|                          | `§eBack`              |
-| BARRIER                  | `§cClose`             |
-| BLACK_STAINED_GLASS_PANE | `<space>`             |
+| **Material**             | **Display Name**       |
+| ------------------------ | ---------------------- |
+| ARMOR_STAND              | `§5§lVending Machine`  |
+|                          | `§5§lNewt's Briefcase` |
+| ARROW                    | `§eNext`               |
+|                          | `§eBack`               |
+| BARRIER                  | `§cClose`              |
+| BLACK_STAINED_GLASS_PANE | `<space>`              |
 
 ### Inventory Title
 
@@ -175,6 +195,7 @@ with other plugins.
 
 1. `§e§lCustom Shops`
 2. `§5§lVending Machine`
+3. `§5§lNewt's Briefcase`
 
 ## Adding Custom Models
 
