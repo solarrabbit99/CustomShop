@@ -44,13 +44,14 @@ public class ShopOpening implements Listener {
     public void openShop(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
         Player player = evt.getPlayer();
-        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                || player.isSneaking()) {
-            return;
-        }
         Block targetBlock = evt.getClickedBlock();
         ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
-        if (armorStand != null) {
+        if (armorStand == null) {
+        } else if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                || player.isSneaking()) {
+            // To prevent block placing with left hand
+            evt.setCancelled(true);
+        } else {
             evt.setCancelled(true);
             ShopGUI gui = getShopOpener(armorStand, player);
             if (gui != null) {
