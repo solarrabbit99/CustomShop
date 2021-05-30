@@ -91,22 +91,26 @@ public class BriefcaseGUI extends ShopGUI {
         }
     }
 
-    public void retrieveItem(int amount) {
-
+    /**
+     * Returns a copy of item that the shop is selling/buying. {@code null} or
+     * {@link ItemStack} with type {@link Material#AIR} if no such item exists.
+     *
+     * @return item that shop is selling/buying
+     */
+    public ItemStack getItem() {
+        return this.armorStand.getEquipment().getLeggings();
     }
 
     public boolean hasItem() {
-        return this.normalView != null;
+        ItemStack item = this.armorStand.getEquipment().getLeggings();
+        return item != null && item.getType() != Material.AIR;
     }
 
     /**
      * Initializes the item that the shop is buying/selling and its price.
-     *
-     * @param item  item to sell/buy
-     * @param price price to sell/buy
-     * @return Feedback message
+     * {@inheritDoc}
      */
-    public String initItem(ItemStack item, double price) {
+    public String listPrice(ItemStack item, double price) {
         if (item == null || item.getType() == Material.AIR) {
             return "§cYou are not holding anything in your main hand!";
         } else {
@@ -131,6 +135,16 @@ public class BriefcaseGUI extends ShopGUI {
             return "§aSuccessfully initialized shop with " + name + "§a for $"
                     + MessageUtils.getHumanReadablePriceFromNumber(price) + "!";
         }
+    }
+
+    @Override
+    public void purchaseItem(ItemStack item, int amount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void retrieveItem(int amount) {
+
     }
 
     @Override

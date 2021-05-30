@@ -16,9 +16,9 @@
  *
  */
 
-package com.paratopiamc.customshop.shop.vm;
+package com.paratopiamc.customshop.shop.briefcase;
 
-import com.paratopiamc.customshop.gui.VMGUI;
+import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
@@ -31,11 +31,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/**
- * Listener for players interacting with custom shops' GUI, containing handlers
- * for which the player (owner or not) purchases items.
- */
-public class VMInteractInventory implements Listener {
+public class BriefcaseInteractInventory implements Listener {
 
     /**
      * Event handler for interactions with shop's GUI.
@@ -50,15 +46,27 @@ public class VMInteractInventory implements Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§5§lVending Machine")) {
+        if (title.equalsIgnoreCase("§5§lNewt's Briefcase")) {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                PlayerState state = PlayerState.getPlayerState(player);
+                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
+                if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
+                    String displayName = itemMeta.getDisplayName();
+                    switch (displayName) {
+                    case "§cClose":
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                        break;
+                    case "§6Selling":
+                    case "§6Buying":
+                    case "§6Change Price":
+                    case "§6Add Items":
+                    case "§6Retrieve Items":
+                    default:
+                        break;
+                    }
                 } else if (evt.getSlot() < 27) {
-                    PlayerState state = PlayerState.getPlayerState(player);
-                    VMGUI ui = (VMGUI) state.getShopGUI();
-                    ItemStack item = ui.getItem(evt.getSlot());
+                    ItemStack item = ui.getItem();
                     state.startPurchase(item, new PurchaseConversationFactory());
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }

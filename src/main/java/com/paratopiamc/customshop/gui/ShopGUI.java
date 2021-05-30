@@ -102,6 +102,17 @@ public abstract class ShopGUI {
     }
 
     /**
+     * Returns the outcome message of this event.
+     *
+     * @param item  item to set the price for
+     * @param price new price
+     * @return outcome message of the purchase, to be sent to the player involved
+     */
+    abstract public String listPrice(ItemStack item, double price);
+
+    abstract public void purchaseItem(ItemStack item, int amount);
+
+    /**
      * Opens public InventoryView of the shop that facilitates purchasing or selling
      * of items to/from the shop.
      */

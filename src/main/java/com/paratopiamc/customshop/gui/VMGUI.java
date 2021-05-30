@@ -149,12 +149,12 @@ public class VMGUI extends ShopGUI {
      * <li>Player does not have enough money to purchase the specified amount of
      * items
      * </ul>
-     * Returns the outcome message of this event.
+     * Sends the outcome message of this event to viewer.
      *
      * @param item   item to be purchased
      * @param amount amount of item the player intended to purchase
-     * @return outcome message of the purchase, to be sent to the player involved
      */
+    @Override
     public void purchaseItem(ItemStack item, int amount) {
         if (item == null) {
             viewer.sendMessage("§cItem is null...");
@@ -203,14 +203,9 @@ public class VMGUI extends ShopGUI {
     }
 
     /**
-     * List all similar ItemStack with the specified price. Returns the outcome
-     * message of this event.
-     *
-     * @param player owner of the shop
-     * @param item   item to set the price for
-     * @param price  new price
-     * @return outcome message of the purchase, to be sent to the player involved
+     * List all similar ItemStack with the specified price. {@inheritDoc}
      */
+    @Override
     public String listPrice(ItemStack item, double price) {
         if (item == null || item.getType() == Material.AIR) {
             return "§cYou are not holding anything in your main hand!";
