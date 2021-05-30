@@ -122,3 +122,6 @@ briefcase:
     nether:
         name: §r§6Nether Newt's Briefcase
         model-data: 203
+    sand:
+        name: §r§6Sand Newt's Briefcase
+        model-data: 204
