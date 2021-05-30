@@ -21,7 +21,9 @@ package com.paratopiamc.customshop.shop.briefcase;
 import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.shop.conversation.AddConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
+import com.paratopiamc.customshop.shop.conversation.RetrieveConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -91,7 +93,13 @@ public class BriefcaseInteractInventory implements Listener {
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                         break;
                     case "§6Add Items":
+                        state.startConversation(new AddConversationFactory());
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                        break;
                     case "§6Retrieve Items":
+                        state.startConversation(new RetrieveConversationFactory());
+                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                        break;
                     default:
                         break;
                     }

@@ -88,7 +88,7 @@ public class VMGUI extends ShopGUI {
             prices = new double[27];
         }
         for (int i = 0; i < items.length; i++) {
-            inventoryView.setItem(i, UIUtils.setPrice(items[i], prices[i]));
+            inventoryView.setItem(i, UIUtils.setPrice(items[i], prices[i], true));
             inventory.setItem(i, items[i]);
         }
     }

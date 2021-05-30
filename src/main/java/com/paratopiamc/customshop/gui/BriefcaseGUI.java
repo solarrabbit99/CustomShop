@@ -75,19 +75,21 @@ public class BriefcaseGUI extends ShopGUI {
             ItemMeta meta = item.getItemMeta();
             if (meta.hasLore()) {
                 List<String> lore = meta.getLore();
-                lore.add("§9" + (this.selling ? "Selling " + String.format("%,.0f", Double.valueOf(this.quantity))
-                        : "Buying"));
+                lore.add("§7--------------------");
+                lore.add("§5Current Stock: §e" + String.format("%,.0f", Double.valueOf(this.quantity)));
+                lore.add("§5" + (this.selling ? "Selling " : "Buying"));
                 meta.setLore(lore);
             } else {
                 List<String> lore = new ArrayList<>();
-                lore.add("§9" + (this.selling ? "Selling " + String.format("%,.0f", Double.valueOf(this.quantity))
-                        : "Buying"));
+                lore.add("§7--------------------");
+                lore.add("§5Current Stock: §e" + String.format("%,.0f", Double.valueOf(this.quantity)));
+                lore.add("§5" + (this.selling ? "Selling " : "Buying"));
                 meta.setLore(lore);
             }
             item.setItemMeta(meta);
 
-            normalView.setItem(13, UIUtils.setPrice(item, this.price));
-            ownerView.setItem(13, UIUtils.setPrice(item, this.price));
+            normalView.setItem(13, UIUtils.setPrice(item, this.price, false));
+            ownerView.setItem(13, UIUtils.setPrice(item, this.price, false));
         }
     }
 
@@ -191,10 +193,20 @@ public class BriefcaseGUI extends ShopGUI {
         }
     }
 
+    /**
+     * Getter for whether the shop is selling items, the alternative being buying.
+     *
+     * @return {@code true} if the shop is selling
+     */
     public boolean isSelling() {
         return this.selling;
     }
 
+    /**
+     * Setter for whether the shop is selling items, the alternative being buying.
+     *
+     * @param selling whether the shop is selling
+     */
     public void setSelling(boolean selling) {
         this.selling = selling;
         EntityEquipment armorStandContent = this.armorStand.getEquipment();
@@ -222,18 +234,137 @@ public class BriefcaseGUI extends ShopGUI {
         ItemStack item = ownerView.getItem(13);
         ItemMeta itemMeta = item.getItemMeta();
         List<String> itemLore = itemMeta.getLore();
-        itemLore.set(itemLore.size() - 2,
-                "§9" + (this.selling ? "Selling " + String.format("%,.0f", Double.valueOf(this.quantity)) : "Buying"));
+        itemLore.set(itemLore.size() - 2, "§5" + (this.selling ? "Selling " : "Buying"));
         itemMeta.setLore(itemLore);
         item.setItemMeta(itemMeta);
     }
 
+    /**
+     * Viewer (inferred to be the owner) retrieves items from the shop.
+     *
+     * @param amount amount of item to retrieve from shop
+     */
     public void retrieveItem(int amount) {
-        // TODO
+        if (!this.hasItem()) {
+            viewer.sendMessage("§cItem doesn't exist...");
+            return;
+        }
+        ItemStack item = this.getItem();
+        if (this.quantity < amount) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
+                            ownerID, viewer, 0, item, amount));
+            return;
+        }
+        Inventory pInventory = viewer.getInventory();
+        int totalSpace = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack pItem = pInventory.getItem(i);
+            if (pItem == null) {
+                totalSpace += item.getMaxStackSize();
+            } else if (pItem.isSimilar(item)) {
+                totalSpace += pItem.getMaxStackSize() - pItem.getAmount();
+            }
+        }
+
+        if (totalSpace < amount) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
+                            ownerID, viewer, 0, item, amount));
+        } else { // Valid operation
+            item.setAmount(amount);
+            pInventory.addItem(item);
+            EntityEquipment armorStandContent = this.armorStand.getEquipment();
+            ItemStack placeHolder = armorStandContent.getChestplate();
+            if (placeHolder.getType() == Material.AIR)
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+
+            ItemMeta meta = placeHolder.getItemMeta();
+            if (!meta.hasLore())
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+
+            List<String> lore = meta.getLore();
+            lore.set(1, String.valueOf(this.quantity - amount));
+            meta.setLore(lore);
+            placeHolder.setItemMeta(meta);
+            armorStandContent.setChestplate(placeHolder);
+        }
     }
 
+    /**
+     * Viewer (inferred to be the owner) addss items to the shop.
+     *
+     * @param amount amount of item to add to shop
+     */
     public void addItem(int amount) {
-        // TODO
+        if (!this.hasItem()) {
+            viewer.sendMessage("§cItem doesn't exist...");
+            return;
+        }
+        ItemStack item = this.getItem();
+
+        Inventory pInventory = viewer.getInventory();
+        int availableAmount = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack pItem = pInventory.getItem(i);
+            if (item.isSimilar(pItem)) {
+                availableAmount += pItem.getAmount();
+            }
+        }
+
+        if (availableAmount < amount) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
+                            ownerID, viewer, 0, item, amount));
+            return;
+        }
+
+        long quantityLong = this.quantity;
+        long amountLong = amount;
+        if (quantityLong + amountLong > Integer.MAX_VALUE) {
+            viewer.sendMessage("§cShop limit reached! You are only able to add " + (Integer.MAX_VALUE - this.quantity)
+                    + " more items!");
+        } else { // Valid operation
+            EntityEquipment armorStandContent = this.armorStand.getEquipment();
+            ItemStack placeHolder = armorStandContent.getChestplate();
+            if (placeHolder.getType() == Material.AIR)
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+
+            ItemMeta meta = placeHolder.getItemMeta();
+            if (!meta.hasLore())
+                CustomShop.getPlugin().getServer().getConsoleSender()
+                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
+                                + this.armorStand.getLocation() + ", unable to update shop info. "
+                                + "Report this error!");
+            List<String> lore = meta.getLore();
+            lore.set(1, String.valueOf(this.quantity + amount));
+            meta.setLore(lore);
+            placeHolder.setItemMeta(meta);
+            armorStandContent.setChestplate(placeHolder);
+
+            for (int i = pInventory.getSize() - 1; i >= 0 && amount > 0; i--) {
+                ItemStack sItem = pInventory.getItem(i);
+                if (sItem != null && sItem.isSimilar(item)) {
+                    int currentStackSize = sItem.getAmount();
+                    if (currentStackSize - amount > 0) {
+                        sItem.setAmount(currentStackSize - amount);
+                        amount = 0;
+                    } else {
+                        sItem.setAmount(0);
+                        amount -= currentStackSize;
+                    }
+                }
+            }
+        }
     }
 
     @Override

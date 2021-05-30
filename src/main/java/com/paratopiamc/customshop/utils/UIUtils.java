@@ -165,8 +165,12 @@ public final class UIUtils {
      * @param price given price in double
      * @return new instance of ItemStack
      */
-    public static ItemStack setPrice(ItemStack item, double price) {
-        return item == null ? null : loreItem(item, "§9Price: $" + MessageUtils.getHumanReadablePriceFromNumber(price));
+    public static ItemStack setPrice(ItemStack item, double price, boolean withSpace) {
+        return item == null ? null
+                : withSpace
+                        ? loreItem(item, "§7--------------------",
+                                "§5Price: §e$" + MessageUtils.getHumanReadablePriceFromNumber(price))
+                        : loreItem(item, "§5Price: §e$" + MessageUtils.getHumanReadablePriceFromNumber(price));
     }
 
     /**

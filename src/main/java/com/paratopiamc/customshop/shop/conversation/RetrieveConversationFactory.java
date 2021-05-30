@@ -1,24 +1,6 @@
-/*
- *  This file is part of CustomShop. Copyright (c) 2021 Paratopia.
- *
- *  CustomShop is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CustomShop is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CustomShop. If not, see <https://www.gnu.org/licenses/>.
- *
- */
-
 package com.paratopiamc.customshop.shop.conversation;
 
-import com.paratopiamc.customshop.gui.ShopGUI;
+import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -30,39 +12,32 @@ import org.bukkit.conversations.InactivityConversationCanceller;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-public class SetPriceConversationFactory extends ConversationFactory {
-    private ItemStack item;
+public class RetrieveConversationFactory extends ConversationFactory {
 
-    public SetPriceConversationFactory(ItemStack item) {
+    public RetrieveConversationFactory() {
         super(CustomShop.getPlugin());
-        this.item = item.clone();
-        this.firstPrompt = new PricePrompt();
-        this.localEchoEnabled = false;
+        this.firstPrompt = new RetrieveConversation();
         this.isModal = false;
+        this.localEchoEnabled = false;
         this.abandonedListeners.add(new ConversationAbandonedListener() {
             @Override
             public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
                 ConversationCanceller canceller = abandonedEvent.getCanceller();
                 Player player = (Player) abandonedEvent.getContext().getForWhom();
                 if (canceller != null) {
-                    player.sendMessage("§cShop listing cancelled...");
+                    player.sendMessage("§cItem retrieve cancelled...");
                 }
                 PlayerState.getPlayerState(player).clearShopInteractions();
             }
         });
-        this.cancellers.add(new InactivityConversationCanceller(CustomShop.getPlugin(), 10));
+        this.cancellers.add(new InactivityConversationCanceller(plugin, 10));
     }
 
-    /**
-     * Prompt when player attempts to list a new price to all items in shop similar
-     * to the item in hand.
-     */
-    private class PricePrompt extends StringPrompt {
+    private static class RetrieveConversation extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "§aEnter the price of the item that you want to list...";
+            return "§aEnter the amount of item that you want to retrieve...";
         }
 
         @Override
@@ -70,13 +45,15 @@ public class SetPriceConversationFactory extends ConversationFactory {
             if (context.getForWhom() instanceof Player) {
                 Player player = (Player) context.getForWhom();
                 PlayerState state = PlayerState.getPlayerState(player);
-                ShopGUI ui = state.getShopGUI();
+                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 try {
-                    double price = ((Double) (Double.parseDouble(input) * 100)).intValue() / 100.0;
-                    if (price <= 0) {
-                        player.sendMessage("§cPrice must be more than 0!");
-                    } else {
-                        player.sendMessage(ui.listPrice(item, price));
+                    int inputInt = Integer.parseInt(input);
+                    double inputDouble = Double.parseDouble(input);
+
+                    if (inputInt != inputDouble || inputDouble <= 0) {
+                        player.sendMessage("§cInvalid input!");
+                    } else if (context.getForWhom() instanceof Player) {
+                        ui.retrieveItem(inputInt);
                     }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§cInvalid input!");
@@ -88,5 +65,4 @@ public class SetPriceConversationFactory extends ConversationFactory {
             return END_OF_CONVERSATION;
         }
     }
-
 }

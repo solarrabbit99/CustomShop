@@ -69,6 +69,8 @@ public class VMListItem implements Listener {
                 return;
             }
             VMGUI ui = new VMGUI(armorStand, player);
+            // Note that on top of what getItemInMainHand()'s documentation suggests, the
+            // method most possibly returns a shallow copy.
             ItemStack itemInHand = player.getEquipment().getItemInMainHand();
             if (itemInHand.getType().equals(Material.AIR)) {
                 ui.openOwnerUI();

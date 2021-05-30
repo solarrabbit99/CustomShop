@@ -46,9 +46,11 @@ customer-buy-success-customer: §aSuccessfully purchased {%amount%}x{%item%}§a 
 customer-buy-fail-money: §cYou need at least {%total%} to make the purchase!
 
 # Message to customer when customer failed to purchase item from shop due to insufficient space.
+# Also the same message to owner with insufficient space trying to retrieve item from a shop.
 customer-buy-fail-space: §cYou do not have enough space in your inventory!
 
 # Message to customer when customer failed to purchase item from shop due to insufficient items in shop.
+# Also the same message to owner trying to retrieve more items from a shop than the shop has.
 customer-buy-fail-item: §cShop does not have the specified amount of the selected item!
 
 # Message to shop owner when shop owner successfully bought from customer.
@@ -61,6 +63,7 @@ customer-sell-success-customer: §aSuccessfully sold {%amount%}x{%item%}§a for 
 customer-sell-fail-money: §c{%owner%} does not have enough money!
 
 # Message to customer when customer failed to sell item to shop due to insufficient items.
+# Also the same message to owner with insufficient items trying to add items to shop.
 customer-sell-fail-item: §cYou do not have the specified amount of the specified item!
 
 ############################################################
