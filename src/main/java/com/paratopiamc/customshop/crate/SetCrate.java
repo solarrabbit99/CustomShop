@@ -52,8 +52,9 @@ public class SetCrate extends CSComd {
         if (targetBlock == null) {
             player.sendMessage("§cYou are not targeting any block...");
             return false;
-        } else if (!targetBlock.getType().equals(Material.CHEST)) {
-            player.sendMessage("§cYou are not targeting any chests!");
+        } else if (!targetBlock.getType().equals(Material.CHEST) && !targetBlock.getType().equals(Material.BARREL)
+                && !targetBlock.getType().equals(Material.ENDER_CHEST)) {
+            player.sendMessage("§cYou are not targeting any chests, enderchests or barrels!");
         } else {
             crateLocation.set("crate-location.world", targetBlock.getLocation().getWorld().getName());
             crateLocation.set("crate-location.x", targetBlock.getLocation().getX());

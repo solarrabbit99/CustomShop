@@ -9,7 +9,7 @@
 		CustomShop
 	</artifactId>
 	<version>
-		1.0-SNAPSHOT
+		BETA-2.2
 	</version>
 	<properties>
 		<maven.compiler.source>
