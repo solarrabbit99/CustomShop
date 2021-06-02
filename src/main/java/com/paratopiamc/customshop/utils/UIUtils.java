@@ -147,41 +147,7 @@ public final class UIUtils {
         return item == null ? null
                 : withSpace
                         ? loreItem(item, "§7--------------------",
-                                "§5Price: §e$" + MessageUtils.getHumanReadablePriceFromNumber(price))
-                        : loreItem(item, "§5Price: §e$" + MessageUtils.getHumanReadablePriceFromNumber(price));
-    }
-
-    /**
-     * For converting lore list of shop's container to an array of item prices. The
-     * index of prices corresponds to index of item in the container. Size of array
-     * is in accordance to that of the given list.
-     *
-     * @param lore lore list obtained from item's meta
-     * @return double array
-     * @throws NullPointerException  if any of the String is null
-     * @throws NumberFormatException if any of the String is not of double format
-     */
-    public static double[] stringListToDoubleArray(List<String> lore) {
-        double[] prices = new double[lore.size()];
-        for (int i = 0; i < lore.size(); i++) {
-            prices[i] = Double.parseDouble(lore.get(i));
-        }
-        return prices;
-    }
-
-    /**
-     * For converting an array of item prices to lore list. The index of lore
-     * corresponds to index of item in the container. Size of list is in accordance
-     * to that of the given array.
-     *
-     * @param prices double array
-     * @return List of string representation of the prices
-     */
-    public static List<String> doubleToStringList(double[] prices) {
-        List<String> result = new ArrayList<>(prices.length);
-        for (int i = 0; i < prices.length; i++) {
-            result.add(Double.toString(prices[i]));
-        }
-        return result;
+                                "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price))
+                        : loreItem(item, "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price));
     }
 }

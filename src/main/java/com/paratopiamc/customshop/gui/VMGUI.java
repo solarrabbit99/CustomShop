@@ -20,8 +20,11 @@ package com.paratopiamc.customshop.gui;
 
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.block.ShulkerBox;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.InventoryUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -53,10 +56,10 @@ public class VMGUI extends ShopGUI {
      */
     private ShulkerBox sourceImage;
     /**
-     * An array to keep track of prices for each slots. This array is retrieved from
-     * and eventually synced with the lure of the shulker box.
+     * A mapping of items to their prices. This mapping is retrieved from and
+     * eventually synced with the lure of the shulker box.
      */
-    private double[] prices;
+    private HashMap<ItemStack, Double> prices;
 
     /**
      * Constructor method for vending machine. Retrieves the items from the source
@@ -81,59 +84,97 @@ public class VMGUI extends ShopGUI {
         }
         UIUtils.createItem(inventoryView, 3, 4, Material.BARRIER, 1, "§cClose", "");
 
-        ItemStack[] items = sourceImage.getInventory().getContents();
-        if (blockMeta.hasLore()) {
-            prices = UIUtils.stringListToDoubleArray(blockMeta.getLore());
-        } else { // Should not come here.
-            prices = new double[27];
+        prices = this.stringListToDoubleArray(blockMeta.getLore(), sourceImage.getInventory());
+
+        Inventory shulkerContent = sourceImage.getInventory();
+        for (int i = 0; i < shulkerContent.getSize(); i++) {
+            ItemStack item = shulkerContent.getItem(i);
+            if (item != null) {
+                ItemStack key = item.clone();
+                key.setAmount(1);
+                inventoryView.setItem(i, UIUtils.setPrice(item, prices.get(key), true));
+                inventory.setItem(i, item);
+            }
         }
-        for (int i = 0; i < items.length; i++) {
-            inventoryView.setItem(i, UIUtils.setPrice(items[i], prices[i], true));
-            inventory.setItem(i, items[i]);
+    }
+
+    /**
+     * Gets the original copy of item without price lore.
+     *
+     * @param index index of the item in the inventory
+     * @return the copy of the item
+     */
+    public ItemStack getItem(int index) {
+        return this.inventory.getItem(index).clone();
+    }
+
+    /**
+     * For converting lore list of shop's container to a {@link HashMap} of item
+     * prices. Each item is mapped to the first available price stated in lore. The
+     * lore is assumed to be of the same size as the inventory. As accordance to
+     * {@link ItemStack}'s {@link #equals(Object)} method, the keys stored in the
+     * resulting HashMap is of amount set to 1, and is equal to an item if and only
+     * if {@link ItemStack#isSimilar(ItemStack)} returns {@code true} and item
+     * amount is set to 1.
+     *
+     * @param lore lore list obtained from shulker's meta, cannot be {@code null}
+     * @return mapping of items to their corresponding prices
+     * @throws NullPointerException  if any of the String is null
+     * @throws NumberFormatException if any of the String is not of double format
+     */
+    private HashMap<ItemStack, Double> stringListToDoubleArray(List<String> lore, Inventory inventory) {
+        HashMap<ItemStack, Double> result = new HashMap<>();
+        for (int i = 0; i < lore.size(); i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item != null) {
+                item = item.clone();
+                item.setAmount(1);
+                if (!result.containsKey(item)) {
+                    result.put(item, Double.parseDouble(lore.get(i)));
+                }
+            }
         }
+        return result;
+    }
+
+    /**
+     * For converting mapping of prices to lore list. The index of lore corresponds
+     * to index of item in {@link #inventory}, similarly for size.
+     *
+     * @return List of string representation of the prices
+     */
+    public List<String> doubleToStringList() {
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < this.inventory.getSize(); i++) {
+            ItemStack item = this.inventory.getItem(i);
+            if (item != null) {
+                ItemStack key = item.clone();
+                key.setAmount(1);
+                Double price = this.prices.get(key);
+                price = price == null ? 0.0 : price;
+                result.add(price.toString());
+            } else {
+                result.add("0.0");
+            }
+        }
+        return result;
     }
 
     /**
      * {@inheritDoc} This method attempts to replace the original shulker in the
      * armor stand's chestplate slot with a duplicate of the same name and updated
      * contents, as the original copy is not retrievable.
-     * <p>
-     * New items added into empty slots will follow the price of the last instance
-     * of the same item listed. As the prices of the items are saved according to
-     * their positions in the inventory, it is possible to swap two or more items in
-     * established slots to make differing prices among items of the same type.
      */
+    @Override
     public void saveInventories() {
         // Does non-null armorStand imply non-null ShopGUI?
         if (armorStand != null) {
-            HashMap<ItemStack, Double> withPrices = new HashMap<>();
             for (int i = 0; i < 27; i++) {
                 sourceImage.getInventory().setItem(i, inventory.getItem(i));
-                if (inventory.getItem(i) == null) {
-                    prices[i] = 0;
-                } else if (prices[i] != 0) {
-                    ItemStack sampleItem = inventory.getItem(i).clone();
-                    sampleItem.setAmount(1);
-                    Double maybePrice = withPrices.get(sampleItem);
-                    if (maybePrice == null) {
-                        withPrices.put(sampleItem, prices[i]);
-                    } else {
-                        prices[i] = maybePrice;
-                    }
-                }
-            }
-            for (int i = 0; i < 27; i++) {
-                if (prices[i] == 0 && inventory.getItem(i) != null) {
-                    ItemStack sampleRequest = inventory.getItem(i).clone();
-                    sampleRequest.setAmount(1);
-                    Double wrapperPrice = withPrices.get(sampleRequest);
-                    double price = wrapperPrice == null ? 0 : wrapperPrice;
-                    prices[i] = price;
-                }
             }
             ItemStack container = armorStand.getEquipment().getChestplate();
             BlockStateMeta shulkerMeta = (BlockStateMeta) container.getItemMeta();
-            shulkerMeta.setLore(UIUtils.doubleToStringList(prices));
+            shulkerMeta.setLore(this.doubleToStringList());
             shulkerMeta.setBlockState(sourceImage);
             container.setItemMeta(shulkerMeta);
             armorStand.getEquipment().setChestplate(container);
@@ -164,40 +205,22 @@ public class VMGUI extends ShopGUI {
                             ownerID, viewer, 0, item, amount));
             return;
         }
+
+        ItemStack key = item.clone();
+        key.setAmount(1);
+        double totalCost = amount * prices.get(key);
+
         Inventory pInventory = viewer.getInventory();
-        int totalSpace = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack pItem = pInventory.getItem(i);
-            if (pItem == null) {
-                totalSpace += item.getMaxStackSize();
-            } else if (pItem.isSimilar(item)) {
-                totalSpace += pItem.getMaxStackSize() - pItem.getAmount();
-            }
-        }
-
-        double totalCost = amount * prices[inventory.first(item)];
-
-        if (totalSpace < amount) {
+        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, totalCost, item, amount));
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
+            // addItem mutates item, use temp to clone a copy
+            ItemStack temp = item.clone();
             pInventory.addItem(item);
-            for (int i = 26; i >= 0 && amount > 0; i--) {
-                ItemStack sItem = inventory.getItem(i);
-                if (sItem != null && sItem.isSimilar(item)) {
-                    int currentStackSize = sItem.getAmount();
-                    if (currentStackSize - amount > 0) {
-                        sItem.setAmount(currentStackSize - amount);
-                        amount = 0;
-                    } else {
-                        sItem.setAmount(0);
-                        prices[i] = 0;
-                        amount -= currentStackSize;
-                    }
-                }
-            }
+            inventory.removeItem(temp);
         }
     }
 
@@ -209,43 +232,14 @@ public class VMGUI extends ShopGUI {
         if (item == null || item.getType() == Material.AIR) {
             return "§cYou are not holding anything in your main hand!";
         } else {
-            for (int i = 0; i < 27; i++) {
-                ItemStack sItem = inventory.getItem(i);
-                if (sItem != null && sItem.isSimilar(item)) {
-                    prices[i] = price;
-                }
-            }
+            ItemStack key = item.clone();
+            key.setAmount(1);
+            prices.put(key, price);
             ItemMeta meta = item.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
-            return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadablePriceFromNumber(price)
-                    + "!";
+            return "§aSuccessfully listed " + name + "§r§a for $" + MessageUtils.getHumanReadableNumber(price) + "!";
         }
     }
-
-    /**
-     * Gets the original copy of item without price lore.
-     *
-     * @param index index of the item in the inventory
-     * @return the copy of the item
-     */
-    public ItemStack getItem(int index) {
-        return this.inventory.getItem(index).clone();
-    }
-
-    // /**
-    // * Get price from the lore of the container.
-    // *
-    // * @param container intended container for the shop (e.g. Shulker Box)
-    // * @param index the index of item in the container
-    // * @return price of selected item
-    // * @throws NullPointerException if the string is null
-    // * @throws NumberFormatException if the string does not contain a parsable
-    // * double
-    // */
-    // public static double getPrice(ItemStack container, int index) {
-    // String label = container.getItemMeta().getLore().get(index);
-    // return Double.parseDouble(label);
-    // }
 
     @Override
     public void openUI() {

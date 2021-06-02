@@ -1,3 +1,21 @@
+/*
+ *  This file is part of CustomShop. Copyright (c) 2021 Paratopia.
+ *
+ *  CustomShop is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CustomShop is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CustomShop. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.paratopiamc.customshop.utils;
 
 import java.util.UUID;
@@ -19,13 +37,13 @@ public class MessageUtils {
             String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
         message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
-        message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadablePriceFromNumber(total));
+        message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadableNumber(total));
         message = message.replaceAll("\\{%item%\\}", itemName == null ? "" : itemName);
         message = message.replaceAll("\\{%amount%\\}", "" + amount);
         return message;
     }
 
-    public static String getHumanReadablePriceFromNumber(double number) {
+    public static String getHumanReadableNumber(double number) {
         if (number >= 1000000000) {
             return String.format("%.2fB", number / 1000000000.0);
         }

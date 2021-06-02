@@ -20,9 +20,10 @@ package com.paratopiamc.customshop.shop.vm;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopCreator;
-import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -62,8 +63,7 @@ public class VMCreator extends ShopCreator {
 
         ItemStack container = new ItemStack(Material.SHULKER_BOX);
         BlockStateMeta blockMeta = (BlockStateMeta) container.getItemMeta();
-        double[] prices = new double[27];
-        List<String> lore = UIUtils.doubleToStringList(prices);
+        List<String> lore = Stream.<String>generate(() -> "0.0").limit(27).collect(Collectors.toList());
         blockMeta.setDisplayName(owner.getUniqueId().toString());
         blockMeta.setLore(lore);
 

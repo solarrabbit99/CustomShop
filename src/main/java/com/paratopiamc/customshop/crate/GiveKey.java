@@ -19,7 +19,6 @@
 package com.paratopiamc.customshop.crate;
 
 import java.util.HashMap;
-
 import com.paratopiamc.customshop.plugin.CSComd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

@@ -26,10 +26,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -71,22 +72,22 @@ public class CreationGUI {
         modelData = new LinkedList<>();
         defaults = new ArrayList<>();
         playerToCreationGUI = new HashMap<>();
-        ConsoleCommandSender logger = CustomShop.getPlugin().getServer().getConsoleSender();
 
         int defaultVM = CustomShop.getPlugin().getConfig().getInt("defaults.vending-machine");
         Set<String> vm = CustomShop.getPlugin().getConfig().getConfigurationSection("vending-machine").getKeys(false);
         for (String e : vm) {
             String customModelName = CustomShop.getPlugin().getConfig().getString("vending-machine." + e + ".name");
             if (customModelName == null) {
-                logger.sendMessage(
-                        "§c§l[CustomShop] Name not set for at least one of the vending machines! Disabling plugin...");
+                CustomShopLogger.sendMessage(
+                        "Name not set for at least one of the vending machines! Disabling plugin...", Level.FAIL);
                 Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
             }
             names.add(customModelName);
             Integer customModelData = CustomShop.getPlugin().getConfig().getInt("vending-machine." + e + ".model-data");
             if (customModelData == 0) {
-                logger.sendMessage(
-                        "§c§l[CustomShop] Missing Custom Model Data or set to 0 for at least one of the vending machines! Disabling plugin...");
+                CustomShopLogger.sendMessage(
+                        "Missing Custom Model Data or set to 0 for at least one of the vending machines! Disabling plugin...",
+                        Level.FAIL);
                 Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
             }
             modelData.add(customModelData);
@@ -98,15 +99,16 @@ public class CreationGUI {
         for (String e : bc) {
             String customModelName = CustomShop.getPlugin().getConfig().getString("briefcase." + e + ".name");
             if (customModelName == null) {
-                logger.sendMessage(
-                        "§c§l[CustomShop] Name not set for at least one of the vending machines! Disabling plugin...");
+                CustomShopLogger.sendMessage("Name not set for at least one of the briefcases! Disabling plugin...",
+                        Level.FAIL);
                 Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
             }
             names.add(customModelName);
             Integer customModelData = CustomShop.getPlugin().getConfig().getInt("briefcase." + e + ".model-data");
             if (customModelData == 0) {
-                logger.sendMessage(
-                        "§c§l[CustomShop] Missing Custom Model Data or set to 0 for at least one of the vending machines! Disabling plugin...");
+                CustomShopLogger.sendMessage(
+                        "Missing Custom Model Data or set to 0 for at least one of the briefcases! Disabling plugin...",
+                        Level.FAIL);
                 Bukkit.getPluginManager().disablePlugin(CustomShop.getPlugin());
             }
             modelData.add(customModelData);

@@ -36,6 +36,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * GUI for Newt's Briefcase.
+ */
 public class BriefcaseGUI extends ShopGUI {
     /**
      * Inventory viewed by normal players, consisting of UI elements such as exit
@@ -61,6 +64,15 @@ public class BriefcaseGUI extends ShopGUI {
      */
     private int quantity;
 
+    /**
+     * Constructor for briefcase's GUI, which can be called regardless whether the
+     * briefcase has been initialized with any items.
+     *
+     * @param armorStand verified to be a briefcase, cannot be {@code null}
+     * @param player     viewer of the GUI
+     * @throws NullPointerException if {@code armorStand}'s chestplate item does not
+     *                              have a display name
+     */
     public BriefcaseGUI(ArmorStand armorStand, Player player) {
         super(player, armorStand, armorStand.getEquipment().getChestplate().getItemMeta().getDisplayName());
         EntityEquipment armorStandContent = armorStand.getEquipment();
@@ -149,11 +161,16 @@ public class BriefcaseGUI extends ShopGUI {
             ItemMeta itemMeta = item.getItemMeta();
 
             String name = itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : item.getType().toString();
-            return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadablePriceFromNumber(price)
-                    + "!";
+            return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadableNumber(price) + "!";
         }
     }
 
+    /**
+     * Viewer sells items to shop owner.
+     *
+     * @param item   cannot be {@code null}
+     * @param amount amount to sell, disregards the amount tagged to {@code item}
+     */
     public void sellItem(ItemStack item, int amount) {
         if (item == null) {
             viewer.sendMessage("§cItem is null...");
@@ -172,39 +189,12 @@ public class BriefcaseGUI extends ShopGUI {
 
         int remainingSpace = Integer.MAX_VALUE - this.quantity;
         double totalCost = amount * price;
-
         if (remainingSpace < amount) {
             viewer.sendMessage(
                     "§cShop limit reached! You are only able to sell " + remainingSpace + " more items to the shop!");
         } else if (super.ownerBuy(amount, totalCost, item)) { // Valid transaction
             this.updatePlaceHolderLore(2, this.quantity + amount);
             pInventory.removeItem(clone);
-        }
-    }
-
-    @Override
-    public void purchaseItem(ItemStack item, int amount) {
-        if (item == null) {
-            viewer.sendMessage("§cItem is null...");
-            return;
-        }
-        if (this.quantity < amount) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
-                            ownerID, viewer, 0, item, amount));
-            return;
-        }
-        Inventory pInventory = viewer.getInventory();
-        double totalCost = amount * price;
-
-        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
-                            ownerID, viewer, totalCost, item, amount));
-        } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
-            item.setAmount(amount);
-            pInventory.addItem(item);
-            this.updatePlaceHolderLore(2, this.quantity - amount);
         }
     }
 
@@ -335,6 +325,32 @@ public class BriefcaseGUI extends ShopGUI {
             placeHolder.setItemMeta(meta);
             armorStandContent.setChestplate(placeHolder);
             return true;
+        }
+    }
+
+    @Override
+    public void purchaseItem(ItemStack item, int amount) {
+        if (item == null) {
+            viewer.sendMessage("§cItem is null...");
+            return;
+        }
+        if (this.quantity < amount) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
+                            ownerID, viewer, 0, item, amount));
+            return;
+        }
+        Inventory pInventory = viewer.getInventory();
+        double totalCost = amount * price;
+
+        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
+            viewer.sendMessage(
+                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
+                            ownerID, viewer, totalCost, item, amount));
+        } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
+            item.setAmount(amount);
+            pInventory.addItem(item);
+            this.updatePlaceHolderLore(2, this.quantity - amount);
         }
     }
 

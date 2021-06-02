@@ -31,8 +31,11 @@ import net.milkbowl.vault.economy.Economy;
 
 /**
  * Encapsulates a shop GUI, which contains inventory views for interacting with
- * custom shops. Implementing classes do not check for any permissions regarding
- * shop access.
+ * custom shops. ShopGUIs contains basic information about the interactive
+ * parties, and therefore should also be the implementing class for shop
+ * operations.
+ * <p>
+ * Implementing classes do not check for any permissions regarding shop access.
  */
 public abstract class ShopGUI {
     /**
@@ -72,6 +75,19 @@ public abstract class ShopGUI {
         return this.viewer.getUniqueId().toString().equals(this.ownerID);
     }
 
+    /**
+     * Money transaction when owner sells item (recieves money) to customer. Sends
+     * feedback message to viewer regarding the outcome of the transaction. If
+     * transaction is made successfully, owner will also receive relevant messages
+     * if he is online. Otherwise, it will be saved in the database and pushed to
+     * the owner on join.
+     * 
+     * @param amount    amount of items sold, disregards the amount tagged to
+     *                  {@code item}
+     * @param totalCost total money involved in the transaction
+     * @param item      item sold
+     * @return {@code true} if transaction is successful
+     */
     protected boolean ownerSell(int amount, double totalCost, ItemStack item) {
         Economy economy = CustomShop.getPlugin().getEconomy();
         double bal = economy.getBalance(viewer);
@@ -101,6 +117,19 @@ public abstract class ShopGUI {
         }
     }
 
+    /**
+     * Money transaction when owner buys item (pays money) from customer. Sends
+     * feedback message to viewer regarding the outcome of the transaction. If
+     * transaction is made successfully, owner will also receive relevant messages
+     * if he is online. Otherwise, it will be saved in the database and pushed to
+     * the owner on join.
+     * 
+     * @param amount    amount of items bought, disregards the amount tagged to
+     *                  {@code item}
+     * @param totalCost total money involved in the transaction
+     * @param item      item bought
+     * @return {@code true} if transaction is successful
+     */
     protected boolean ownerBuy(int amount, double totalCost, ItemStack item) {
         OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(this.ownerID));
         Economy economy = CustomShop.getPlugin().getEconomy();
@@ -139,6 +168,14 @@ public abstract class ShopGUI {
      */
     abstract public String listPrice(ItemStack item, double price);
 
+    /**
+     * Viewer purchase item from shop. Non-economy related operations dependent on
+     * the type of shop will be handled here.
+     *
+     * @param item   item purchased by the viewer
+     * @param amount amounnt of item to purchase, disregards the amount tagged to
+     *               {@code item}
+     */
     abstract public void purchaseItem(ItemStack item, int amount);
 
     /**
