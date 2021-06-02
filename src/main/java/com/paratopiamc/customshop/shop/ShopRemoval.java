@@ -30,7 +30,7 @@ import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
-import com.paratopiamc.customshop.utils.UIUtils;
+import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -107,7 +107,7 @@ public class ShopRemoval extends CSComd implements Listener {
             PlayerState.getPlayerState(player).clearShopInteractions();
             UUID ownerID = remover.removeShop();
             CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
-        } else if (UIUtils.getArmorStand(targetBlock) != null) {
+        } else if (ShopUtils.getArmorStand(targetBlock) != null) {
             evt.setCancelled(true);
         }
     }
@@ -144,8 +144,8 @@ public class ShopRemoval extends CSComd implements Listener {
      * @return correspond remover for the type of shop
      */
     private static ShopRemover getShopRemover(Block targetBlock, Player player) {
-        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
-        if (armorStand != null && UIUtils.hasShopPermission(armorStand, player)) {
+        ArmorStand armorStand = ShopUtils.getArmorStand(targetBlock);
+        if (armorStand != null && ShopUtils.hasShopPermission(armorStand, player)) {
             String customName = armorStand.getCustomName();
             ShopRemover result;
             switch (customName) {

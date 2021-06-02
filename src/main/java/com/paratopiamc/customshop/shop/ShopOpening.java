@@ -23,7 +23,7 @@ import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
-import com.paratopiamc.customshop.utils.UIUtils;
+import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class ShopOpening implements Listener {
         EquipmentSlot hand = evt.getHand();
         Player player = evt.getPlayer();
         Block targetBlock = evt.getClickedBlock();
-        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
+        ArmorStand armorStand = ShopUtils.getArmorStand(targetBlock);
         if (armorStand == null) {
         } else if (hand.equals(EquipmentSlot.OFF_HAND)) {
             // To prevent block placing with left hand

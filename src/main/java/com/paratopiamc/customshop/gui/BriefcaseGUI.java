@@ -21,6 +21,9 @@ package com.paratopiamc.customshop.gui;
 import java.util.ArrayList;
 import java.util.List;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import com.paratopiamc.customshop.utils.InventoryUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -117,9 +120,14 @@ public class BriefcaseGUI extends ShopGUI {
      * @return item that shop is selling/buying
      */
     public ItemStack getItem() {
-        return this.armorStand.getEquipment().getLeggings();
+        return this.armorStand.getEquipment().getLeggings().clone();
     }
 
+    /**
+     * Return if shop has an {@link ItemStack} set for sale/buying.
+     * 
+     * @return {@code true} if the shop has an item set
+     */
     public boolean hasItem() {
         ItemStack item = this.armorStand.getEquipment().getLeggings();
         return item != null && item.getType() != Material.AIR;
@@ -137,16 +145,7 @@ public class BriefcaseGUI extends ShopGUI {
             item.setAmount(1);
             armorStandContent.setLeggings(item);
 
-            ItemStack placeHolder = armorStandContent.getChestplate();
-            ItemMeta meta = placeHolder.getItemMeta();
-            List<String> lore = meta.getLore();
-
-            lore.set(0, String.valueOf(price));
-
-            meta.setLore(lore);
-            placeHolder.setItemMeta(meta);
-            armorStandContent.setChestplate(placeHolder);
-
+            this.updatePlaceHolderLore(1, price);
             ItemMeta itemMeta = item.getItemMeta();
 
             String name = itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : item.getType().toString();
@@ -160,16 +159,11 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage("§cItem is null...");
             return;
         }
+        ItemStack clone = item.clone();
+        clone.setAmount(amount);
         Inventory pInventory = viewer.getInventory();
-        int amountAvailable = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack pItem = pInventory.getItem(i);
-            if (pItem != null && pItem.isSimilar(item)) {
-                amountAvailable += pItem.getAmount();
-            }
-        }
 
-        if (amountAvailable < amount) {
+        if (!pInventory.containsAtLeast(item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
                             ownerID, viewer, 0, item, amount));
@@ -183,39 +177,8 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(
                     "§cShop limit reached! You are only able to sell " + remainingSpace + " more items to the shop!");
         } else if (super.ownerBuy(amount, totalCost, item)) { // Valid transaction
-            EntityEquipment armorStandContent = this.armorStand.getEquipment();
-            ItemStack placeHolder = armorStandContent.getChestplate();
-            if (placeHolder.getType() == Material.AIR)
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-
-            ItemMeta meta = placeHolder.getItemMeta();
-            if (!meta.hasLore())
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-            List<String> lore = meta.getLore();
-            lore.set(1, String.valueOf(this.quantity + amount));
-            meta.setLore(lore);
-            placeHolder.setItemMeta(meta);
-            armorStandContent.setChestplate(placeHolder);
-
-            for (int i = pInventory.getSize() - 1; i >= 0 && amount > 0; i--) {
-                ItemStack sItem = pInventory.getItem(i);
-                if (sItem != null && sItem.isSimilar(item)) {
-                    int currentStackSize = sItem.getAmount();
-                    if (currentStackSize - amount > 0) {
-                        sItem.setAmount(currentStackSize - amount);
-                        amount = 0;
-                    } else {
-                        sItem.setAmount(0);
-                        amount -= currentStackSize;
-                    }
-                }
-            }
+            this.updatePlaceHolderLore(2, this.quantity + amount);
+            pInventory.removeItem(clone);
         }
     }
 
@@ -232,45 +195,16 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
         Inventory pInventory = viewer.getInventory();
-        int totalSpace = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack pItem = pInventory.getItem(i);
-            if (pItem == null) {
-                totalSpace += item.getMaxStackSize();
-            } else if (pItem.isSimilar(item)) {
-                totalSpace += pItem.getMaxStackSize() - pItem.getAmount();
-            }
-        }
-
         double totalCost = amount * price;
 
-        if (totalSpace < amount) {
+        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, totalCost, item, amount));
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
             pInventory.addItem(item);
-            EntityEquipment armorStandContent = this.armorStand.getEquipment();
-            ItemStack placeHolder = armorStandContent.getChestplate();
-            if (placeHolder.getType() == Material.AIR)
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-
-            ItemMeta meta = placeHolder.getItemMeta();
-            if (!meta.hasLore())
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-
-            List<String> lore = meta.getLore();
-            lore.set(1, String.valueOf(this.quantity - amount));
-            meta.setLore(lore);
-            placeHolder.setItemMeta(meta);
-            armorStandContent.setChestplate(placeHolder);
+            this.updatePlaceHolderLore(2, this.quantity - amount);
         }
     }
 
@@ -290,24 +224,7 @@ public class BriefcaseGUI extends ShopGUI {
      */
     public void setSelling(boolean selling) {
         this.selling = selling;
-        EntityEquipment armorStandContent = this.armorStand.getEquipment();
-        ItemStack placeHolder = armorStandContent.getChestplate();
-        if (placeHolder.getType() == Material.AIR)
-            CustomShop.getPlugin().getServer().getConsoleSender()
-                    .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
-                            + this.armorStand.getLocation() + ", unable to update shop info. " + "Report this error!");
-
-        ItemMeta meta = placeHolder.getItemMeta();
-        if (!meta.hasLore())
-            CustomShop.getPlugin().getServer().getConsoleSender()
-                    .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
-                            + this.armorStand.getLocation() + ", unable to update shop info. " + "Report this error!");
-
-        List<String> lore = meta.getLore();
-        lore.set(2, String.valueOf(selling));
-        meta.setLore(lore);
-        placeHolder.setItemMeta(meta);
-        armorStandContent.setChestplate(placeHolder);
+        this.updatePlaceHolderLore(3, selling);
 
         UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1, "§6" + (this.selling ? "Selling" : "Buying"),
                 "§2Click to toggle");
@@ -338,50 +255,20 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
         Inventory pInventory = viewer.getInventory();
-        int totalSpace = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack pItem = pInventory.getItem(i);
-            if (pItem == null) {
-                totalSpace += item.getMaxStackSize();
-            } else if (pItem.isSimilar(item)) {
-                totalSpace += pItem.getMaxStackSize() - pItem.getAmount();
-            }
-        }
 
-        if (totalSpace < amount) {
+        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, 0, item, amount));
         } else { // Valid operation
             item.setAmount(amount);
-            pInventory.addItem(item);
-            EntityEquipment armorStandContent = this.armorStand.getEquipment();
-            ItemStack placeHolder = armorStandContent.getChestplate();
-            if (placeHolder.getType() == Material.AIR)
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-
-            ItemMeta meta = placeHolder.getItemMeta();
-            if (!meta.hasLore())
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-
-            List<String> lore = meta.getLore();
-            lore.set(1, String.valueOf(this.quantity - amount));
-            meta.setLore(lore);
-            placeHolder.setItemMeta(meta);
-            armorStandContent.setChestplate(placeHolder);
-
-            viewer.sendMessage("§aSuccessfully retrieved " + amount + " items!");
+            if (this.updatePlaceHolderLore(2, this.quantity - amount) && pInventory.addItem(item).isEmpty())
+                viewer.sendMessage("§aSuccessfully retrieved " + amount + " items!");
         }
     }
 
     /**
-     * Viewer (inferred to be the owner) addss items to the shop.
+     * Viewer (inferred to be the owner) adds items to the shop.
      *
      * @param amount amount of item to add to shop
      */
@@ -391,17 +278,10 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
         ItemStack item = this.getItem();
-
+        item.setAmount(amount);
         Inventory pInventory = viewer.getInventory();
-        int availableAmount = 0;
-        for (int i = 0; i < 36; i++) {
-            ItemStack pItem = pInventory.getItem(i);
-            if (item.isSimilar(pItem)) {
-                availableAmount += pItem.getAmount();
-            }
-        }
 
-        if (availableAmount < amount) {
+        if (!pInventory.containsAtLeast(item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
                             ownerID, viewer, 0, item, amount));
@@ -412,40 +292,49 @@ public class BriefcaseGUI extends ShopGUI {
         if (remainingSpace < amount) {
             viewer.sendMessage("§cShop limit reached! You are only able to add " + remainingSpace + " more items!");
         } else { // Valid operation
-            EntityEquipment armorStandContent = this.armorStand.getEquipment();
-            ItemStack placeHolder = armorStandContent.getChestplate();
-            if (placeHolder.getType() == Material.AIR)
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase without placeHolder detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
+            if (this.updatePlaceHolderLore(2, this.quantity + amount) && pInventory.removeItem(item).isEmpty())
+                viewer.sendMessage("§aSuccessfully added " + amount + " more items!");
+        }
+    }
 
-            ItemMeta meta = placeHolder.getItemMeta();
-            if (!meta.hasLore())
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Briefcase's placeHolder without lore detected at "
-                                + this.armorStand.getLocation() + ", unable to update shop info. "
-                                + "Report this error!");
-            List<String> lore = meta.getLore();
-            lore.set(1, String.valueOf(this.quantity + amount));
+    /**
+     * Updates placeholder's lore with the following properties at index:
+     * <ol>
+     * <li>price of the item
+     * <li>current stock of the item
+     * <li>boolean indicating whether shop is selling
+     * </ol>
+     * Sends console messages if update fails.
+     * 
+     * @param index    the index to update, refer above
+     * @param property the updated property
+     * @return {@code true} if updated succesfully
+     */
+    private boolean updatePlaceHolderLore(int index, Object property) {
+        EntityEquipment armorStandContent = this.armorStand.getEquipment();
+        ItemStack placeHolder = armorStandContent.getChestplate();
+        if (placeHolder == null || placeHolder.getType() == Material.AIR) {
+            CustomShopLogger.sendMessage("Briefcase without placeHolder detected at " + this.armorStand.getLocation()
+                    + ", unable to update shop info. Report this error!", Level.FAIL);
+            return false;
+        }
+        ItemMeta meta = placeHolder.getItemMeta();
+        if (!meta.hasLore()) {
+            CustomShopLogger.sendMessage("Briefcase's placeHolder without lore detected at "
+                    + this.armorStand.getLocation() + ", unable to update shop info. Report this error!", Level.FAIL);
+            return false;
+        }
+        List<String> lore = meta.getLore();
+        if (lore.size() < 3) {
+            CustomShopLogger.sendMessage("Briefcase's placeHolder with incomplete lore size detected at "
+                    + this.armorStand.getLocation() + ", unable to update shop info. Report this error!", Level.FAIL);
+            return false;
+        } else {
+            lore.set(index - 1, property.toString());
             meta.setLore(lore);
             placeHolder.setItemMeta(meta);
             armorStandContent.setChestplate(placeHolder);
-
-            viewer.sendMessage("§aSuccessfully added " + amount + " more items!");
-            for (int i = pInventory.getSize() - 1; i >= 0 && amount > 0; i--) {
-                ItemStack sItem = pInventory.getItem(i);
-                if (sItem != null && sItem.isSimilar(item)) {
-                    int currentStackSize = sItem.getAmount();
-                    if (currentStackSize - amount > 0) {
-                        sItem.setAmount(currentStackSize - amount);
-                        amount = 0;
-                    } else {
-                        sItem.setAmount(0);
-                        amount -= currentStackSize;
-                    }
-                }
-            }
+            return true;
         }
     }
 

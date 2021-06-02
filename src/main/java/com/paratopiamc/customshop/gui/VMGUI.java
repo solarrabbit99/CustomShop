@@ -232,6 +232,21 @@ public class VMGUI extends ShopGUI {
         return this.inventory.getItem(index).clone();
     }
 
+    // /**
+    // * Get price from the lore of the container.
+    // *
+    // * @param container intended container for the shop (e.g. Shulker Box)
+    // * @param index the index of item in the container
+    // * @return price of selected item
+    // * @throws NullPointerException if the string is null
+    // * @throws NumberFormatException if the string does not contain a parsable
+    // * double
+    // */
+    // public static double getPrice(ItemStack container, int index) {
+    // String label = container.getItemMeta().getLore().get(index);
+    // return Double.parseDouble(label);
+    // }
+
     @Override
     public void openUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);

@@ -22,7 +22,7 @@ import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
-import com.paratopiamc.customshop.utils.UIUtils;
+import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -49,7 +49,7 @@ public class VMListItem implements Listener {
             return;
         }
         Block targetBlock = evt.getClickedBlock();
-        ArmorStand armorStand = UIUtils.getArmorStand(targetBlock);
+        ArmorStand armorStand = ShopUtils.getArmorStand(targetBlock);
         if (armorStand == null) {
             return;
         }
@@ -60,7 +60,7 @@ public class VMListItem implements Listener {
             evt.setCancelled(true);
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
-            if (!UIUtils.hasShopPermission(armorStand, player)) {
+            if (!ShopUtils.hasShopPermission(armorStand, player)) {
                 player.sendMessage("§cYou do not own the vending machine!");
                 return;
             }
