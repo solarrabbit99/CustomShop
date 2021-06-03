@@ -38,7 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class BriefcaseCreator extends ShopCreator {
     @Override
-    public void createShop(Location location, Player owner, ItemStack item) {
+    public void createShop(Location location, Player owner, ItemStack item, boolean isAdmin) {
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
                 .getInt("defaults.briefcase")) {
             owner.sendMessage("§cYou have yet to unlock the selected Newt's Briefcase!");
@@ -70,6 +70,10 @@ public class BriefcaseCreator extends ShopCreator {
 
         placeHolder.setItemMeta(meta);
         armorStandBody.setChestplate(placeHolder);
+
+        if (isAdmin) {
+            armorStandBody.setBoots(new ItemStack(Material.DIRT));
+        }
 
         lockArmorStand(armorStand);
 

@@ -58,7 +58,10 @@ public class CSComdExec implements CommandExecutor {
                 comd = new ShopRemoval(sender);
                 break;
             case "newshop":
-                comd = new ShopCreation(sender);
+                comd = new ShopCreation(sender, false);
+                break;
+            case "newadminshop":
+                comd = new ShopCreation(sender, true);
                 break;
             case "setcount":
                 comd = new SetShopCount(sender, args);

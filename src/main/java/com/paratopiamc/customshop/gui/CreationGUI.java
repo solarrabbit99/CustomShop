@@ -48,14 +48,16 @@ public class CreationGUI {
     private List<Integer> unlockedShops;
     private Inventory[] pages;
     private int currentPage;
+    private boolean isAdmin;
 
     /**
      * Set up a GUI for the player. Called when static method
      * {@link #openFirstPage(Player)} is called.
      */
-    private CreationGUI(Player player) {
+    private CreationGUI(Player player, boolean isAdmin) {
+        this.isAdmin = isAdmin;
         this.currentPage = 0;
-        if (!CustomShop.getPlugin().getConfig().getBoolean("unlock-all")) {
+        if (!isAdmin && !CustomShop.getPlugin().getConfig().getBoolean("unlock-all")) {
             unlockedShops = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
         }
         this.setUpGUI(player);
@@ -136,7 +138,7 @@ public class CreationGUI {
 
         int item = 0;
         for (int i = 0; i < noOfPages; i++) {
-            pages[i] = Bukkit.createInventory(null, 9 * 4, "§e§lCustom Shops");
+            pages[i] = Bukkit.createInventory(null, 9 * 4, isAdmin ? "§e§lAdmin Custom Shops" : "§e§lCustom Shops");
 
             // Setting up UI elemenets on the last row.
             int[] blackSlots = new int[] { 0, 1, 2, 6, 7, 8 };
@@ -159,11 +161,13 @@ public class CreationGUI {
     /**
      * Opens the first page for its viewer.
      *
+     * @param player  player viewing the GUI
+     * @param isAdmin whether it is an admin shop creation
      * @throws NullPointerException if GUI is not yet initialised
      * @see #setUpGUI()
      */
-    public static void openFirstPage(Player player) {
-        CompletableFuture<CreationGUI> guicf = CompletableFuture.supplyAsync(() -> new CreationGUI(player));
+    public static void openFirstPage(Player player, boolean isAdmin) {
+        CompletableFuture<CreationGUI> guicf = CompletableFuture.supplyAsync(() -> new CreationGUI(player, isAdmin));
         guicf.thenAccept(gui -> {
             playerToCreationGUI.put(player.getUniqueId(), gui);
             BukkitRunnable runnable = new BukkitRunnable() {

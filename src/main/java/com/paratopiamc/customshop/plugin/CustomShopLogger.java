@@ -51,7 +51,7 @@ public class CustomShopLogger {
      * Uses {@link ConsoleCommandSender} to log color-coded messages.
      * 
      * @param message message to send to console
-     * @param type    {@link CustomShopLogger#Level} associated with the message
+     * @param type    {@link CustomShopLogger.Level} associated with the message
      */
     public static void sendMessage(String message, Level type) {
         getLogger().sendMessage(type + "§l[CustomShop] " + message);

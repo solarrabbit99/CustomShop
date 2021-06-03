@@ -43,16 +43,22 @@ import org.bukkit.scheduler.BukkitRunnable;
  * a design listed in the GUI.
  */
 public class ShopCreation extends CSComd implements Listener {
+    private boolean isAdmin;
+
     public ShopCreation() {
     }
 
-    public ShopCreation(CommandSender sender) {
+    public ShopCreation(CommandSender sender, boolean isAdmin) {
         this.sender = sender;
+        this.isAdmin = isAdmin;
     }
 
     @Override
     public boolean exec() {
         if (!(sender instanceof Player)) {
+            return false;
+        } else if (!sender.hasPermission("customshop.admin") && this.isAdmin) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
             return false;
         }
         Player player = (Player) sender;
@@ -61,7 +67,7 @@ public class ShopCreation extends CSComd implements Listener {
             player.sendMessage("§cYou are not targeting any block...");
             return false;
         }
-        CreationGUI.openFirstPage(player);
+        CreationGUI.openFirstPage(player, isAdmin);
         return false;
     }
 
@@ -80,7 +86,8 @@ public class ShopCreation extends CSComd implements Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§e§lCustom Shops")) {
+        if (title.equalsIgnoreCase("§e§lCustom Shops") || title.equalsIgnoreCase("§e§lAdmin Custom Shops")) {
+            this.isAdmin = title.equalsIgnoreCase("§e§lAdmin Custom Shops");
             evt.setCancelled(true);
             if (holder == null) {
                 ItemMeta itemMeta = item.getItemMeta();
@@ -111,7 +118,7 @@ public class ShopCreation extends CSComd implements Listener {
                                 }
                                 Location location = getCreationLocation(targetBlock, player);
                                 ShopCreator creator = getShopCreator(itemMeta);
-                                creator.createShop(location, player, item);
+                                creator.createShop(location, player, item, isAdmin);
                                 CreationGUI.closeGUI(player);
                             }
                         };

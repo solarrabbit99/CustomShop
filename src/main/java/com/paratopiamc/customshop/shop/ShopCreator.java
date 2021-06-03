@@ -38,8 +38,9 @@ public abstract class ShopCreator {
      * @param location location in which the shop will attempt on top of
      * @param owner    owner of the shop
      * @param item     design of the shop
+     * @param isAdmin  whether the shop is an admin shop
      */
-    public abstract void createShop(Location location, Player owner, ItemStack item);
+    public abstract void createShop(Location location, Player owner, ItemStack item, boolean isAdmin);
 
     /**
      * Locks armor stand to prevent accessibility of items within its slots.

@@ -51,28 +51,30 @@ public class ShopUtils {
         if (player.hasPermission("customshop.admin") || player.isOp()) {
             return true;
         }
-        String customName = armorStand.getCustomName();
-        if (customName == null || !customName.equals("§5§lVending Machine"))
+        EntityEquipment equipment = armorStand.getEquipment();
+
+        // Test whether the shop is an admin shop.
+        ItemStack adminItem = equipment.getBoots();
+        if (adminItem != null && adminItem.getType() != Material.AIR) {
             return false;
-        else {
-            EntityEquipment equipment = armorStand.getEquipment();
-            ItemStack item = equipment.getChestplate();
-            if (item != null && item.getType() != Material.AIR) {
-                ItemMeta meta = item.getItemMeta();
-                if (!meta.hasDisplayName()) {
-                    Location standLocation = armorStand.getLocation();
-                    CustomShopLogger.sendMessage(
-                            "Custom shop without owner's display name detected at " + standLocation + "!", Level.FAIL);
-                    return false;
-                }
-                String ownerUUID = meta.getDisplayName();
-                return player.getUniqueId().toString().equals(ownerUUID);
-            } else {
+        }
+
+        ItemStack item = equipment.getChestplate();
+        if (item != null && item.getType() != Material.AIR) {
+            ItemMeta meta = item.getItemMeta();
+            if (!meta.hasDisplayName()) {
                 Location standLocation = armorStand.getLocation();
-                CustomShopLogger.sendMessage("Custom shop without owner item detected at " + standLocation + "!",
-                        Level.FAIL);
+                CustomShopLogger.sendMessage(
+                        "Custom shop without owner's display name detected at " + standLocation + "!", Level.FAIL);
                 return false;
             }
+            String ownerUUID = meta.getDisplayName();
+            return player.getUniqueId().toString().equals(ownerUUID);
+        } else {
+            Location standLocation = armorStand.getLocation();
+            CustomShopLogger.sendMessage("Custom shop without owner item detected at " + standLocation + "!",
+                    Level.FAIL);
+            return false;
         }
     }
 

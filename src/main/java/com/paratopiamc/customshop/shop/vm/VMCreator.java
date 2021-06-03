@@ -39,7 +39,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
  */
 public class VMCreator extends ShopCreator {
     @Override
-    public void createShop(Location location, Player owner, ItemStack item) {
+    public void createShop(Location location, Player owner, ItemStack item, boolean isAdmin) {
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
                 .getInt("defaults.vending-machine")) {
             owner.sendMessage("§cYou have yet to unlock the selected Vending Machine!");
@@ -69,6 +69,10 @@ public class VMCreator extends ShopCreator {
 
         container.setItemMeta(blockMeta);
         armorStandBody.setChestplate(container);
+
+        if (isAdmin) {
+            armorStandBody.setBoots(new ItemStack(Material.DIRT));
+        }
 
         lockArmorStand(armorStand);
 
