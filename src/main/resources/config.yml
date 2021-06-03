@@ -125,3 +125,18 @@ briefcase:
     sand:
         name: §r§6Sand Newt's Briefcase
         model-data: 204
+    prismarine:
+        name: §r§6Prismarine Newt's Briefcase
+        model-data: 205
+    ice:
+        name: §r§6Ice Newt's Briefcase
+        model-data: 206
+    blackstone:
+        name: §r§6Blackstone Newt's Briefcase
+        model-data: 207
+    copper:
+        name: §r§6Copper Newt's Briefcase
+        model-data: 208
+    amethyst:
+        name: §r§6Amethyst Newt's Briefcase
+        model-data: 209

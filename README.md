@@ -112,6 +112,37 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <td>Nether Newt's Briefcase</td>
 <td>Sand Newt's Briefcase</td>
 </tr>
+<tr>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/2PvOCUg" title="Prismarine Newt's Briefcase">
+<img src="https://i.imgur.com/2PvOCUg.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/zWdzADb" title="Ice Newt's Briefcase">
+<img src="https://i.imgur.com/zWdzADb.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/7W8Di4O" title="Blackstone Newt's Briefcase">
+<img src="https://i.imgur.com/7W8Di4O.png" decoding="async" width="128"></a>
+</td>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/Eni93wR" title="Copper Newt's Briefcase">
+<img src="https://i.imgur.com/Eni93wR.png" decoding="async" width="128"></a>
+</td></tr>
+<tr>
+<td>Prismarine Newt's Briefcase</td>
+<td>Ice Newt's Briefcase</td>
+<td>Blackstone Newt's Briefcase</td>
+<td>Copper Newt's Briefcase</td>
+</tr>
+<tr>
+<td scope="col" style="width: 68px;">
+<a href="https://imgur.com/VR8mnm3" title="Amethyst Vending Machine">
+<img src="https://i.imgur.com/VR8mnm3.png" decoding="async" width="128"></a>
+</td></tr>
+<tr>
+<td>Amethyst Newt's Briefcase</td>
+</tr>
 </tbody></table>
 
 ## Commands
@@ -171,6 +202,11 @@ The following IDs for `Material.PAPER` are used for custom shops. Change
 | 202    | stone_briefcase            |
 | 203    | nether_briefcase           |
 | 204    | sand_briefcase             |
+| 205    | prismarine_briefcase       |
+| 206    | ice_briefcase              |
+| 207    | blackstone_briefcase       |
+| 208    | copper_briefcase           |
+| 209    | amethyst_briefcase         |
 
 ### Display Names
 
@@ -194,8 +230,9 @@ The plugin uses two following inventory titles. Check if these title conflicts
 with other plugins.
 
 1. `§e§lCustom Shops`
-2. `§5§lVending Machine`
-3. `§5§lNewt's Briefcase`
+2. `§e§lAdmin Custom Shops`
+3. `§5§lVending Machine`
+4. `§5§lNewt's Briefcase`
 
 ## Adding Custom Models
 
