@@ -61,7 +61,7 @@ public class VMListItem implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!ShopUtils.hasShopPermission(armorStand, player)) {
-                player.sendMessage("§cYou do not own the vending machine!");
+                player.sendMessage("§cYou do not have permission to the vending machine!");
                 return;
             }
             if (PlayerState.getInteractingPlayer(armorStand) != null) {

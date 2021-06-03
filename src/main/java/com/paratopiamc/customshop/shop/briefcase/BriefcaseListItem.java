@@ -60,7 +60,7 @@ public class BriefcaseListItem implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!ShopUtils.hasShopPermission(armorStand, player)) {
-                player.sendMessage("§cYou do not own the briefcase!");
+                player.sendMessage("§cYou do not have permission to the briefcase!");
                 return;
             }
             if (PlayerState.getInteractingPlayer(armorStand) != null) {

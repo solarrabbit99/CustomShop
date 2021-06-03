@@ -107,13 +107,15 @@ public class BriefcaseGUI extends ShopGUI {
             if (meta.hasLore()) {
                 List<String> lore = meta.getLore();
                 lore.add("§7--------------------");
-                lore.add("§5Current Stock: §e" + String.format("%,.0f", Double.valueOf(this.quantity)));
+                lore.add("§5Current Stock: §e"
+                        + (this.isAdmin ? "Unlimited" : String.format("%,.0f", Double.valueOf(this.quantity))));
                 lore.add("§5" + (this.selling ? "Selling " : "Buying"));
                 meta.setLore(lore);
             } else {
                 List<String> lore = new ArrayList<>();
                 lore.add("§7--------------------");
-                lore.add("§5Current Stock: §e" + String.format("%,.0f", Double.valueOf(this.quantity)));
+                lore.add("§5Current Stock: §e"
+                        + (this.isAdmin ? "Unlimited" : String.format("%,.0f", Double.valueOf(this.quantity))));
                 lore.add("§5" + (this.selling ? "Selling " : "Buying"));
                 meta.setLore(lore);
             }
@@ -188,11 +190,13 @@ public class BriefcaseGUI extends ShopGUI {
 
         int remainingSpace = Integer.MAX_VALUE - this.quantity;
         double totalCost = amount * price;
-        if (remainingSpace < amount) {
+        if (remainingSpace < amount && !this.isAdmin) {
             viewer.sendMessage(
                     "§cShop limit reached! You are only able to sell " + remainingSpace + " more items to the shop!");
         } else if (super.ownerBuy(amount, totalCost, item)) { // Valid transaction
-            this.updatePlaceHolderLore(2, this.quantity + amount);
+            if (!this.isAdmin) {
+                this.updatePlaceHolderLore(2, this.quantity + amount);
+            }
             pInventory.removeItem(clone);
         }
     }
@@ -333,7 +337,7 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage("§cItem is null...");
             return;
         }
-        if (this.quantity < amount) {
+        if (this.quantity < amount && !this.isAdmin) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
                             ownerID, viewer, 0, item, amount));
@@ -349,7 +353,9 @@ public class BriefcaseGUI extends ShopGUI {
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
             pInventory.addItem(item);
-            this.updatePlaceHolderLore(2, this.quantity - amount);
+            if (!this.isAdmin) {
+                this.updatePlaceHolderLore(2, this.quantity - amount);
+            }
         }
     }
 

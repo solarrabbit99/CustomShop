@@ -27,7 +27,7 @@ permissions:
         description: User able to reload configuration of the plugin.
         default: op
     customshop.admin:
-        description: User able to perform all commands.
+        description: User able to perform all commands and full access to admin shops.
         default: op
         children:
             customshop.setcrate: true

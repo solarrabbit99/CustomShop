@@ -198,7 +198,7 @@ public class VMGUI extends ShopGUI {
         if (item == null) {
             viewer.sendMessage("§cItem is null...");
             return;
-        } else if (!inventory.containsAtLeast(item, amount)) {
+        } else if (!inventory.containsAtLeast(item, amount) && !this.isAdmin) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
                             ownerID, viewer, 0, item, amount));
@@ -219,7 +219,9 @@ public class VMGUI extends ShopGUI {
             // addItem mutates item, use temp to clone a copy
             ItemStack temp = item.clone();
             pInventory.addItem(item);
-            inventory.removeItem(temp);
+            if (!this.isAdmin) {
+                inventory.removeItem(temp);
+            }
         }
     }
 

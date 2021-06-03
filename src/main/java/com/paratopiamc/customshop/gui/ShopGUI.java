@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -50,11 +51,18 @@ public abstract class ShopGUI {
      * Player viewing the GUI.
      */
     protected final Player viewer;
+    /**
+     * Whether this shop is an admin shop.
+     */
+    protected final boolean isAdmin;
 
     public ShopGUI(Player player, ArmorStand armorStand, String ownerID) {
         this.armorStand = armorStand;
         this.viewer = player;
         this.ownerID = ownerID;
+
+        ItemStack adminItem = armorStand.getEquipment().getBoots();
+        this.isAdmin = adminItem != null && adminItem.getType() != Material.AIR;
     }
 
     /**
@@ -97,7 +105,13 @@ public abstract class ShopGUI {
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-money"),
                             ownerID, viewer, totalCost, item, amount));
             return false;
-        } else { // Valid transaction
+        } else if (this.isAdmin) { // Valid transaction
+            economy.withdrawPlayer(viewer, totalCost);
+            viewer.sendMessage(MessageUtils.convertMessage(
+                    CustomShop.getPlugin().getConfig().getString("customer-buy-success-customer"), ownerID, viewer,
+                    totalCost, item, amount));
+            return true;
+        } else {
             OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(this.ownerID));
             economy.withdrawPlayer(viewer, totalCost);
             economy.depositPlayer(owner, totalCost);
@@ -140,7 +154,13 @@ public abstract class ShopGUI {
                     CustomShop.getPlugin().getConfig().getString("customer-sell-fail-money"), ownerID, viewer,
                     totalCost, item, amount));
             return false;
-        } else { // Valid transaction
+        } else if (this.isAdmin) { // Valid transaction
+            economy.depositPlayer(viewer, totalCost);
+            viewer.sendMessage(MessageUtils.convertMessage(
+                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-customer"), ownerID, viewer,
+                    totalCost, item, amount));
+            return true;
+        } else {
             economy.withdrawPlayer(owner, totalCost);
             economy.depositPlayer(viewer, totalCost);
             viewer.sendMessage(MessageUtils.convertMessage(
