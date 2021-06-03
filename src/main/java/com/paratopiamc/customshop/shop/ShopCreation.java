@@ -57,6 +57,9 @@ public class ShopCreation extends CSComd implements Listener {
     public boolean exec() {
         if (!(sender instanceof Player)) {
             return false;
+        } else if (!sender.hasPermission("customshop.createshop")) {
+            sender.sendMessage("§cYou do not have permission to use this command.");
+            return false;
         } else if (!sender.hasPermission("customshop.admin") && this.isAdmin) {
             sender.sendMessage("§cYou do not have permission to use this command.");
             return false;

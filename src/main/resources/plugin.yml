@@ -11,6 +11,9 @@ commands:
         alias: [cs]
 
 permissions:
+    customshop.createshop:
+        description: User able to create non-admin shops.
+        default: true
     customshop.setcrate:
         description: User able to set the location of the crate.
         default: op
