@@ -23,6 +23,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * PlayerKickEvent and PlayerQuitEvent handlers.
+ */
 public class PlayerLeave implements Listener {
     /**
      * Handler in event player gets kicked with GUI opened or in conversation.

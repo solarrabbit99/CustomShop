@@ -1,7 +1,26 @@
+/*
+ *  This file is part of CustomShop. Copyright (c) 2021 Paratopia.
+ *
+ *  CustomShop is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CustomShop is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CustomShop. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.paratopiamc.customshop.utils;
 
 import java.util.Collection;
-import org.bukkit.Bukkit;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,7 +31,13 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Utility class for shop related methods.
+ */
 public class ShopUtils {
+    private ShopUtils() {
+    }
+
     /**
      * Checks if the player has permission to access the shop's listing and removal
      * features. Currently only owners, OPs or player with {@code customshop.admin}
@@ -36,17 +61,16 @@ public class ShopUtils {
                 ItemMeta meta = item.getItemMeta();
                 if (!meta.hasDisplayName()) {
                     Location standLocation = armorStand.getLocation();
-                    Bukkit.getServer().getConsoleSender()
-                            .sendMessage("§6§l[CustomShop] Custom shop without owner's display name detected at "
-                                    + standLocation + "!");
+                    CustomShopLogger.sendMessage(
+                            "Custom shop without owner's display name detected at " + standLocation + "!", Level.FAIL);
                     return false;
                 }
                 String ownerUUID = meta.getDisplayName();
                 return player.getUniqueId().toString().equals(ownerUUID);
             } else {
                 Location standLocation = armorStand.getLocation();
-                Bukkit.getServer().getConsoleSender().sendMessage(
-                        "§6§l[CustomShop] Custom shop without owner item detected at " + standLocation + "!");
+                CustomShopLogger.sendMessage("Custom shop without owner item detected at " + standLocation + "!",
+                        Level.FAIL);
                 return false;
             }
         }

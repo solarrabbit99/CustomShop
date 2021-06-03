@@ -119,8 +119,7 @@ public abstract class Database {
     }
 
     /**
-     * Returns the total number of shops owned by player. The number of shops is
-     * capped at 99, due to SQL {@code int(2)} declaration.
+     * Returns the total number of shops owned by player.
      *
      * @param playerID UUUID of player of interest
      * @return total custom shops owned by player
@@ -145,6 +144,12 @@ public abstract class Database {
         return result;
     }
 
+    /**
+     * Updates the shop owned by player to database.
+     * 
+     * @param playerID player's UUID
+     * @param number   updated number of shops owned
+     */
     public void setShopsOwned(UUID playerID, int number) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -161,8 +166,8 @@ public abstract class Database {
     }
 
     /**
-     * Decrements the total number of custom shops owned by the player. Lower limit
-     * set to 0.
+     * Decrements the total number of custom shops owned by the player. This
+     * operation has no lower limit (i.e. it can decrease below 0).
      *
      * @param playerID UUID of player of interest
      */
@@ -229,6 +234,18 @@ public abstract class Database {
         }
     }
 
+    /**
+     * Used to store transaction messages to offline shop owners. Messages remain
+     * unformatted until it is queried for using {@link #getMessages(String)} on
+     * owner join event.
+     *
+     * @param ownerID   String replresentation of shop owner's UUID
+     * @param customer  of the transaction
+     * @param selling   whether items are sold to customer
+     * @param item      item involved in transaction
+     * @param amount    amount of {@code item} involved in transaction
+     * @param totalCost total amount of money involved in transaction
+     */
     public void storeMessage(String ownerID, Player customer, boolean selling, ItemStack item, int amount,
             double totalCost) {
         Connection conn = null;
@@ -250,6 +267,14 @@ public abstract class Database {
         }
     }
 
+    /**
+     * Get messages for shop owner for transaction that occurred while they are
+     * offline. Formatting of messages is handled here, based on configuration in
+     * {@code config.yml}.
+     * 
+     * @param ownerID String representation of shop owner's UUID
+     * @return list of formatted messages to be sent to owner
+     */
     public List<String> getMessages(String ownerID) {
         List<String> messages = new ArrayList<>();
         String sellMessage = plugin.getConfig().getString("customer-buy-success-owner");
@@ -299,10 +324,16 @@ public abstract class Database {
             if (rs != null)
                 rs.close();
         } catch (SQLException ex) {
-            Errors.close(plugin, ex);
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
         }
     }
 
+    /**
+     * Close {@link PreparedStatement} and {@link Connection} to the database.
+     *
+     * @param ps   PreparedStatement of the database
+     * @param conn Connection to the database
+     */
     public void close(PreparedStatement ps, Connection conn) {
         try {
             if (ps != null)

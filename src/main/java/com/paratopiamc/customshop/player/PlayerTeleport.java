@@ -22,7 +22,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+/**
+ * PlayerTeleportEvent handlers.
+ */
 public class PlayerTeleport implements Listener {
+    /**
+     * Cancel any shop interactions if player teleports to a differing location,
+     * regardless of player's distance to the shop after teleportation.
+     *
+     * @param evt player teleport event
+     */
     @EventHandler
     public void onTeleport(PlayerTeleportEvent evt) {
         PlayerState.getPlayerState(evt.getPlayer()).clearShopInteractions();

@@ -19,7 +19,8 @@
 package com.paratopiamc.customshop.shop.vm;
 
 import java.util.UUID;
-import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopRemover;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,17 +49,15 @@ public class VMRemover extends ShopRemover {
         ItemStack chestItem = armorStand.getEquipment().getChestplate();
         if (chestItem == null || !(chestItem.getItemMeta() instanceof BlockStateMeta)
                 || !(((BlockStateMeta) chestItem.getItemMeta()).getBlockState() instanceof ShulkerBox)) {
-            CustomShop.getPlugin().getServer().getConsoleSender()
-                    .sendMessage("§c§l[CustomShop] Attempting to remove vending machine at " + bottom
-                            + " with missing shulker box! Report this error!");
+            CustomShopLogger.sendMessage("Attempting to remove vending machine at " + bottom
+                    + " with missing shulker box! Report this error!", Level.FAIL);
         } else {
             meta = (BlockStateMeta) chestItem.getItemMeta();
             if (meta.hasDisplayName()) {
                 this.ownerUUID = UUID.fromString(meta.getDisplayName());
             } else {
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Attempting to remove vending machine at " + bottom
-                                + " with shulker box with missing display name! Report this error!");
+                CustomShopLogger.sendMessage("Attempting to remove vending machine at " + bottom
+                        + " with shulker box with missing display name! Report this error!", Level.FAIL);
             }
         }
     }

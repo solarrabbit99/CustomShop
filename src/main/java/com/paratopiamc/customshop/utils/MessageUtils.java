@@ -25,7 +25,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Utility class for messages/number formatting related methods.
+ */
 public class MessageUtils {
+    private MessageUtils() {
+    }
+
+    /**
+     * Formats messages to replace place holders with their respective texts.
+     * 
+     * @param message the entire message containing placeholders
+     * @param ownerID String representation of shop owner's UUID
+     * @param viewer  customer of the transaction, who can be offline when
+     *                transaction messages are sent to the shop owner
+     * @param total   total amount of moeny involved in transaction
+     * @param item    item involved in transaction
+     * @param amount  amount of items involved in transaction
+     * @return formatted message
+     */
     public static String convertMessage(String message, String ownerID, Player viewer, double total, ItemStack item,
             int amount) {
         ItemMeta meta = item.getItemMeta();
@@ -33,6 +51,18 @@ public class MessageUtils {
         return convertMessage(message, ownerID, viewer, total, itemName, amount);
     }
 
+    /**
+     * Formats messages to replace place holders with their respective texts.
+     * 
+     * @param message  the entire message containing placeholders
+     * @param ownerID  String representation of shop owner's UUID
+     * @param viewer   customer of the transaction, who can be offline when
+     *                 transaction messages are sent to the shop owner
+     * @param total    total amount of moeny involved in transaction
+     * @param itemName material type of the item or display name of the item, if any
+     * @param amount   amount of items involved in transaction
+     * @return formatted message
+     */
     public static String convertMessage(String message, String ownerID, OfflinePlayer viewer, double total,
             String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
@@ -43,6 +73,13 @@ public class MessageUtils {
         return message;
     }
 
+    /**
+     * Format number with units (K for thousand, M for million, B for billion) with
+     * 2 decimal places.
+     *
+     * @param number unformatted number
+     * @return formatted number in string form
+     */
     public static String getHumanReadableNumber(double number) {
         if (number >= 1000000000) {
             return String.format("%.2fB", number / 1000000000.0);

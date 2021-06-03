@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.paratopiamc.customshop.plugin.CustomShop;
-import com.paratopiamc.customshop.utils.InventoryUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -211,7 +210,7 @@ public class VMGUI extends ShopGUI {
         double totalCost = amount * prices.get(key);
 
         Inventory pInventory = viewer.getInventory();
-        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
+        if (!UIUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, totalCost, item, amount));

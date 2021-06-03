@@ -29,6 +29,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+/**
+ * CommandExecutor for plugin commands, more specifically {@code /customshop}
+ * commands.
+ */
 public class CSComdExec implements CommandExecutor {
 
     @Override
@@ -38,33 +42,33 @@ public class CSComdExec implements CommandExecutor {
         } else {
             CSComd comd;
             switch (args[0]) {
-                case "gettotal":
-                    comd = new GetTotal(sender);
-                    break;
-                case "givekey":
-                    comd = new GiveKey(sender, args);
-                    break;
-                case "lockall":
-                    comd = new LockAll(sender, args);
-                    break;
-                case "setcrate":
-                    comd = new SetCrate(sender);
-                    break;
-                case "removeshop":
-                    comd = new ShopRemoval(sender);
-                    break;
-                case "newshop":
-                    comd = new ShopCreation(sender);
-                    break;
-                case "setcount":
-                    comd = new SetShopCount(sender, args);
-                    break;
-                case "reload":
-                    comd = new Reload(sender);
-                    break;
-                default:
-                    comd = null;
-                    break;
+            case "gettotal":
+                comd = new GetTotal(sender);
+                break;
+            case "givekey":
+                comd = new GiveKey(sender, args);
+                break;
+            case "lockall":
+                comd = new LockAll(sender, args);
+                break;
+            case "setcrate":
+                comd = new SetCrate(sender);
+                break;
+            case "removeshop":
+                comd = new ShopRemoval(sender);
+                break;
+            case "newshop":
+                comd = new ShopCreation(sender);
+                break;
+            case "setcount":
+                comd = new SetShopCount(sender, args);
+                break;
+            case "reload":
+                comd = new Reload(sender);
+                break;
+            default:
+                comd = null;
+                break;
             }
             return comd == null ? false : comd.exec();
         }

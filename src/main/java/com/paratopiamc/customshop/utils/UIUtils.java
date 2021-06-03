@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * This class stores utility methods for other classes.
+ * Utility class for GUI/Inventory related methods.
  */
 public final class UIUtils {
     private UIUtils() {
@@ -139,8 +139,10 @@ public final class UIUtils {
     /**
      * Set price as lore of the item.
      *
-     * @param item  ItemStack to label
-     * @param price given price in double
+     * @param item      ItemStack to label
+     * @param price     given price in double
+     * @param withSpace whether to create partition between item's lore and the
+     *                  price tag
      * @return new instance of ItemStack
      */
     public static ItemStack setPrice(ItemStack item, double price, boolean withSpace) {
@@ -149,5 +151,30 @@ public final class UIUtils {
                         ? loreItem(item, "§7--------------------",
                                 "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price))
                         : loreItem(item, "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price));
+    }
+
+    /**
+     * Whether the given inventory has sufficient space for adding the amount of
+     * specified item. This method can be called before
+     * {@link Inventory#addItem(ItemStack...)} if it is intended to not add any of
+     * the item into inventory given insufficient space.
+     * 
+     * @param inventory to add items into
+     * @param item      reference item of any positive amount
+     * @param amount    amount of item intended to add, disregards the amount tagged
+     *                  to {@code item}
+     * @return {@code true} if inventory has enough space for the amount of item
+     */
+    public static boolean hasSpace(Inventory inventory, ItemStack item, int amount) {
+        int totalSpace = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack pItem = inventory.getItem(i);
+            if (pItem == null) {
+                totalSpace += item.getMaxStackSize();
+            } else if (pItem.isSimilar(item)) {
+                totalSpace += pItem.getMaxStackSize() - pItem.getAmount();
+            }
+        }
+        return totalSpace >= amount;
     }
 }

@@ -35,6 +35,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Handlers for briefcase initialization with item and its price.
+ */
 public class BriefcaseListItem implements Listener {
     @EventHandler
     public void listItem(PlayerInteractEvent evt) {

@@ -35,8 +35,10 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Handlers for interactions with briefcase's GUI.
+ */
 public class BriefcaseInteractInventory implements Listener {
-
     /**
      * Event handler for interactions with shop's GUI.
      *

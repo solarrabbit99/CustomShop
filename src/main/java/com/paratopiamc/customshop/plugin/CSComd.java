@@ -22,7 +22,9 @@ import org.bukkit.command.CommandSender;
 
 /** Commands that are under the extension of {@code /customshop} command. */
 public abstract class CSComd {
+    /** Sender of the command */
     protected CommandSender sender;
+    /** Arguments of the command (regardless of completion stage) */
     protected String[] args;
 
     /**

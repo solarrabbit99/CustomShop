@@ -26,6 +26,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Crate key for unlocking CustomShop's crate.
+ */
 public class Key extends ItemStack {
     private static final String crateKeyName = CustomShop.getPlugin().getConfig().getString("crate-key-name");
     private static final List<String> crateKeyLore = CustomShop.getPlugin().getConfig().getStringList("crate-key-lore");
@@ -42,6 +45,12 @@ public class Key extends ItemStack {
         this.setAmount(amount);
     }
 
+    /**
+     * Whether the given item is a custom shop crate key.
+     *
+     * @param item to test
+     * @return {@code true} if the given item is a crate key
+     */
     public static boolean isKey(ItemStack item) {
         return template.isSimilar(item);
     }

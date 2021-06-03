@@ -20,7 +20,8 @@ package com.paratopiamc.customshop.shop.briefcase;
 
 import java.util.List;
 import java.util.UUID;
-import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopRemover;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,6 +30,9 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * ShopRemover for Newt's Briefcase.
+ */
 public class BriefcaseRemover extends ShopRemover {
 
     private Location location;
@@ -44,17 +48,16 @@ public class BriefcaseRemover extends ShopRemover {
         ItemStack placeHolder = armorStand.getEquipment().getChestplate();
 
         if (placeHolder == null || placeHolder.getType() == Material.AIR) {
-            CustomShop.getPlugin().getServer().getConsoleSender()
-                    .sendMessage("§c§l[CustomShop] Attempting to remove briefcase at " + location
-                            + " with missing chest item! Report this error!");
+            CustomShopLogger.sendMessage(
+                    "Attempting to remove briefcase at " + location + " with missing chest item! Report this error!",
+                    Level.FAIL);
         } else {
             ItemMeta meta = placeHolder.getItemMeta();
             if (meta.hasDisplayName()) {
                 this.ownerUUID = UUID.fromString(meta.getDisplayName());
             } else {
-                CustomShop.getPlugin().getServer().getConsoleSender()
-                        .sendMessage("§c§l[CustomShop] Attempting to remove briefcase at " + location
-                                + " with chest item with missing display name! Report this error!");
+                CustomShopLogger.sendMessage("Attempting to remove briefcase at " + location
+                        + " with chest item with missing display name! Report this error!", Level.FAIL);
                 return;
             }
 

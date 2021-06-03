@@ -20,6 +20,9 @@ package com.paratopiamc.customshop.plugin;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * Command to reload plugin configurations in {@code config.yml}.
+ */
 public class Reload extends CSComd {
 
     public Reload(CommandSender sender) {

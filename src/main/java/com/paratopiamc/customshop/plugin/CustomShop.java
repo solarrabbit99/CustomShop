@@ -32,6 +32,7 @@ import com.paratopiamc.customshop.player.PlayerLeave;
 import com.paratopiamc.customshop.player.PlayerMove;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.player.PlayerTeleport;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopCreation;
 import com.paratopiamc.customshop.shop.ShopExit;
 import com.paratopiamc.customshop.shop.ShopOpening;
@@ -62,12 +63,11 @@ public final class CustomShop extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
 
         if (!setUpEconomy()) {
-            getServer().getConsoleSender()
-                    .sendMessage("§c§l[CustomShop] No Vault dependencies found! Disabling plugin...");
+            CustomShopLogger.sendMessage("No Vault dependencies found! Disabling plugin...", Level.FAIL);
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            getServer().getConsoleSender().sendMessage("§a§l[CustomShop] Successfully hooked onto Vault.");
+            CustomShopLogger.sendMessage("Successfully hooked onto Vault.", Level.SUCCESS);
         }
         if (!this.getDataFolder().exists()) {
             try {

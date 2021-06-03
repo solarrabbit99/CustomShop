@@ -23,7 +23,6 @@ import java.util.List;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
-import com.paratopiamc.customshop.utils.InventoryUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -246,7 +245,7 @@ public class BriefcaseGUI extends ShopGUI {
         }
         Inventory pInventory = viewer.getInventory();
 
-        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
+        if (!UIUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, 0, item, amount));
@@ -343,7 +342,7 @@ public class BriefcaseGUI extends ShopGUI {
         Inventory pInventory = viewer.getInventory();
         double totalCost = amount * price;
 
-        if (!InventoryUtils.hasSpace(pInventory, item, amount)) {
+        if (!UIUtils.hasSpace(pInventory, item, amount)) {
             viewer.sendMessage(
                     MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
                             ownerID, viewer, totalCost, item, amount));

@@ -20,13 +20,19 @@ package com.paratopiamc.customshop.player;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/** PlayerJoinEvent's handlers */
 public class PlayerJoin implements Listener {
+    /**
+     * Fetching and send messages for transactions that occurred while the player is
+     * offline.
+     *
+     * @param evt player join event
+     */
     @EventHandler
     public void onJoin(PlayerJoinEvent evt) {
         CompletableFuture.runAsync(() -> {

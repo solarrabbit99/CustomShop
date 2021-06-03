@@ -29,7 +29,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+/**
+ * PlayerMoveEvent handlers.
+ */
 public class PlayerMove implements Listener {
+    /**
+     * Abandon any conversation with custom shops if player is more than 5 meters
+     * away from the shop's armor stand.
+     * 
+     * @param evt event of player moving
+     */
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent evt) {
         Player player = evt.getPlayer();

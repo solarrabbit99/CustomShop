@@ -27,6 +27,9 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import com.paratopiamc.customshop.plugin.CustomShop;
 
+/**
+ * Database connection operations handled by SQLite.
+ */
 public class SQLite extends Database {
     // Player is 36 characters as we are using UUID to represent a player.
     private String SQLiteCreateTotalShopsOwnedTable = "CREATE TABLE IF NOT EXISTS " + totalShopOwned

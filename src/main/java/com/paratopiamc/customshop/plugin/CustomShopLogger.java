@@ -25,6 +25,9 @@ import org.bukkit.command.ConsoleCommandSender;
  * Standardized logger for the plugin.
  */
 public class CustomShopLogger {
+    /**
+     * Level of log message.
+     */
     public enum Level {
         FAIL(ChatColor.RED), INFO(ChatColor.WHITE), WARN(ChatColor.YELLOW), SUCCESS(ChatColor.GREEN);
 
