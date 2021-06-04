@@ -71,7 +71,12 @@ public final class CustomShop extends JavaPlugin {
         }
 
         if (this.hasTowny()) {
-            CustomShopLogger.sendMessage("Successfully hooked onto Towny.", Level.SUCCESS);
+            CustomShopLogger.sendMessage("Towny plugin detected, successfully hooked into towny.", Level.SUCCESS);
+        }
+
+        if (this.hasWorldGuard()) {
+            CustomShopLogger.sendMessage("WorldGuard plugin detected, successfully hooked into worldguard.",
+                    Level.SUCCESS);
         }
 
         if (!this.getDataFolder().exists()) {
@@ -141,6 +146,15 @@ public final class CustomShop extends JavaPlugin {
      */
     public boolean hasTowny() {
         return getServer().getPluginManager().getPlugin("Towny") != null;
+    }
+
+    /**
+     * Checks if worldguard plugin is installed by name.
+     * 
+     * @return {@code true} if the server has worldguaard plugin installed
+     */
+    public boolean hasWorldGuard() {
+        return getServer().getPluginManager().getPlugin("WorldGuard") != null;
     }
 
     /**

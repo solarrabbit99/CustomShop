@@ -25,6 +25,14 @@ import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -63,10 +71,23 @@ public class ShopUtils {
             return false;
         }
 
-        // Check for towny plugin
+        // Check for towny restrictions
         if (CustomShop.getPlugin().hasTowny() && !PlayerCacheUtil.getCachePermission(player, armorStand.getLocation(),
                 Material.STONE, ActionType.DESTROY)) {
             return false;
+        }
+
+        // Check for worldguard restrictions
+        if (CustomShop.getPlugin().hasWorldGuard()) {
+            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+            if (!WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer,
+                    localPlayer.getWorld())) {
+                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                RegionQuery query = container.createQuery();
+                if (!query.testState(BukkitAdapter.adapt(armorStand.getLocation()), localPlayer, Flags.BLOCK_BREAK)) {
+                    return false;
+                }
+            }
         }
 
         ItemStack item = equipment.getChestplate();

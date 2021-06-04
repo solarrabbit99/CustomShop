@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.shop;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.paratopiamc.customshop.gui.CreationGUI;
@@ -28,6 +27,14 @@ import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -130,6 +137,22 @@ public class ShopCreation extends CSComd implements Listener {
                                         location, Material.STONE, ActionType.BUILD)) {
                                     player.sendMessage("§cYou are not allowed to build here!");
                                     return;
+                                }
+
+                                // Check for worldguard restrictions
+                                if (CustomShop.getPlugin().hasWorldGuard()) {
+                                    LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+                                    if (!WorldGuard.getInstance().getPlatform().getSessionManager()
+                                            .hasBypass(localPlayer, localPlayer.getWorld())) {
+                                        RegionContainer container = WorldGuard.getInstance().getPlatform()
+                                                .getRegionContainer();
+                                        RegionQuery query = container.createQuery();
+                                        if (!query.testState(BukkitAdapter.adapt(location), localPlayer,
+                                                Flags.BLOCK_PLACE)) {
+                                            player.sendMessage("§cYou are not allowed to build here!");
+                                            return;
+                                        }
+                                    }
                                 }
 
                                 ShopCreator creator = getShopCreator(itemMeta);
