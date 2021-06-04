@@ -19,20 +19,8 @@
 package com.paratopiamc.customshop.utils;
 
 import java.util.Collection;
-
-import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
-import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
-import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -69,25 +57,6 @@ public class ShopUtils {
         ItemStack adminItem = equipment.getBoots();
         if (adminItem != null && adminItem.getType() != Material.AIR) {
             return false;
-        }
-
-        // Check for towny restrictions
-        if (CustomShop.getPlugin().hasTowny() && !PlayerCacheUtil.getCachePermission(player, armorStand.getLocation(),
-                Material.STONE, ActionType.DESTROY)) {
-            return false;
-        }
-
-        // Check for worldguard restrictions
-        if (CustomShop.getPlugin().hasWorldGuard()) {
-            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-            if (!WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer,
-                    localPlayer.getWorld())) {
-                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-                RegionQuery query = container.createQuery();
-                if (!query.testState(BukkitAdapter.adapt(armorStand.getLocation()), localPlayer, Flags.BUILD)) {
-                    return false;
-                }
-            }
         }
 
         ItemStack item = equipment.getChestplate();

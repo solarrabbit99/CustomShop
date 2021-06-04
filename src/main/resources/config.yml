@@ -75,7 +75,7 @@ customer-sell-fail-item: §cYou do not have the specified amount of the specifie
 #   that the data here correctly corresponds to the data   #
 #   in the resource pack. Keep custom model data to no     #
 #   than 6 digits. DO NOT change model data once players   #
-#   start unlocking shops!                                 #
+#   start unlocking or creating shops!                     #
 #                                                          #
 ############################################################
 
@@ -140,3 +140,31 @@ briefcase:
     amethyst:
         name: §r§6Amethyst Newt's Briefcase
         model-data: 209
+
+############################################################
+# +------------------------------------------------------+ #
+# |                    Towny Settings                    | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   Ignore this section if you do not have Towny           #
+#   installed.                                             #
+#                                                          #
+############################################################
+
+# Use towny's build/destroy permissions for custom shop creation and removal?
+towny-enabled: true
+# Restrict shop creation and removal to shop plots? (Requires `towny-enabled` to be true)
+only-shop-plots: false
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  WorldGuard Settings                 | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   Ignore this section if you do not have WorldGuard      #
+#   installed.                                             #
+#                                                          #
+############################################################
+
+# Use worldguard's build permissions for custom shop creation and removal?
+worldguard-enabled: true

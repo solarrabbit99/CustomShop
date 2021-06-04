@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
+import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
@@ -34,7 +35,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -132,26 +132,10 @@ public class ShopCreation extends CSComd implements Listener {
                                 }
                                 Location location = getCreationLocation(targetBlock, player);
 
-                                // Check for towny plugin
-                                if (CustomShop.getPlugin().hasTowny() && !PlayerCacheUtil.getCachePermission(player,
-                                        location, Material.STONE, ActionType.BUILD)) {
-                                    player.sendMessage("§cYou are not allowed to build here!");
+                                // Check for towny and worldguard restrictions
+                                if (!hasTownyPerms(location, player) || !hasWorldGuardPerms(location, player)) {
+                                    player.sendMessage("§cYou are not allowed to place custom shops here!");
                                     return;
-                                }
-
-                                // Check for worldguard restrictions
-                                if (CustomShop.getPlugin().hasWorldGuard()) {
-                                    LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-                                    if (!WorldGuard.getInstance().getPlatform().getSessionManager()
-                                            .hasBypass(localPlayer, localPlayer.getWorld())) {
-                                        RegionContainer container = WorldGuard.getInstance().getPlatform()
-                                                .getRegionContainer();
-                                        RegionQuery query = container.createQuery();
-                                        if (!query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD)) {
-                                            player.sendMessage("§cYou are not allowed to build here!");
-                                            return;
-                                        }
-                                    }
                                 }
 
                                 ShopCreator creator = getShopCreator(itemMeta);
@@ -164,6 +148,51 @@ public class ShopCreation extends CSComd implements Listener {
                 }
             }
         }
+    }
+
+    /**
+     * Checks if towny will not restrict player from placing custom shop, which is
+     * vacuously true if Towny is not installed or is disabled for the plugin.
+     *
+     * @param location location where the shop will be placed
+     * @return {@code true} if player is not restricted to build by towny
+     */
+    private static boolean hasTownyPerms(Location location, Player player) {
+        if (!CustomShop.getPlugin().hasTowny())
+            return true;
+        if (!CustomShop.getPlugin().getConfig().getBoolean("towny-enabled"))
+            return true;
+
+        boolean onlyShopPlots = CustomShop.getPlugin().getConfig().getBoolean("only-shop-plots");
+        if (onlyShopPlots) {
+            return ShopPlotUtil.doesPlayerHaveAbilityToEditShopPlot(player, location);
+        } else {
+            return PlayerCacheUtil.getCachePermission(player, location, Material.STONE, ActionType.BUILD);
+        }
+    }
+
+    /**
+     * Checks if worldguard will not restrict player from placing custom shop, which
+     * is vacuously true if WorldGuard is not installed or is disabled for the
+     * plugin.
+     *
+     * @param location location where the shop will be placed
+     * @return {@code true} if player is not restricted to build by worldguard
+     */
+    private static boolean hasWorldGuardPerms(Location location, Player player) {
+        if (!CustomShop.getPlugin().hasWorldGuard())
+            return true;
+        if (!CustomShop.getPlugin().getConfig().getBoolean("worldguard-enabled"))
+            return true;
+
+        LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+        if (WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer, localPlayer.getWorld())) {
+            return true;
+        }
+
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+        return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD);
     }
 
     /**
