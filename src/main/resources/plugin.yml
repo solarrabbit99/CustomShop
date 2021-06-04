@@ -5,6 +5,7 @@ author: SolarRabbit
 api-version: 1.16
 
 depend: [ProtocolLib, Vault]
+softdepend: [Towny]
 
 commands:
     customshop:

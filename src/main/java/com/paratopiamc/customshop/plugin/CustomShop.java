@@ -69,6 +69,11 @@ public final class CustomShop extends JavaPlugin {
         } else {
             CustomShopLogger.sendMessage("Successfully hooked onto Vault.", Level.SUCCESS);
         }
+
+        if (this.hasTowny()) {
+            CustomShopLogger.sendMessage("Successfully hooked onto Towny.", Level.SUCCESS);
+        }
+
         if (!this.getDataFolder().exists()) {
             try {
                 this.getDataFolder().mkdir();
@@ -127,6 +132,15 @@ public final class CustomShop extends JavaPlugin {
                 return economy != null;
             }
         }
+    }
+
+    /**
+     * Checks if towny plugin is installed by name.
+     * 
+     * @return {@code true} if the server has towny plugin installed
+     */
+    public boolean hasTowny() {
+        return getServer().getPluginManager().getPlugin("Towny") != null;
     }
 
     /**

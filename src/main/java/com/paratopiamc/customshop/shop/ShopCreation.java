@@ -20,12 +20,16 @@ package com.paratopiamc.customshop.shop;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+
+import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -109,10 +113,10 @@ public class ShopCreation extends CSComd implements Listener {
                         BukkitRunnable runnable = new BukkitRunnable() {
                             @Override
                             public void run() {
+                                CreationGUI.closeGUI(player);
                                 if (number.intValue() >= maxShops) {
                                     player.sendMessage(
                                             "§cYou have reached the maximum number of custom shops created!");
-                                    CreationGUI.closeGUI(player);
                                     return;
                                 }
                                 if (targetBlock == null) {
@@ -120,6 +124,14 @@ public class ShopCreation extends CSComd implements Listener {
                                     return;
                                 }
                                 Location location = getCreationLocation(targetBlock, player);
+
+                                // Check for towny plugin
+                                if (CustomShop.getPlugin().hasTowny() && !PlayerCacheUtil.getCachePermission(player,
+                                        location, Material.STONE, ActionType.BUILD)) {
+                                    player.sendMessage("§cYou are not allowed to build here!");
+                                    return;
+                                }
+
                                 ShopCreator creator = getShopCreator(itemMeta);
                                 creator.createShop(location, player, item, isAdmin);
                                 CreationGUI.closeGUI(player);

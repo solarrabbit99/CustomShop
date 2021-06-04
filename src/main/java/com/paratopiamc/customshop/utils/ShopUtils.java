@@ -19,6 +19,10 @@
 package com.paratopiamc.customshop.utils;
 
 import java.util.Collection;
+
+import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
+import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import org.bukkit.Location;
@@ -56,6 +60,12 @@ public class ShopUtils {
         // Test whether the shop is an admin shop.
         ItemStack adminItem = equipment.getBoots();
         if (adminItem != null && adminItem.getType() != Material.AIR) {
+            return false;
+        }
+
+        // Check for towny plugin
+        if (CustomShop.getPlugin().hasTowny() && !PlayerCacheUtil.getCachePermission(player, armorStand.getLocation(),
+                Material.STONE, ActionType.DESTROY)) {
             return false;
         }
 

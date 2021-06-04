@@ -76,7 +76,7 @@ public class ShopRemoval extends CSComd implements Listener {
                     }
                 }
             };
-            runnable.runTaskLater(CustomShop.getPlugin(), 75);
+            runnable.runTaskLater(CustomShop.getPlugin(), 45);
         }
 
         CustomShop.getPlugin().getProtocolManager()
