@@ -147,8 +147,7 @@ public class ShopCreation extends CSComd implements Listener {
                                         RegionContainer container = WorldGuard.getInstance().getPlatform()
                                                 .getRegionContainer();
                                         RegionQuery query = container.createQuery();
-                                        if (!query.testState(BukkitAdapter.adapt(location), localPlayer,
-                                                Flags.BLOCK_PLACE)) {
+                                        if (!query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD)) {
                                             player.sendMessage("§cYou are not allowed to build here!");
                                             return;
                                         }

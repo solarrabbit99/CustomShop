@@ -84,7 +84,7 @@ public class ShopUtils {
                     localPlayer.getWorld())) {
                 RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
                 RegionQuery query = container.createQuery();
-                if (!query.testState(BukkitAdapter.adapt(armorStand.getLocation()), localPlayer, Flags.BLOCK_BREAK)) {
+                if (!query.testState(BukkitAdapter.adapt(armorStand.getLocation()), localPlayer, Flags.BUILD)) {
                     return false;
                 }
             }
