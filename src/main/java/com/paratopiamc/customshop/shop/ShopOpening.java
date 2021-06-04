@@ -46,7 +46,7 @@ public class ShopOpening implements Listener {
         Player player = evt.getPlayer();
         Block targetBlock = evt.getClickedBlock();
         ArmorStand armorStand = ShopUtils.getArmorStand(targetBlock);
-        if (armorStand == null) {
+        if (armorStand == null || hand == null) {
         } else if (hand.equals(EquipmentSlot.OFF_HAND)) {
             // To prevent block placing with left hand
             evt.setCancelled(true);

@@ -43,7 +43,7 @@ public class BriefcaseListItem implements Listener {
     public void listItem(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
         Player player = evt.getPlayer();
-        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.LEFT_CLICK_BLOCK)
+        if (hand == null || !hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.LEFT_CLICK_BLOCK)
                 || !player.isSneaking()) {
             return;
         }

@@ -44,7 +44,7 @@ public class OpenCrate implements Listener {
     @EventHandler
     public static void onOpenCrate(PlayerInteractEvent evt) {
         EquipmentSlot hand = evt.getHand();
-        if (!hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if (hand == null || !hand.equals(EquipmentSlot.HAND) || !evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
         } else if (!SetCrate.verifyCrateLocation(evt.getClickedBlock().getLocation())) {
             return;
