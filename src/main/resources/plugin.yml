@@ -28,8 +28,6 @@ permissions:
         description: User able to perform all commands and full access to admin shops.
         default: op
         children:
-            customshop.setcrate: true
-            customshop.givekey: true
             customshop.lockall: true
             customshop.setcount: true
             customshop.reload: true

@@ -36,12 +36,6 @@ public class AutoComplete implements TabCompleter {
         if (args.length == 1) {
             String[] array = new String[] { "newshop", "removeshop", "gettotal" };
             List<String> subCommands = new ArrayList<>(Arrays.asList(array));
-            if (sender.hasPermission("customshop.setcrate")) {
-                subCommands.add("setcrate");
-            }
-            if (sender.hasPermission("customshop.givekey")) {
-                subCommands.add("givekey");
-            }
             if (sender.hasPermission("customshop.lockall")) {
                 subCommands.add("lockall");
             }
@@ -55,8 +49,7 @@ public class AutoComplete implements TabCompleter {
                 subCommands.add("newadminshop");
             }
             return subCommands;
-        } else if (args.length == 2 && ((args[0].equals("givekey") && sender.hasPermission("customshop.givekey"))
-                || (args[0].equals("lockall") && sender.hasPermission("customshop.lockall"))
+        } else if (args.length == 2 && ((args[0].equals("lockall") && sender.hasPermission("customshop.lockall"))
                 || (args[0].equals("setcount") && sender.hasPermission("customshop.setcount")))) {
             return CustomShop.getPlugin().getServer().getOnlinePlayers().stream().map(p -> p.getName())
                     .collect(Collectors.toList());
