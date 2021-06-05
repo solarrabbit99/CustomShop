@@ -15,12 +15,6 @@ permissions:
     customshop.createshop:
         description: User able to create non-admin shops.
         default: true
-    customshop.setcrate:
-        description: User able to set the location of the crate.
-        default: op
-    customshop.givekey:
-        description: User able to give custom shop crate keys to players.
-        default: op
     customshop.lockall:
         description: User able to lock all custom shops of a player.
         default: op

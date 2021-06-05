@@ -21,9 +21,7 @@ package com.paratopiamc.customshop.plugin;
 import net.milkbowl.vault.economy.Economy;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.paratopiamc.customshop.crate.OpenCrate;
-import com.paratopiamc.customshop.crate.PlaceKey;
-import com.paratopiamc.customshop.crate.SetCrate;
+import com.paratopiamc.customshop.crate.UnlockShop;
 import com.paratopiamc.customshop.database.Database;
 import com.paratopiamc.customshop.database.SQLite;
 import com.paratopiamc.customshop.gui.CreationGUI;
@@ -95,17 +93,14 @@ public final class CustomShop extends JavaPlugin {
         pluginManager.registerEvents(new BriefcaseListItem(), this);
         pluginManager.registerEvents(new ShopCreation(), this);
         pluginManager.registerEvents(new ShopRemoval(), this);
-        pluginManager.registerEvents(new OpenCrate(), this);
+        pluginManager.registerEvents(new UnlockShop(), this);
         pluginManager.registerEvents(new PlayerTeleport(), this);
         pluginManager.registerEvents(new PlayerMove(), this);
         pluginManager.registerEvents(new PlayerLeave(), this);
-        pluginManager.registerEvents(new PlaceKey(), this);
         pluginManager.registerEvents(new PlayerJoin(), this);
         PluginCommand mainCommand = getCommand("customshop");
         mainCommand.setExecutor(new CSComdExec());
         mainCommand.setTabCompleter(new AutoComplete());
-
-        SetCrate.createCustomConfig(this);
 
         this.database = new SQLite(this);
         this.database.load();

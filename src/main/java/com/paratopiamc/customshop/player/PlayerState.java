@@ -21,11 +21,13 @@ package com.paratopiamc.customshop.player;
 import java.util.HashMap;
 import java.util.Optional;
 import com.paratopiamc.customshop.gui.ShopGUI;
+import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Contains all the references from player to corresponding interacting
@@ -40,6 +42,8 @@ public class PlayerState {
     private ItemStack transactionItem;
     private Conversation conversation;
     private Player player;
+    private BukkitRunnable unlockingShop;
+    private ItemStack unlockingShopItem;
 
     private PlayerState(Player player) {
         this.player = player;
@@ -60,6 +64,37 @@ public class PlayerState {
         } else {
             return result;
         }
+    }
+
+    /**
+     * Returns the current shop item (player head) used to unlock the shop within 5
+     * seconds of its first placement.
+     * 
+     * @return {@code null} if 5 seconds timer is up
+     */
+    public ItemStack getUnlockingShopItem() {
+        return this.unlockingShopItem;
+    }
+
+    /**
+     * Sets the shop that the player is attempting to unlock using player head. This
+     * method starts a 5 seconds timer for which {@code shopItem} is obtainable
+     * through {@link #getUnlockingShopItem()}.
+     *
+     * @param shopItem the player head associated to the shop
+     */
+    public void setUnlockingShop(ItemStack shopItem) {
+        if (this.unlockingShop != null && !this.unlockingShop.isCancelled())
+            this.unlockingShop.cancel();
+        this.unlockingShopItem = shopItem;
+        this.unlockingShop = new BukkitRunnable() {
+            @Override
+            public void run() {
+                PlayerState.this.unlockingShopItem = null;
+                PlayerState.this.unlockingShop = null;
+            }
+        };
+        this.unlockingShop.runTaskLater(CustomShop.getPlugin(), 45);
     }
 
     /**
