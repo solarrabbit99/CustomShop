@@ -238,8 +238,6 @@
 				<includes>
 					<include>plugin.yml</include>
 					<include>config.yml</include>
-					<include>crate-location.yml</include>
-					<include>saved-messages.yml</include>
 				</includes>
 			</resource>
 		</resources>
