@@ -18,11 +18,10 @@
 
 package com.paratopiamc.customshop.gui;
 
-import java.util.ArrayList;
 import java.util.List;
-import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -77,8 +76,8 @@ public class BriefcaseGUI extends ShopGUI {
         EntityEquipment armorStandContent = armorStand.getEquipment();
         ItemStack item = armorStandContent.getLeggings();
         if (item != null && item.getType() != Material.AIR) {
-            normalView = Bukkit.createInventory(null, 9 * 4, "§5§lNewt's Briefcase");
-            ownerView = Bukkit.createInventory(null, 9 * 4, "§5§lNewt's Briefcase Settings");
+            normalView = Bukkit.createInventory(null, 9 * 4, LanguageUtils.getString("newt-briefcase-customer"));
+            ownerView = Bukkit.createInventory(null, 9 * 4, LanguageUtils.getString("newt-briefcase-owner"));
 
             ItemStack placeHolder = armorStandContent.getChestplate();
             List<String> info = placeHolder.getItemMeta().getLore();
@@ -92,37 +91,25 @@ public class BriefcaseGUI extends ShopGUI {
                 UIUtils.createItem(normalView, 3, i, Material.BLACK_STAINED_GLASS_PANE, 1, " ");
                 UIUtils.createItem(ownerView, 3, i, Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
-            UIUtils.createItem(normalView, 3, 4, Material.BARRIER, 1, "§cClose", "");
+            UIUtils.createItem(normalView, 3, 4, Material.BARRIER, 1, "§c" + LanguageUtils.getString("icons.close"));
 
-            UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1, "§6" + (this.selling ? "Selling" : "Buying"),
-                    "§2Click to toggle");
-            UIUtils.createItem(ownerView, 3, 3, Material.NAME_TAG, 1, "§6Change Price", "§2Click to change");
-            UIUtils.createItem(ownerView, 3, 4, Material.HOPPER_MINECART, 1, "§6Add Items",
-                    "§2Click to add items to shop");
-            UIUtils.createItem(ownerView, 3, 5, Material.CHEST_MINECART, 1, "§6Retrieve Items",
-                    "§2Click to retrieve items from shop");
-            UIUtils.createItem(ownerView, 3, 6, Material.BARRIER, 1, "§cClose", "");
+            UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1,
+                    "§6" + (this.selling ? LanguageUtils.getString("price-tag.selling")
+                            : LanguageUtils.getString("price-tag.buying")),
+                    "§2" + LanguageUtils.getString("icons.selling-status.lore"));
+            UIUtils.createItem(ownerView, 3, 3, Material.NAME_TAG, 1,
+                    "§6" + LanguageUtils.getString("icons.change-price.title"),
+                    "§2" + LanguageUtils.getString("icons.change-price.lore"));
+            UIUtils.createItem(ownerView, 3, 4, Material.HOPPER_MINECART, 1,
+                    "§6" + LanguageUtils.getString("icons.add-items.title"),
+                    "§2" + LanguageUtils.getString("icons.add-items.lore"));
+            UIUtils.createItem(ownerView, 3, 5, Material.CHEST_MINECART, 1,
+                    "§6" + LanguageUtils.getString("icons.retrieve-items.title"),
+                    "§2" + LanguageUtils.getString("icons.retrieve-items.lore"));
+            UIUtils.createItem(ownerView, 3, 6, Material.BARRIER, 1, "§c" + LanguageUtils.getString("icons.close"));
 
-            ItemMeta meta = item.getItemMeta();
-            if (meta.hasLore()) {
-                List<String> lore = meta.getLore();
-                lore.add("§7--------------------");
-                lore.add("§5Current Stock: §e"
-                        + (this.isAdmin ? "Unlimited" : String.format("%,.0f", Double.valueOf(this.quantity))));
-                lore.add("§5" + (this.selling ? "Selling " : "Buying"));
-                meta.setLore(lore);
-            } else {
-                List<String> lore = new ArrayList<>();
-                lore.add("§7--------------------");
-                lore.add("§5Current Stock: §e"
-                        + (this.isAdmin ? "Unlimited" : String.format("%,.0f", Double.valueOf(this.quantity))));
-                lore.add("§5" + (this.selling ? "Selling " : "Buying"));
-                meta.setLore(lore);
-            }
-            item.setItemMeta(meta);
-
-            normalView.setItem(13, UIUtils.setPrice(item, this.price, false));
-            ownerView.setItem(13, UIUtils.setPrice(item, this.price, false));
+            normalView.setItem(13, UIUtils.setPriceTag(item, this.price, this.selling, this.isAdmin, this.quantity));
+            ownerView.setItem(13, UIUtils.setPriceTag(item, this.price, this.selling, this.isAdmin, this.quantity));
         }
     }
 
@@ -182,9 +169,8 @@ public class BriefcaseGUI extends ShopGUI {
         Inventory pInventory = viewer.getInventory();
 
         if (!pInventory.containsAtLeast(item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
+                    viewer, 0, item, amount));
             return;
         }
 
@@ -219,13 +205,16 @@ public class BriefcaseGUI extends ShopGUI {
         this.selling = selling;
         this.updatePlaceHolderLore(3, selling);
 
-        UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1, "§6" + (this.selling ? "Selling" : "Buying"),
-                "§2Click to toggle");
+        UIUtils.createItem(ownerView, 3, 2, Material.OAK_SIGN, 1,
+                "§6" + (this.selling ? LanguageUtils.getString("price-tag.selling")
+                        : LanguageUtils.getString("price-tag.buying")),
+                "§2" + LanguageUtils.getString("icons.selling-status.lore"));
 
         ItemStack item = ownerView.getItem(13);
         ItemMeta itemMeta = item.getItemMeta();
         List<String> itemLore = itemMeta.getLore();
-        itemLore.set(itemLore.size() - 2, "§5" + (this.selling ? "Selling " : "Buying"));
+        itemLore.set(itemLore.size() - 2, "§5" + (this.selling ? LanguageUtils.getString("price-tag.selling")
+                : LanguageUtils.getString("price-tag.buying")));
         itemMeta.setLore(itemLore);
         item.setItemMeta(itemMeta);
     }
@@ -242,17 +231,15 @@ public class BriefcaseGUI extends ShopGUI {
         }
         ItemStack item = this.getItem();
         if (this.quantity < amount) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount));
             return;
         }
         Inventory pInventory = viewer.getInventory();
 
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, 0, item, amount));
         } else { // Valid operation
             item.setAmount(amount);
             if (this.updatePlaceHolderLore(2, this.quantity - amount) && pInventory.addItem(item).isEmpty())
@@ -275,9 +262,8 @@ public class BriefcaseGUI extends ShopGUI {
         Inventory pInventory = viewer.getInventory();
 
         if (!pInventory.containsAtLeast(item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-sell-fail-item"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
+                    viewer, 0, item, amount));
             return;
         }
 
@@ -338,18 +324,16 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
         if (this.quantity < amount && !this.isAdmin) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount));
             return;
         }
         Inventory pInventory = viewer.getInventory();
         double totalCost = amount * price;
 
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
-                            ownerID, viewer, totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, totalCost, item, amount));
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
             pInventory.addItem(item);

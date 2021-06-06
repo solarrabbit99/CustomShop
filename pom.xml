@@ -238,6 +238,8 @@
 				<includes>
 					<include>plugin.yml</include>
 					<include>config.yml</include>
+					<include>english.yml</include>
+					<include>chinese.yml</include>
 				</includes>
 			</resource>
 		</resources>

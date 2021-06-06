@@ -39,6 +39,7 @@ import com.paratopiamc.customshop.shop.briefcase.BriefcaseInteractInventory;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseListItem;
 import com.paratopiamc.customshop.shop.vm.VMInteractInventory;
 import com.paratopiamc.customshop.shop.vm.VMListItem;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -106,6 +107,7 @@ public final class CustomShop extends JavaPlugin {
         this.database.load();
 
         saveDefaultConfig();
+        LanguageUtils.loadLanguageConfig();
         CreationGUI.initialize();
     }
 

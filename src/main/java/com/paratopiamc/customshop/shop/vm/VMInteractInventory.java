@@ -22,6 +22,8 @@ import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
+import com.paratopiamc.customshop.utils.LanguageUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,10 +52,11 @@ public class VMInteractInventory implements Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§5§lVending Machine")) {
+        if (title.equalsIgnoreCase(LanguageUtils.getString("vending-machine-customer"))) {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
+                if (itemMeta.hasDisplayName()
+                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.close"))) {
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
                     PlayerState state = PlayerState.getPlayerState(player);

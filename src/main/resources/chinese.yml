@@ -1,0 +1,91 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                  自制商店的图形用户界面                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Title of inventory view when player accesses the shop-creation GUI.
+shop-creation: §e§l自制商店
+
+# Title of inventory view when player accesses the admin-shop-creation GUI.
+admin-shop-creation: §e§l公共自制商店
+
+# Title of vending machines' inventory view when player accesses the customer's view
+vending-machine-customer: §5§l自动售货机
+
+# Title of vending machines' inventory view when player accesses the owner's view
+vending-machine-owner: §5§l自动售货机内容
+
+# Title of newt's briefcases' inventory view when player accesses the customer's view
+newt-briefcase-customer: §5§l纽特公文包
+
+# Title of newt's briefcases' inventory view when player accesses the owner's view
+newt-briefcase-owner: §5§l纽特公文包设置
+
+# Words used in price tags (capitalize whenever applicable)
+price-tag:
+    price: 价格
+    selling: 出售
+    buying: 收购
+    stock: 现存
+    unlimited: 无限量
+
+# Words used for clickable icons in GUIs (capitalize the first word whenever applicable)
+icons:
+    selling-status:
+        lore: 点击更换
+    change-price:
+        title: 更换价格
+        lore: 点击更换商品价格
+    add-items:
+        title: 添加
+        lore: 点击添加商店的供货量
+    retrieve-items:
+        title: 领取
+        lore: 点击领取商店的供货
+    close: 关闭
+    previous: 上一页
+    next: 下一页
+
+############################################################
+# +------------------------------------------------------+ #
+# |                     买卖的相关信息                      | #
+# +------------------------------------------------------+ #
+############################################################
+
+# 所提供标签:
+# 顾客          %customer%      顾客的用户名
+# 店主          %owner%         店主的用户名
+# 花费总数       %total%         顾客/店主花费的总数
+# 商品          %item%          商品的名称/显示名称
+# 数量          %amount%        顾客/店主购买商品的数量
+
+# Message to shop owner when shop owner successfully sold to customer.
+customer-buy-success-owner: §c{%customer%}花费{%total%}从您店里购买了{%amount%}x{%item%}§c。
+
+# Message to customer when customer successfully purchased item from shop.
+customer-buy-success-customer: §a购买成功！您花费{%total%}购买了{%amount%}x{%item%}§a。
+
+# Message to customer when customer failed to purchase item from shop due to insufficient money.
+customer-buy-fail-money: §c现金不足！需至少{%total%}才能购买！
+
+# Message to customer when customer failed to purchase item from shop due to insufficient space.
+# Also the same message to owner with insufficient space trying to retrieve item from a shop.
+customer-buy-fail-space: §c您物品栏的空间不足！
+
+# Message to customer when customer failed to purchase item from shop due to insufficient items in shop.
+# Also the same message to owner trying to retrieve more items from a shop than the shop has.
+customer-buy-fail-item: §c此店的供货不足！
+
+# Message to shop owner when shop owner successfully bought from customer.
+customer-sell-success-owner: §a{%customer%}以{%total%}的价格卖给您{%amount%}x{%item%}§a.
+
+# Message to customer when customer successfully sold item to shop.
+customer-sell-success-customer: §a成功以{%total%}的价格卖了{%amount%}x{%item%}§a.
+
+# Message to customer when customer failed to sell item to shop due to owner's insufficient money.
+customer-sell-fail-money: §c{%owner%}现金不足!
+
+# Message to customer when customer failed to sell item to shop due to insufficient items.
+# Also the same message to owner with insufficient items trying to add items to shop.
+customer-sell-fail-item: §c您物品栏里的供货不足!

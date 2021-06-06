@@ -18,6 +18,7 @@
 
 package com.paratopiamc.customshop.plugin;
 
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -35,6 +36,7 @@ public class Reload extends CSComd {
             sender.sendMessage("§cYou do not have permission to use this command.");
         } else {
             CustomShop.getPlugin().reloadConfig();
+            LanguageUtils.loadLanguageConfig();
             sender.sendMessage("§6[CustomShop] §aSuccessfully reloaded configurations!");
         }
         return true;

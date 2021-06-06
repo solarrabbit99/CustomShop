@@ -21,6 +21,7 @@ package com.paratopiamc.customshop.gui;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -101,26 +102,22 @@ public abstract class ShopGUI {
         double bal = economy.getBalance(viewer);
 
         if (bal < totalCost) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-money"),
-                            ownerID, viewer, totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-money"), ownerID,
+                    viewer, totalCost, item, amount));
             return false;
         } else if (this.isAdmin) { // Valid transaction
             economy.withdrawPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-buy-success-customer"), ownerID, viewer,
-                    totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-customer"),
+                    ownerID, viewer, totalCost, item, amount));
             return true;
         } else {
             OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(this.ownerID));
             economy.withdrawPlayer(viewer, totalCost);
             economy.depositPlayer(owner, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-buy-success-customer"), ownerID, viewer,
-                    totalCost, item, amount));
-            String ownerMessage = MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-buy-success-owner"), ownerID, viewer,
-                    totalCost, item, amount);
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-customer"),
+                    ownerID, viewer, totalCost, item, amount));
+            String ownerMessage = MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-owner"),
+                    ownerID, viewer, totalCost, item, amount);
             if (owner.isOnline()) {
                 owner.getPlayer().sendMessage(ownerMessage);
             } else {
@@ -150,25 +147,21 @@ public abstract class ShopGUI {
         double bal = economy.getBalance(owner);
 
         if (bal < totalCost) {
-            viewer.sendMessage(MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-sell-fail-money"), ownerID, viewer,
-                    totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-money"), ownerID,
+                    viewer, totalCost, item, amount));
             return false;
         } else if (this.isAdmin) { // Valid transaction
             economy.depositPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-customer"), ownerID, viewer,
-                    totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-customer"),
+                    ownerID, viewer, totalCost, item, amount));
             return true;
         } else {
             economy.withdrawPlayer(owner, totalCost);
             economy.depositPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-customer"), ownerID, viewer,
-                    totalCost, item, amount));
-            String ownerMessage = MessageUtils.convertMessage(
-                    CustomShop.getPlugin().getConfig().getString("customer-sell-success-owner"), ownerID, viewer,
-                    totalCost, item, amount);
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-customer"),
+                    ownerID, viewer, totalCost, item, amount));
+            String ownerMessage = MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-owner"),
+                    ownerID, viewer, totalCost, item, amount);
             if (owner.isOnline()) {
                 owner.getPlayer().sendMessage(ownerMessage);
             } else {

@@ -1,0 +1,91 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                       Shop GUI                       | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Title of inventory view when player accesses the shop-creation GUI.
+shop-creation: §e§lCustom Shops
+
+# Title of inventory view when player accesses the admin-shop-creation GUI.
+admin-shop-creation: §e§lAdmin Custom Shops
+
+# Title of vending machines' inventory view when player accesses the customer's view
+vending-machine-customer: §5§lVending Machine
+
+# Title of vending machines' inventory view when player accesses the owner's view
+vending-machine-owner: §5§lVending Machine Content
+
+# Title of newt's briefcases' inventory view when player accesses the customer's view
+newt-briefcase-customer: §5§lNewt's Briefcase
+
+# Title of newt's briefcases' inventory view when player accesses the owner's view
+newt-briefcase-owner: §5§lNewt's Briefcase Settings
+
+# Words used in price tags (capitalize whenever applicable)
+price-tag:
+    price: Price
+    selling: Selling
+    buying: Buying
+    stock: Current Stock
+    unlimited: Unlimited
+
+# Words used for clickable icons in GUIs (capitalize the first word whenever applicable)
+icons:
+    selling-status:
+        lore: Click to toggle
+    change-price:
+        title: Change Price
+        lore: Click to change
+    add-items:
+        title: Add Items
+        lore: Click to add items to shop
+    retrieve-items:
+        title: Retrieve Items
+        lore: Click to retrieve items from shop
+    close: Close
+    previous: Previous Page
+    next: Next Page
+
+############################################################
+# +------------------------------------------------------+ #
+# |                Messages (Transactions)               | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Placeholders:
+# Customer      %customer%      Username of the customer, either purchasing or selling items to the shop
+# Owner         %owner%         Username of the owner of the shop
+# Total         %total%         Total amount of money involved in the transaction
+# Item          %item%          Display name of the item, or its material type if display name is absent
+# Amount        %amount%        Amount of items purchased/sold to the shop
+
+# Message to shop owner when shop owner successfully sold to customer.
+customer-buy-success-owner: §c{%customer%} bought {%amount%}x{%item%}§c from you for {%total%}.
+
+# Message to customer when customer successfully purchased item from shop.
+customer-buy-success-customer: §aSuccessfully purchased {%amount%}x{%item%}§a for {%total%}.
+
+# Message to customer when customer failed to purchase item from shop due to insufficient money.
+customer-buy-fail-money: §cYou need at least {%total%} to make the purchase!
+
+# Message to customer when customer failed to purchase item from shop due to insufficient space.
+# Also the same message to owner with insufficient space trying to retrieve item from a shop.
+customer-buy-fail-space: §cYou do not have enough space in your inventory!
+
+# Message to customer when customer failed to purchase item from shop due to insufficient items in shop.
+# Also the same message to owner trying to retrieve more items from a shop than the shop has.
+customer-buy-fail-item: §cShop does not have the specified amount of the selected item!
+
+# Message to shop owner when shop owner successfully bought from customer.
+customer-sell-success-owner: §a{%customer%} sold {%amount%}x{%item%}§a to you for {%total%}.
+
+# Message to customer when customer successfully sold item to shop.
+customer-sell-success-customer: §aSuccessfully sold {%amount%}x{%item%}§a for {%total%}.
+
+# Message to customer when customer failed to sell item to shop due to owner's insufficient money.
+customer-sell-fail-money: §c{%owner%} does not have enough money!
+
+# Message to customer when customer failed to sell item to shop due to insufficient items.
+# Also the same message to owner with insufficient items trying to add items to shop.
+customer-sell-fail-item: §cYou do not have the specified amount of the specified item!

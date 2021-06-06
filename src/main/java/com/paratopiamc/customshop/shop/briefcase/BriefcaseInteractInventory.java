@@ -26,6 +26,8 @@ import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.RetrieveConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.SellConversationFactory;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
+import com.paratopiamc.customshop.utils.LanguageUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,14 +54,14 @@ public class BriefcaseInteractInventory implements Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§5§lNewt's Briefcase")) {
+        if (title.equalsIgnoreCase(LanguageUtils.getString("newt-briefcase-customer"))) {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
                 PlayerState state = PlayerState.getPlayerState(player);
                 BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
                     String displayName = itemMeta.getDisplayName();
-                    if (displayName.equals("§cClose"))
+                    if (displayName.equals("§c" + LanguageUtils.getString("icons.close")))
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
                     ItemStack item = ui.getItem();
@@ -72,39 +74,28 @@ public class BriefcaseInteractInventory implements Listener {
                 }
             }
             evt.setCancelled(true);
-        } else if (title.equalsIgnoreCase("§5§lNewt's Briefcase Settings")) {
+        } else if (title.equalsIgnoreCase(LanguageUtils.getString("newt-briefcase-owner"))) {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
                 PlayerState state = PlayerState.getPlayerState(player);
                 BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
                 if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
                     String displayName = itemMeta.getDisplayName();
-                    switch (displayName) {
-                    case "§cClose":
+                    if (displayName.equals("§c" + LanguageUtils.getString("icons.close"))) {
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                        break;
-                    case "§6Selling":
+                    } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.selling"))) {
                         ui.setSelling(false);
-                        break;
-                    case "§6Buying":
+                    } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.buying"))) {
                         ui.setSelling(true);
-                        break;
-                    case "§6Change Price":
-                        // Don't have to start conversation in separate tick as player in GUI implies
-                        // player not conversing.
+                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.change-price.title"))) {
                         state.startConversation(new SetPriceConversationFactory(ui.getItem()));
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                        break;
-                    case "§6Add Items":
+                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.add-items.title"))) {
                         state.startConversation(new AddConversationFactory());
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                        break;
-                    case "§6Retrieve Items":
+                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.retrieve-items.title"))) {
                         state.startConversation(new RetrieveConversationFactory());
                         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                        break;
-                    default:
-                        break;
                     }
                 }
             }

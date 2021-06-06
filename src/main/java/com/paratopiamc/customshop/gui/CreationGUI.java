@@ -28,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -138,16 +139,17 @@ public class CreationGUI {
 
         int item = 0;
         for (int i = 0; i < noOfPages; i++) {
-            pages[i] = Bukkit.createInventory(null, 9 * 4, isAdmin ? "§e§lAdmin Custom Shops" : "§e§lCustom Shops");
+            pages[i] = Bukkit.createInventory(null, 9 * 4, isAdmin ? LanguageUtils.getString("admin-shop-creation")
+                    : LanguageUtils.getString("shop-creation"));
 
             // Setting up UI elemenets on the last row.
             int[] blackSlots = new int[] { 0, 1, 2, 6, 7, 8 };
             for (int j : blackSlots) {
                 UIUtils.createItem(pages[i], 3, j, Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
-            UIUtils.createItem(pages[i], 3, 3, Material.ARROW, 1, "§eBack");
-            UIUtils.createItem(pages[i], 3, 4, Material.BARRIER, 1, "§cClose");
-            UIUtils.createItem(pages[i], 3, 5, Material.ARROW, 1, "§eNext");
+            UIUtils.createItem(pages[i], 3, 3, Material.ARROW, 1, "§e" + LanguageUtils.getString("icons.previous"));
+            UIUtils.createItem(pages[i], 3, 4, Material.BARRIER, 1, "§c" + LanguageUtils.getString("icons.close"));
+            UIUtils.createItem(pages[i], 3, 5, Material.ARROW, 1, "§e" + LanguageUtils.getString("icons.next"));
 
             for (int j = 0; j < 27; j++) {
                 if (i == noOfPages - 1 && item == noOfItems)

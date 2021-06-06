@@ -137,20 +137,38 @@ public final class UIUtils {
     }
 
     /**
-     * Set price as lore of the item.
+     * Set price tag as lore of the item.
      *
-     * @param item      ItemStack to label
-     * @param price     given price in double
-     * @param withSpace whether to create partition between item's lore and the
-     *                  price tag
+     * @param item  ItemStack to label
+     * @param price given price in double
      * @return new instance of ItemStack
      */
-    public static ItemStack setPrice(ItemStack item, double price, boolean withSpace) {
+    public static ItemStack setPriceTag(ItemStack item, double price) {
         return item == null ? null
-                : withSpace
-                        ? loreItem(item, "§7--------------------",
-                                "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price))
-                        : loreItem(item, "§5Price: §e$" + MessageUtils.getHumanReadableNumber(price));
+                : loreItem(item, "§7--------------------", "§5" + LanguageUtils.getString("price-tag.price") + ": §e$"
+                        + MessageUtils.getHumanReadableNumber(price));
+    }
+
+    /**
+     * Set price tag as lore of the item.
+     * 
+     * @param item    ItemStack to label
+     * @param price   given price in double
+     * @param selling whether the shop is selling the item
+     * @param isAdmin whether the shop is an admin shop
+     * @param stock   current stock of the item
+     * @return new instance of ItemStack
+     */
+    public static ItemStack setPriceTag(ItemStack item, double price, boolean selling, boolean isAdmin, int stock) {
+        String[] additionalLore = new String[] { "§7--------------------",
+                "§5" + LanguageUtils.getString("price-tag.stock") + ": §e"
+                        + (isAdmin ? LanguageUtils.getString("price-tag.unlimited")
+                                : String.format("%,.0f", Double.valueOf(stock))),
+                "§5" + (selling ? LanguageUtils.getString("price-tag.selling")
+                        : LanguageUtils.getString("price-tag.buying")),
+                "§5" + LanguageUtils.getString("price-tag.price") + ": §e$"
+                        + MessageUtils.getHumanReadableNumber(price) };
+        return item == null ? null : loreItem(item, additionalLore);
     }
 
     /**

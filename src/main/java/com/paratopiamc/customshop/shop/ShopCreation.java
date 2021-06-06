@@ -28,6 +28,7 @@ import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
@@ -100,16 +101,20 @@ public class ShopCreation extends CSComd implements Listener {
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
         String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase("§e§lCustom Shops") || title.equalsIgnoreCase("§e§lAdmin Custom Shops")) {
-            this.isAdmin = title.equalsIgnoreCase("§e§lAdmin Custom Shops");
+        if (title.equalsIgnoreCase(LanguageUtils.getString("shop-creation"))
+                || title.equalsIgnoreCase(LanguageUtils.getString("admin-shop-creation"))) {
+            this.isAdmin = title.equalsIgnoreCase(LanguageUtils.getString("admin-shop-creation"));
             evt.setCancelled(true);
             if (holder == null) {
                 ItemMeta itemMeta = item.getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§cClose")) {
+                if (itemMeta.hasDisplayName()
+                        && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
                     CreationGUI.closeGUI(player);
-                } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eBack")) {
+                } else if (itemMeta.hasDisplayName()
+                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.previous"))) {
                     CreationGUI.previousPage(player);
-                } else if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§eNext")) {
+                } else if (itemMeta.hasDisplayName()
+                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.next"))) {
                     CreationGUI.nextPage(player);
                 } else if (evt.getSlot() < 27) {
                     Block targetBlock = player.getTargetBlockExact(5);

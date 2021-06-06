@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -277,8 +278,8 @@ public abstract class Database {
      */
     public List<String> getMessages(String ownerID) {
         List<String> messages = new ArrayList<>();
-        String sellMessage = plugin.getConfig().getString("customer-buy-success-owner");
-        String buyMessage = plugin.getConfig().getString("customer-sell-success-owner");
+        String sellMessage = LanguageUtils.getString("customer-buy-success-owner");
+        String buyMessage = LanguageUtils.getString("customer-sell-success-owner");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

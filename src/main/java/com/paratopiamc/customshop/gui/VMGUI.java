@@ -23,7 +23,7 @@ import org.bukkit.block.ShulkerBox;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
 import org.bukkit.Bukkit;
@@ -73,15 +73,15 @@ public class VMGUI extends ShopGUI {
         BlockStateMeta blockMeta = (BlockStateMeta) block.getItemMeta();
         this.sourceImage = (ShulkerBox) blockMeta.getBlockState();
 
-        inventoryView = Bukkit.createInventory(null, 9 * 4, "§5§lVending Machine");
-        inventory = Bukkit.createInventory(null, 9 * 3, "§5§lVending Machine Content");
+        inventoryView = Bukkit.createInventory(null, 9 * 4, LanguageUtils.getString("vending-machine-customer"));
+        inventory = Bukkit.createInventory(null, 9 * 3, LanguageUtils.getString("vending-machine-owner"));
 
         // Setting up UI elemenets on the last row.
         int[] blackSlots = new int[] { 0, 1, 2, 3, 5, 6, 7, 8 };
         for (int i : blackSlots) {
             UIUtils.createItem(inventoryView, 3, i, Material.BLACK_STAINED_GLASS_PANE, 1, " ");
         }
-        UIUtils.createItem(inventoryView, 3, 4, Material.BARRIER, 1, "§cClose", "");
+        UIUtils.createItem(inventoryView, 3, 4, Material.BARRIER, 1, "§c" + LanguageUtils.getString("icons.close"));
 
         prices = this.stringListToDoubleArray(blockMeta.getLore(), sourceImage.getInventory());
 
@@ -91,7 +91,7 @@ public class VMGUI extends ShopGUI {
             if (item != null) {
                 ItemStack key = item.clone();
                 key.setAmount(1);
-                inventoryView.setItem(i, UIUtils.setPrice(item, prices.get(key), true));
+                inventoryView.setItem(i, UIUtils.setPriceTag(item, prices.get(key)));
                 inventory.setItem(i, item);
             }
         }
@@ -199,9 +199,8 @@ public class VMGUI extends ShopGUI {
             viewer.sendMessage("§cItem is null...");
             return;
         } else if (!inventory.containsAtLeast(item, amount) && !this.isAdmin) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-item"),
-                            ownerID, viewer, 0, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount));
             return;
         }
 
@@ -211,9 +210,8 @@ public class VMGUI extends ShopGUI {
 
         Inventory pInventory = viewer.getInventory();
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(
-                    MessageUtils.convertMessage(CustomShop.getPlugin().getConfig().getString("customer-buy-fail-space"),
-                            ownerID, viewer, totalCost, item, amount));
+            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, totalCost, item, amount));
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
             // addItem mutates item, use temp to clone a copy
