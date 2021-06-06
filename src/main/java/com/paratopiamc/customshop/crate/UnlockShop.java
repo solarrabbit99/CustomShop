@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class UnlockShop implements Listener {
                 evt.setCancelled(true);
                 PlayerState state = PlayerState.getPlayerState(player);
                 if (state.getUnlockingShopItem() == null || !state.getUnlockingShopItem().isSimilar(item)) {
-                    player.sendMessage("§9Place again to confirm!");
+                    player.sendMessage(LanguageUtils.getString("unlock.confirmation"));
                     state.setUnlockingShop(item);
                 } else {
                     CompletableFuture<List<Integer>> cf = CompletableFuture
@@ -63,13 +64,15 @@ public class UnlockShop implements Listener {
                             public void run() {
                                 if (list.contains(modelData)) {
                                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.5F, 1.0F);
-                                    player.sendMessage("§6You already have " + displayName + "§6 unlocked!");
+                                    player.sendMessage(String.format(LanguageUtils.getString("unlock.unlocked-already"),
+                                            displayName));
                                 } else {
                                     list.add(modelData);
                                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.5F, 1.0F);
                                     CompletableFuture.runAsync(() -> {
                                         CustomShop.getPlugin().getDatabase().setUnlockedShops(player, list);
-                                        player.sendMessage("§aYou have unlocked a new custom shop: " + displayName);
+                                        player.sendMessage(String.format(LanguageUtils.getString("unlock.unlocked-new"),
+                                                displayName));
                                     });
                                     item.setAmount(item.getAmount() - 1);
                                 }

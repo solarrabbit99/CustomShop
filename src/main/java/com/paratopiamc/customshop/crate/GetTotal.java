@@ -21,6 +21,8 @@ package com.paratopiamc.customshop.crate;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,7 +41,8 @@ public class GetTotal extends CSComd {
             Player player = (Player) sender;
             CompletableFuture<Integer> cf = CompletableFuture
                     .supplyAsync(() -> CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId()));
-            cf.thenAccept(total -> player.sendMessage("§9Total custom shops owned: " + total));
+            cf.thenAccept(
+                    total -> player.sendMessage(String.format(LanguageUtils.getString("total-shop-owned"), total)));
         }
         return false;
     }

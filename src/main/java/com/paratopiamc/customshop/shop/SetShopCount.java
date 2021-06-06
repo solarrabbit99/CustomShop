@@ -22,6 +22,8 @@ import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -47,8 +49,8 @@ public class SetShopCount extends CSComd {
 
     @Override
     public boolean exec() {
-        if (!sender.hasPermission("customshop.resetshop") || !(sender instanceof Player)) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
+        if (!sender.hasPermission("customshop.setcount") || !(sender instanceof Player)) {
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
             return false;
         }
         if (args.length < 3) {

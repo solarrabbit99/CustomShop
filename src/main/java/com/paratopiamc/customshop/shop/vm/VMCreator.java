@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopCreator;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -42,14 +43,14 @@ public class VMCreator extends ShopCreator {
     public void createShop(Location location, Player owner, ItemStack item, boolean isAdmin) {
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
                 .getInt("defaults.vending-machine")) {
-            owner.sendMessage("§cYou have yet to unlock the selected Vending Machine!");
+            owner.sendMessage(LanguageUtils.getString("create.vending-machine.locked"));
             return;
         }
 
         Location locationAddOne = location.clone();
         locationAddOne.setY(location.getY() + 1);
         if (location.getBlock().getType() != Material.AIR || locationAddOne.getBlock().getType() != Material.AIR) {
-            owner.sendMessage("§cTarget location must have at least 2 blocks of air above...");
+            owner.sendMessage(LanguageUtils.getString("create.vending-machine.invalid-block"));
             return;
         }
 
@@ -78,7 +79,7 @@ public class VMCreator extends ShopCreator {
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());
-            owner.sendMessage("§aVending machine successfully created!");
+            owner.sendMessage(LanguageUtils.getString("create.vending-machine.success"));
         });
     }
 }

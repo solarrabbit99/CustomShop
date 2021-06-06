@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.ShopCreator;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -41,11 +42,11 @@ public class BriefcaseCreator extends ShopCreator {
     public void createShop(Location location, Player owner, ItemStack item, boolean isAdmin) {
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
                 .getInt("defaults.briefcase")) {
-            owner.sendMessage("§cYou have yet to unlock the selected Newt's Briefcase!");
+            owner.sendMessage(LanguageUtils.getString("create.briefcase.locked"));
             return;
         }
         if (location.getBlock().getType() != Material.AIR) {
-            owner.sendMessage("§cTarget location must have at least 1 block of air above...");
+            owner.sendMessage(LanguageUtils.getString("create.briefcase.invalid-block"));
             return;
         }
 
@@ -79,7 +80,7 @@ public class BriefcaseCreator extends ShopCreator {
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());
-            owner.sendMessage("§aNewt's Briefcase successfully created!");
+            owner.sendMessage(LanguageUtils.getString("create.briefcase.success"));
         });
     }
 }

@@ -139,17 +139,15 @@ public class BriefcaseGUI extends ShopGUI {
      */
     public String listPrice(ItemStack item, double price) {
         if (item == null || item.getType() == Material.AIR) {
-            return "§cYou are not holding anything in your main hand!";
+            return LanguageUtils.getString("price-convo-failed-no-item");
         } else {
             EntityEquipment armorStandContent = this.armorStand.getEquipment();
             item.setAmount(1);
             armorStandContent.setLeggings(item);
 
             this.updatePlaceHolderLore(1, price);
-            ItemMeta itemMeta = item.getItemMeta();
-
-            String name = itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : item.getType().toString();
-            return "§aSuccessfully listed " + name + "§a for $" + MessageUtils.getHumanReadableNumber(price) + "!";
+            return String.format(LanguageUtils.getString("price-convo-success"),
+                    MessageUtils.getHumanReadableNumber(price));
         }
     }
 
@@ -177,8 +175,7 @@ public class BriefcaseGUI extends ShopGUI {
         int remainingSpace = Integer.MAX_VALUE - this.quantity;
         double totalCost = amount * price;
         if (remainingSpace < amount && !this.isAdmin) {
-            viewer.sendMessage(
-                    "§cShop limit reached! You are only able to sell " + remainingSpace + " more items to the shop!");
+            viewer.sendMessage(String.format(LanguageUtils.getString("sell-convo-failed-limit"), remainingSpace));
         } else if (super.ownerBuy(amount, totalCost, item)) { // Valid transaction
             if (!this.isAdmin) {
                 this.updatePlaceHolderLore(2, this.quantity + amount);
@@ -243,7 +240,7 @@ public class BriefcaseGUI extends ShopGUI {
         } else { // Valid operation
             item.setAmount(amount);
             if (this.updatePlaceHolderLore(2, this.quantity - amount) && pInventory.addItem(item).isEmpty())
-                viewer.sendMessage("§aSuccessfully retrieved " + amount + " items!");
+                viewer.sendMessage(String.format(LanguageUtils.getString("retrieve-convo-success"), amount));
         }
     }
 
@@ -269,10 +266,10 @@ public class BriefcaseGUI extends ShopGUI {
 
         int remainingSpace = Integer.MAX_VALUE - this.quantity;
         if (remainingSpace < amount) {
-            viewer.sendMessage("§cShop limit reached! You are only able to add " + remainingSpace + " more items!");
+            viewer.sendMessage(String.format(LanguageUtils.getString("add-convo-failed-limit"), remainingSpace));
         } else { // Valid operation
             if (this.updatePlaceHolderLore(2, this.quantity + amount) && pInventory.removeItem(item).isEmpty())
-                viewer.sendMessage("§aSuccessfully added " + amount + " more items!");
+                viewer.sendMessage(String.format(LanguageUtils.getString("add-convo-success"), amount));
         }
     }
 
@@ -346,7 +343,7 @@ public class BriefcaseGUI extends ShopGUI {
     @Override
     public void openUI() {
         if (normalView == null) {
-            viewer.sendMessage("§cThe shop is not selling/buying any items!");
+            viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             viewer.openInventory(normalView);
@@ -356,7 +353,7 @@ public class BriefcaseGUI extends ShopGUI {
     @Override
     public void openOwnerUI() {
         if (ownerView == null) {
-            viewer.sendMessage("§cThe shop is not selling/buying any items!");
+            viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             viewer.openInventory(ownerView);

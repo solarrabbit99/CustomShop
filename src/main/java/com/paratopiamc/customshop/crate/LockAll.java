@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,7 +38,7 @@ public class LockAll extends CSComd {
     @Override
     public boolean exec() {
         if (!sender.hasPermission("customshop.lockall")) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
             return false;
         }
         if (args.length < 2) {

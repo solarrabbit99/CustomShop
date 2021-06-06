@@ -70,16 +70,16 @@ public class ShopCreation extends CSComd implements Listener {
         if (!(sender instanceof Player)) {
             return false;
         } else if (!sender.hasPermission("customshop.createshop")) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
             return false;
         } else if (!sender.hasPermission("customshop.admin") && this.isAdmin) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
             return false;
         }
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlockExact(5);
         if (targetBlock == null) {
-            player.sendMessage("§cYou are not targeting any block...");
+            player.sendMessage(LanguageUtils.getString("create.invalid-block"));
             return false;
         }
         CreationGUI.openFirstPage(player, isAdmin);
@@ -127,19 +127,18 @@ public class ShopCreation extends CSComd implements Listener {
                             public void run() {
                                 CreationGUI.closeGUI(player);
                                 if (number.intValue() >= maxShops) {
-                                    player.sendMessage(
-                                            "§cYou have reached the maximum number of custom shops created!");
+                                    player.sendMessage(LanguageUtils.getString("create.reached-max"));
                                     return;
                                 }
                                 if (targetBlock == null) {
-                                    player.sendMessage("§cYou are not targeting any block...");
+                                    player.sendMessage(LanguageUtils.getString("create.invalid-block"));
                                     return;
                                 }
                                 Location location = getCreationLocation(targetBlock, player);
 
                                 // Check for towny and worldguard restrictions
                                 if (!hasTownyPerms(location, player) || !hasWorldGuardPerms(location, player)) {
-                                    player.sendMessage("§cYou are not allowed to place custom shops here!");
+                                    player.sendMessage(LanguageUtils.getString("create.no-perms"));
                                     return;
                                 }
 

@@ -33,6 +33,7 @@ import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
@@ -132,7 +133,7 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlockExact(5);
         if (targetBlock == null) {
-            player.sendMessage("§cYou are not targeting any block...");
+            player.sendMessage(LanguageUtils.getString("remove.invalid-target"));
             return true;
         }
         ShopRemover remover = getShopRemover(targetBlock, player);
@@ -140,7 +141,7 @@ public class ShopRemoval extends CSComd implements Listener {
             UUID ownerID = remover.removeShop();
             CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
         } else {
-            player.sendMessage("§cInvalid target...");
+            player.sendMessage(LanguageUtils.getString("remove.invalid-block"));
         }
         return true;
     }

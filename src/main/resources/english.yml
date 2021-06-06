@@ -49,6 +49,56 @@ icons:
 
 ############################################################
 # +------------------------------------------------------+ #
+# |                  Messages (General)                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# No permission for command
+command-no-perms: §cYou do not have permission to use this command.
+
+# Sent when players run `/customshop gettotal`
+total-shop-owned: "§9Total custom shops owned: %s"
+
+# Briefcase initialization
+briefcase-not-initialized: §cThe shop is not selling/buying any items!
+briefcase-already-initialized: §cItem already set for the briefcase!
+
+# Sent when player access shops that are in use by other players
+shop-currently-in-use:
+    shop: §cShop currently in use, please wait...
+    vending-machine: §cVending machine currently in use, please wait...
+    briefcase: §cBriefcase currently in use, please wait...
+
+# Sent when players do not have permissions to the shop
+shop-no-perms: §cYou do not have permissions to the shop!
+
+# Messages when unlocking shop designs
+unlock:
+    confirmation: §9Place again to confirm!
+    unlocked-new: "§aYou have unlocked a new custom shop: %s"
+    unlocked-already: §6You already have %s§6 unlocked!
+
+# Messages for shop creation
+create:
+    invalid-block: §cYou are not targeting any block...
+    no-perms: §cYou are not allowed to place custom shops here!
+    reached-max: §cYou have reached the maximum number of custom shops created!
+    vending-machine:
+        locked: §cYou have yet to unlock the selected Vending Machine!
+        invalid-block: §cTarget location must have at least 2 blocks of air above...
+        success: §aVending machine successfully created!
+    briefcase:
+        locked: §cYou have yet to unlock the selected Newt's Briefcase!
+        invalid-block: §cTarget location must have at least 1 block of air above...
+        success: §aNewt's briefcase successfully created!
+
+# Messages for shop removal
+remove:
+    invalid-block: §cYou are not targeting any block...
+    invalid-target: §cInvalid target...
+
+############################################################
+# +------------------------------------------------------+ #
 # |                Messages (Transactions)               | #
 # +------------------------------------------------------+ #
 ############################################################
@@ -89,3 +139,38 @@ customer-sell-fail-money: §c{%owner%} does not have enough money!
 # Message to customer when customer failed to sell item to shop due to insufficient items.
 # Also the same message to owner with insufficient items trying to add items to shop.
 customer-sell-fail-item: §cYou do not have the specified amount of the specified item!
+
+############################################################
+# +------------------------------------------------------+ #
+# |           Conversation (Shop Interactions)           | #
+# +------------------------------------------------------+ #
+############################################################
+
+# General
+invalid-input: §cInvalid input!
+
+# Set items price
+price-convo-prompt: §aEnter the price of the item that you want to list...
+price-convo-cancelled: §cShop listing cancelled...
+price-convo-failed-no-item: §cYou are not holding anything in your main hand!
+price-convo-success: §aSuccessfully listed item for $%s!
+
+# Add items to shop
+add-convo-prompt: §aEnter the amount of item that you want to add into the shop...
+add-convo-cancelled: §cItem add cancelled...
+add-convo-success: §aSuccessfully added %s more items!
+add-convo-failed-limit: §cShop limit reached! You are only able to add %s more items to the shop!
+
+# Retrieve items from shop
+retrieve-convo-prompt: §aEnter the amount of item that you want to retrieve...
+retrieve-convo-cancelled: §cItem retrieve cancelled...
+retrieve-convo-success: §aSuccessfully retrieved %s items!
+
+# Purchase items from shop
+purchase-convo-prompt: §aEnter the amount that you want to purchase...
+purchase-convo-cancelled: §cShop purchase cancelled...
+
+# Sell items to shop
+sell-convo-prompt: §aEnter the amount that you want to sell...
+sell-convo-cancelled: §cShop selling cancelled...
+sell-convo-failed-limit: §cShop limit reached! You are only able to sell %s more items to the shop!

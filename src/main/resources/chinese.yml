@@ -49,6 +49,55 @@ icons:
 
 ############################################################
 # +------------------------------------------------------+ #
+# |                       信息（总）                       | #
+# +------------------------------------------------------+ #
+############################################################
+
+# No permission for command
+command-no-perms: §c您没有足够权限使用此令。
+
+# Sent when players run `/customshop gettotal`
+total-shop-owned: "§9现有商店：%s家"
+
+# Briefcase initialization
+briefcase-not-initialized: §c此店未设任何交易商品！
+briefcase-already-initialized: §c此店已设有交易商品！
+
+# Sent when player access shops that are in use by other players
+shop-currently-in-use:
+    vending-machine: §c自动售货机被他人使用中， 请稍后。。。
+    briefcase: §c纽特公文包被他人使用中， 请稍后。。。
+
+# Sent when players do not have permissions to the shop
+shop-no-perms: §c您没有足够的权限进入店面设定/内容！
+
+# Messages when unlocking shop designs
+unlock:
+    confirmation: §9再次放置确认！
+    unlocked-new: §a成功开解%s
+    unlocked-already: §6%s§6已开解！
+
+# Messages for shop creation
+create:
+    invalid-block: §c锁定目标无效。。。
+    no-perms: §c您没有足够权限在此安置商店！
+    reached-max: §c您商店的数量已达极限！
+    vending-machine:
+        locked: §c您尚未开解所选自动售货机！
+        invalid-block: §c所置地点之上需至少两格空档。。。
+        success: §a成功安置自动售货机！
+    briefcase:
+        locked: §c您尚未开解所选纽特公文包！
+        invalid-block: §c所置地点之上需至少一格空档。。。
+        success: §a成功安置纽特公文包！
+
+# Messages for shop removal
+remove:
+    invalid-block: §c锁定目标无效。。。
+    invalid-target: §c锁定目标无效。。。
+
+############################################################
+# +------------------------------------------------------+ #
 # |                     买卖的相关信息                      | #
 # +------------------------------------------------------+ #
 ############################################################
@@ -84,8 +133,43 @@ customer-sell-success-owner: §a{%customer%}以{%total%}的价格卖给您{%amou
 customer-sell-success-customer: §a成功以{%total%}的价格卖了{%amount%}x{%item%}§a.
 
 # Message to customer when customer failed to sell item to shop due to owner's insufficient money.
-customer-sell-fail-money: §c{%owner%}现金不足!
+customer-sell-fail-money: §c{%owner%}现金不足！
 
 # Message to customer when customer failed to sell item to shop due to insufficient items.
 # Also the same message to owner with insufficient items trying to add items to shop.
-customer-sell-fail-item: §c您物品栏里的供货不足!
+customer-sell-fail-item: §c您物品栏里的供货不足！
+
+############################################################
+# +------------------------------------------------------+ #
+# |                   商店设置的相关信息                    | #
+# +------------------------------------------------------+ #
+############################################################
+
+# General
+invalid-input: §c输入无效！
+
+# Set items price
+price-convo-prompt: §a请输入价格。。。
+price-convo-cancelled: §c取消标价。。。
+price-convo-failed-no-item: §c您手上没有任何物件！
+price-convo-success: §a成功标商品价格为$%s！
+
+# Add items to shop
+add-convo-prompt: §a请输入添加数量。。。
+add-convo-cancelled: §c取消补货。。。
+add-convo-success: §a成功添加%s件物件！
+add-convo-failed-limit: §c此店货量已达极限！您仅能添加多%s件物件！
+
+# Retrieve items from shop
+retrieve-convo-prompt: §a请输入领取数量。。。
+retrieve-convo-cancelled: §c取消领取。。。
+retrieve-convo-success: §a成功领取%s件物品！
+
+# Purchase items from shop
+purchase-convo-prompt: §a请输入购买数量。。。
+purchase-convo-cancelled: §c取消购买。。。
+
+# Sell items to shop
+sell-convo-prompt: §a请输入销售数量。。。
+sell-convo-cancelled: §c取消销售。。。
+sell-convo-failed-limit: §c此店货量已达极限！您最多仅能售卖%s件物件！

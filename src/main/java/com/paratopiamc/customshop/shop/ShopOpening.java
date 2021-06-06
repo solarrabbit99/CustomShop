@@ -23,6 +23,7 @@ import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -61,7 +62,7 @@ public class ShopOpening implements Listener {
                 PlayerState state = PlayerState.getPlayerState(player);
                 state.clearShopInteractions();
                 if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                    player.sendMessage("§cShop currently in use, please wait...");
+                    player.sendMessage(LanguageUtils.getString("shop-currently-in-use.shop"));
                     return;
                 } else {
                     gui.openUI();

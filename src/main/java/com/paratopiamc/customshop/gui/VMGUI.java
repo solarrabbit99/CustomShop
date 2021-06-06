@@ -33,7 +33,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 /** Custom GUI for vending machines. */
 public class VMGUI extends ShopGUI {
@@ -229,14 +228,13 @@ public class VMGUI extends ShopGUI {
     @Override
     public String listPrice(ItemStack item, double price) {
         if (item == null || item.getType() == Material.AIR) {
-            return "§cYou are not holding anything in your main hand!";
+            return LanguageUtils.getString("price-convo-failed-no-item");
         } else {
             ItemStack key = item.clone();
             key.setAmount(1);
             prices.put(key, price);
-            ItemMeta meta = item.getItemMeta();
-            String name = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
-            return "§aSuccessfully listed " + name + "§r§a for $" + MessageUtils.getHumanReadableNumber(price) + "!";
+            return String.format(LanguageUtils.getString("price-convo-success"),
+                    MessageUtils.getHumanReadableNumber(price));
         }
     }
 

@@ -22,6 +22,7 @@ import com.paratopiamc.customshop.gui.BriefcaseGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -60,11 +61,11 @@ public class BriefcaseListItem implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!ShopUtils.hasShopPermission(armorStand, player)) {
-                player.sendMessage("§cYou do not have permission to the briefcase!");
+                player.sendMessage(LanguageUtils.getString("shop-no-perms"));
                 return;
             }
             if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                player.sendMessage("§cShop current in use, please wait...");
+                player.sendMessage(LanguageUtils.getString("shop-currently-in-use.briefcase"));
                 return;
             }
             BriefcaseGUI ui = new BriefcaseGUI(armorStand, player);
@@ -76,7 +77,7 @@ public class BriefcaseListItem implements Listener {
                 state.setShopGUI(ui);
             } else {
                 if (ui.hasItem()) {
-                    player.sendMessage("§cItem already set for the briefcase!");
+                    player.sendMessage(LanguageUtils.getString("briefcase-already-initialized"));
                 } else {
                     // New conversation must begin in a different tick that cancelled
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(),

@@ -21,6 +21,7 @@ package com.paratopiamc.customshop.shop.conversation;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationCanceller;
@@ -47,7 +48,7 @@ public class SetPriceConversationFactory extends ConversationFactory {
                 ConversationCanceller canceller = abandonedEvent.getCanceller();
                 Player player = (Player) abandonedEvent.getContext().getForWhom();
                 if (canceller != null) {
-                    player.sendMessage("§cShop listing cancelled...");
+                    player.sendMessage(LanguageUtils.getString("price-convo-cancelled"));
                 }
                 PlayerState.getPlayerState(player).clearShopInteractions();
             }
@@ -62,7 +63,7 @@ public class SetPriceConversationFactory extends ConversationFactory {
     private class PricePrompt extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "§aEnter the price of the item that you want to list...";
+            return LanguageUtils.getString("price-convo-prompt");
         }
 
         @Override
@@ -74,12 +75,12 @@ public class SetPriceConversationFactory extends ConversationFactory {
                 try {
                     double price = ((Double) (Double.parseDouble(input) * 100)).intValue() / 100.0;
                     if (price <= 0) {
-                        player.sendMessage("§cPrice must be more than 0!");
+                        player.sendMessage(LanguageUtils.getString("invalid-input"));
                     } else {
                         player.sendMessage(ui.listPrice(item, price));
                     }
                 } catch (NumberFormatException e) {
-                    player.sendMessage("§cInvalid input!");
+                    player.sendMessage(LanguageUtils.getString("invalid-input"));
                 }
             } else {
                 // Should not get here.

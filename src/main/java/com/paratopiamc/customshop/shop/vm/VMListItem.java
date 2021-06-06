@@ -22,6 +22,7 @@ import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.SetPriceConversationFactory;
+import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -61,11 +62,11 @@ public class VMListItem implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             if (!ShopUtils.hasShopPermission(armorStand, player)) {
-                player.sendMessage("§cYou do not have permission to the vending machine!");
+                player.sendMessage(LanguageUtils.getString("shop-no-perms"));
                 return;
             }
             if (PlayerState.getInteractingPlayer(armorStand) != null) {
-                player.sendMessage("§cVending machine current in use, please wait...");
+                player.sendMessage(LanguageUtils.getString("shop-currently-in-use.vending-machine"));
                 return;
             }
             VMGUI ui = new VMGUI(armorStand, player);

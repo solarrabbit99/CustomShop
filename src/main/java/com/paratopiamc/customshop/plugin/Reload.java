@@ -33,7 +33,7 @@ public class Reload extends CSComd {
     @Override
     public boolean exec() {
         if (!sender.hasPermission("customshop.reload")) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
         } else {
             CustomShop.getPlugin().reloadConfig();
             LanguageUtils.loadLanguageConfig();
