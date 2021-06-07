@@ -37,6 +37,9 @@ class AppTest {
         int a = 1;
         print(a);
         System.out.println(String.format("example %s %s", 1, "2"));
+        String value1 = "§r§6Sand Vending Machine";
+        String value2 = "§6§rSand Vending Machine";
+        System.out.println(value1.compareTo(value2));
     }
 
     private void print(Object a) {

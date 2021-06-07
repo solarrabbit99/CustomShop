@@ -32,7 +32,7 @@ import org.bukkit.entity.Player;
  */
 public class GetTotal extends CSComd {
     public GetTotal(CommandSender sender) {
-        this.sender = sender;
+        super(sender, null);
     }
 
     @Override

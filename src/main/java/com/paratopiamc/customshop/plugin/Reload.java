@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
 public class Reload extends CSComd {
 
     public Reload(CommandSender sender) {
-        this.sender = sender;
+        super(sender, null);
     }
 
     @Override

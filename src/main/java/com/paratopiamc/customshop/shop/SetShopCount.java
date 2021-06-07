@@ -42,8 +42,7 @@ public class SetShopCount extends CSComd {
     private int newCount;
 
     public SetShopCount(CommandSender sender, String[] args) {
-        this.sender = sender;
-        this.args = args;
+        super(sender, args);
         initConversationFactory();
     }
 

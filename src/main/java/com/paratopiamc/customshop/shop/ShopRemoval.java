@@ -58,10 +58,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 /** Player removing shop, either by breaking or by command. */
 public class ShopRemoval extends CSComd implements Listener {
     public ShopRemoval() {
+        super(null, null);
     }
 
     public ShopRemoval(CommandSender sender) {
-        this.sender = sender;
+        super(sender, null);
     }
 
     /**

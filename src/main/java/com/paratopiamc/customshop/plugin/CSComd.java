@@ -27,6 +27,11 @@ public abstract class CSComd {
     /** Arguments of the command (regardless of completion stage) */
     protected String[] args;
 
+    public CSComd(CommandSender sender, String[] args) {
+        this.sender = sender;
+        this.args = args;
+    }
+
     /**
      * Calls for execution of respective commands.
      *

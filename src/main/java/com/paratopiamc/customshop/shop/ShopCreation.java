@@ -58,10 +58,11 @@ public class ShopCreation extends CSComd implements Listener {
     private boolean isAdmin;
 
     public ShopCreation() {
+        super(null, null);
     }
 
     public ShopCreation(CommandSender sender, boolean isAdmin) {
-        this.sender = sender;
+        super(sender, null);
         this.isAdmin = isAdmin;
     }
 

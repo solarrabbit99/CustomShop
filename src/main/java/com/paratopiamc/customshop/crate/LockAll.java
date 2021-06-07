@@ -31,8 +31,7 @@ import org.bukkit.entity.Player;
 public class LockAll extends CSComd {
 
     public LockAll(CommandSender sender, String[] args) {
-        this.sender = sender;
-        this.args = args;
+        super(sender, args);
     }
 
     @Override
