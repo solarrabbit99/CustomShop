@@ -32,60 +32,60 @@ defaults:
 
 vending-machine:
     wooden:
-        name: §r§6Wooden Vending Machine
+        name: §6Wooden Vending Machine
         model-data: 101
     stone:
-        name: §r§6Stone Vending Machine
+        name: §6Stone Vending Machine
         model-data: 102
     nether:
-        name: §r§6Nether Vending Machine
+        name: §6Nether Vending Machine
         model-data: 103
     sand:
-        name: §r§6Sand Vending Machine
+        name: §6Sand Vending Machine
         model-data: 104
     prismarine:
-        name: §r§6Prismarine Vending Machine
+        name: §6Prismarine Vending Machine
         model-data: 105
     ice:
-        name: §r§6Ice Vending Machine
+        name: §6Ice Vending Machine
         model-data: 106
     blackstone:
-        name: §r§6Blackstone Vending Machine
+        name: §6Blackstone Vending Machine
         model-data: 107
     copper:
-        name: §r§6Copper Vending Machine
+        name: §6Copper Vending Machine
         model-data: 108
     amethyst:
-        name: §r§6Amethyst Vending Machine
+        name: §6Amethyst Vending Machine
         model-data: 109
 
 briefcase:
     wooden:
-        name: §r§6Wooden Newt's Briefcase
+        name: §6Wooden Newt's Briefcase
         model-data: 201
     stone:
-        name: §r§6Stone Newt's Briefcase
+        name: §6Stone Newt's Briefcase
         model-data: 202
     nether:
-        name: §r§6Nether Newt's Briefcase
+        name: §6Nether Newt's Briefcase
         model-data: 203
     sand:
-        name: §r§6Sand Newt's Briefcase
+        name: §6Sand Newt's Briefcase
         model-data: 204
     prismarine:
-        name: §r§6Prismarine Newt's Briefcase
+        name: §6Prismarine Newt's Briefcase
         model-data: 205
     ice:
-        name: §r§6Ice Newt's Briefcase
+        name: §6Ice Newt's Briefcase
         model-data: 206
     blackstone:
-        name: §r§6Blackstone Newt's Briefcase
+        name: §6Blackstone Newt's Briefcase
         model-data: 207
     copper:
-        name: §r§6Copper Newt's Briefcase
+        name: §6Copper Newt's Briefcase
         model-data: 208
     amethyst:
-        name: §r§6Amethyst Newt's Briefcase
+        name: §6Amethyst Newt's Briefcase
         model-data: 209
 
 ############################################################
