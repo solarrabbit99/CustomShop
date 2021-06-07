@@ -29,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,7 +55,11 @@ public class GiveHead extends CSComd {
             meta.setCustomModelData(model);
             meta.setDisplayName(getNamefromModelData(model));
             reward.setItemMeta(meta);
-            Bukkit.getPlayer(args[1]).getInventory().addItem(reward);
+            Player player = Bukkit.getPlayer(args[1]);
+            if (!player.getInventory().addItem(reward).isEmpty()) {
+                player.sendMessage("§6Insufficient inventory space, dropping reward on the ground...");
+                player.getLocation().getWorld().dropItem(player.getLocation(), reward);
+            }
             return true;
         }
         return false;
