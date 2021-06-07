@@ -10,8 +10,8 @@ max-shops: 3
 # Unlock all designs for all players? (`/customshop lockall <player>` command will have no effect if enabled)
 unlock-all: true
 
-# Language to be used for the server (Currently available: english, chinese)
-language: chinese
+# Language to be used for the server (Currently available: english, chinese, italian)
+language: english
 
 ############################################################
 # +------------------------------------------------------+ #

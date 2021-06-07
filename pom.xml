@@ -240,6 +240,7 @@
 					<include>config.yml</include>
 					<include>english.yml</include>
 					<include>chinese.yml</include>
+					<include>italian.yml</include>
 				</includes>
 			</resource>
 		</resources>
