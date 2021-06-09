@@ -2,7 +2,7 @@ main: com.paratopiamc.customshop.plugin.CustomShop
 name: CustomShop
 version: 1.0
 author: SolarRabbit
-api-version: 1.14
+api-version: 1.16
 
 depend: [ProtocolLib, Vault]
 softdepend: [Towny, WorldGuard]
