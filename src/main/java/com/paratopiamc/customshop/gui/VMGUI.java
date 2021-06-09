@@ -217,7 +217,22 @@ public class VMGUI extends ShopGUI {
             item.setAmount(amount);
             // addItem mutates item, use temp to clone a copy
             ItemStack temp = item.clone();
-            pInventory.addItem(item);
+            List<ItemStack> stacks = new ArrayList<>();
+            int stackNumber = 0;
+            int currentAmount = amount;
+            while (currentAmount > item.getMaxStackSize()) {
+                ItemStack clone = item.clone();
+                clone.setAmount(item.getMaxStackSize());
+                stacks.add(clone);
+                currentAmount -= item.getMaxStackSize();
+                stackNumber++;
+            }
+            if (currentAmount != 0) {
+                item.setAmount(currentAmount);
+                stacks.add(item);
+                stackNumber++;
+            }
+            pInventory.addItem(stacks.toArray(new ItemStack[stackNumber]));
             if (!this.isAdmin) {
                 inventory.removeItem(temp);
             }

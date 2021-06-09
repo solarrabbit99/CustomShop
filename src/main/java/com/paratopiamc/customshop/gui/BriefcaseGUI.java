@@ -350,8 +350,22 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
                     viewer, totalCost, item, amount));
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
-            item.setAmount(amount);
-            pInventory.addItem(item);
+            List<ItemStack> stacks = new ArrayList<>();
+            int stackNumber = 0;
+            int currentAmount = amount;
+            while (currentAmount > item.getMaxStackSize()) {
+                ItemStack clone = item.clone();
+                clone.setAmount(item.getMaxStackSize());
+                stacks.add(clone);
+                currentAmount -= item.getMaxStackSize();
+                stackNumber++;
+            }
+            if (currentAmount != 0) {
+                item.setAmount(currentAmount);
+                stacks.add(item);
+                stackNumber++;
+            }
+            pInventory.addItem(stacks.toArray(new ItemStack[stackNumber]));
             if (!this.isAdmin) {
                 this.updatePlaceHolderLore(2, this.quantity - amount);
             }
