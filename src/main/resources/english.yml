@@ -101,6 +101,7 @@ create:
 remove:
     invalid-block: §cYou are not targeting any block...
     invalid-target: §cInvalid target...
+    contain-items: §cPlease remove all items in the briefcase before removing the briefcase!
 
 ############################################################
 # +------------------------------------------------------+ #

@@ -63,15 +63,17 @@ public class VMRemover extends ShopRemover {
     }
 
     @Override
-    public UUID removeShop() {
+    public UUID removeShop(boolean dropItems) {
         bottom.getBlock().setType(Material.AIR);
         top.getBlock().setType(Material.AIR);
 
-        ShulkerBox shulker = (ShulkerBox) this.meta.getBlockState();
-        shulker.getInventory().forEach(item -> {
-            if (item != null)
-                armorStand.getWorld().dropItem(armorStand.getLocation(), item);
-        });
+        if (dropItems) {
+            ShulkerBox shulker = (ShulkerBox) this.meta.getBlockState();
+            shulker.getInventory().forEach(item -> {
+                if (item != null)
+                    armorStand.getWorld().dropItem(armorStand.getLocation(), item);
+            });
+        }
 
         armorStand.remove();
         return this.ownerUUID;

@@ -34,8 +34,11 @@ public class AutoComplete implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            String[] array = new String[] { "newshop", "removeshop", "gettotal" };
+            String[] array = new String[] { "newshop", "gettotal" };
             List<String> subCommands = new ArrayList<>(Arrays.asList(array));
+            if (sender.hasPermission("customshop.removeshop")) {
+                subCommands.add("removeshop");
+            }
             if (sender.hasPermission("customshop.lockall")) {
                 subCommands.add("lockall");
             }

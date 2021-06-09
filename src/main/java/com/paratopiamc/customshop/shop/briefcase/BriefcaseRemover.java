@@ -23,6 +23,9 @@ import java.util.UUID;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopRemover;
+import com.paratopiamc.customshop.utils.LanguageUtils;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -73,19 +76,14 @@ public class BriefcaseRemover extends ShopRemover {
     }
 
     @Override
-    public UUID removeShop() {
-        location.getBlock().setType(Material.AIR);
-
-        if (this.item != null && this.item.getType() != Material.AIR) {
-            int maxPerStack = item.getMaxStackSize();
-            int maxDropAmount = 54 * maxPerStack;
-            item.setAmount(Math.min(maxDropAmount, item.getAmount()));
-
-            armorStand.getWorld().dropItem(armorStand.getLocation(), item);
+    public UUID removeShop(boolean dropItems) {
+        if (this.item != null && dropItems) {
+            Bukkit.getPlayer(this.ownerUUID).sendMessage(LanguageUtils.getString("remove.contain-items"));
+            return null;
+        } else {
+            location.getBlock().setType(Material.AIR);
+            armorStand.remove();
+            return this.ownerUUID;
         }
-
-        armorStand.remove();
-        return this.ownerUUID;
     }
-
 }

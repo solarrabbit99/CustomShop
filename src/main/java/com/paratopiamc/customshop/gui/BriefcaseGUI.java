@@ -18,6 +18,7 @@
 
 package com.paratopiamc.customshop.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.paratopiamc.customshop.plugin.CustomShop;
@@ -240,8 +241,23 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
                     viewer, 0, item, amount));
         } else { // Valid operation
-            item.setAmount(amount);
-            if (this.updatePlaceHolderLore(2, this.quantity - amount) && pInventory.addItem(item).isEmpty())
+            List<ItemStack> stacks = new ArrayList<>();
+            int stackNumber = 0;
+            int currentAmount = amount;
+            while (currentAmount > item.getMaxStackSize()) {
+                ItemStack clone = item.clone();
+                clone.setAmount(item.getMaxStackSize());
+                stacks.add(clone);
+                currentAmount -= item.getMaxStackSize();
+                stackNumber++;
+            }
+            if (currentAmount != 0) {
+                item.setAmount(currentAmount);
+                stacks.add(item);
+                stackNumber++;
+            }
+            if (this.updatePlaceHolderLore(2, this.quantity - amount)
+                    && pInventory.addItem(stacks.toArray(new ItemStack[stackNumber])).isEmpty())
                 viewer.sendMessage(String.format(LanguageUtils.getString("retrieve-convo-success"), amount));
         }
     }

@@ -42,7 +42,8 @@ public abstract class ShopRemover {
      * Main method of the removal to search and remove all relevant entities/blocks
      * related to the custom shop that is currently being removed.
      *
+     * @param dropItems whether items should be dropped as a result of shop removal
      * @return shop owner's UUID
      */
-    public abstract UUID removeShop();
+    public abstract UUID removeShop(boolean dropItems);
 }

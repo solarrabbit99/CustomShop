@@ -101,6 +101,7 @@ create:
 remove:
     invalid-block: §cNon stai guardando nessun blocco...
     invalid-target: §cBersaglio non valido...
+    contain-items: §cPlease remove all items in the briefcase before removing the briefcase!
 
 ############################################################
 # +------------------------------------------------------+ #

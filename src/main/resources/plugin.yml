@@ -15,6 +15,9 @@ permissions:
     customshop.createshop:
         description: User able to create non-admin shops.
         default: true
+    customshop.removeshop:
+        description: User able to remove shops through command. Briefcases removed via command will not drop any items.
+        default: op
     customshop.lockall:
         description: User able to lock all custom shops of a player.
         default: op
@@ -28,6 +31,7 @@ permissions:
         description: User able to perform all commands and full access to admin shops.
         default: op
         children:
+            customshop.removeshop: true
             customshop.lockall: true
             customshop.setcount: true
             customshop.reload: true

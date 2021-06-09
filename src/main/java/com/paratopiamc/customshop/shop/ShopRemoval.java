@@ -82,11 +82,13 @@ public class ShopRemoval extends CSComd implements Listener {
                 public void run() {
                     if (!evt.isCancelled()) {
                         PlayerState.getPlayerState(player).clearShopInteractions();
-                        UUID ownerID = remover.removeShop();
-                        targetBlock.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F,
-                                1.0F);
-                        CompletableFuture
-                                .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+                        UUID ownerID = remover.removeShop(true);
+                        if (ownerID != null) {
+                            targetBlock.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_STONE_BREAK, 1.5F,
+                                    1.0F);
+                            CompletableFuture.runAsync(
+                                    () -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+                        }
                     }
                 }
             };
@@ -119,8 +121,13 @@ public class ShopRemoval extends CSComd implements Listener {
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
             PlayerState.getPlayerState(player).clearShopInteractions();
-            UUID ownerID = remover.removeShop();
-            CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+            UUID ownerID = remover.removeShop(true);
+            if (ownerID != null) {
+                CompletableFuture
+                        .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+            } else {
+                evt.setCancelled(true);
+            }
         } else if (ShopUtils.getArmorStand(targetBlock) != null) {
             evt.setCancelled(true);
         }
@@ -130,6 +137,9 @@ public class ShopRemoval extends CSComd implements Listener {
     public boolean exec() {
         if (!(sender instanceof Player)) {
             return true;
+        } else if (!sender.hasPermission("customshop.removeshop")) {
+            sender.sendMessage(LanguageUtils.getString("command-no-perms"));
+            return false;
         }
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlockExact(5);
@@ -139,8 +149,11 @@ public class ShopRemoval extends CSComd implements Listener {
         }
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
-            UUID ownerID = remover.removeShop();
-            CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+            UUID ownerID = remover.removeShop(false);
+            if (ownerID != null) {
+                CompletableFuture
+                        .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
+            }
         } else {
             player.sendMessage(LanguageUtils.getString("remove.invalid-block"));
         }
