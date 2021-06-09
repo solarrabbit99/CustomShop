@@ -56,7 +56,7 @@ public class VMInteractInventory implements Listener {
             if (holder == null) {
                 ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
                 if (itemMeta.hasDisplayName()
-                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.close"))) {
+                        && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 } else if (evt.getSlot() < 27) {
                     PlayerState state = PlayerState.getPlayerState(player);
