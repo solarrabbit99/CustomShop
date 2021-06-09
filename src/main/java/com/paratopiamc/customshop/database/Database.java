@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -77,15 +78,17 @@ public abstract class Database {
     public void initialize() {
         connection = getSQLConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + totalShopOwned + " WHERE player = ?");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + totalShopOwned);
             ResultSet rs = ps.executeQuery();
             close(ps, rs);
-            ps = connection.prepareStatement("SELECT * FROM " + shopsUnlocked + " WHERE player = ?");
+            ps = connection.prepareStatement("SELECT * FROM " + shopsUnlocked);
             rs = ps.executeQuery();
             close(ps, rs);
-            ps = connection.prepareStatement("SELECT * FROM " + pendingTransactions + " WHERE player = ?");
+            ps = connection.prepareStatement("SELECT * FROM " + pendingTransactions);
             rs = ps.executeQuery();
             close(ps, rs);
+            CustomShopLogger.sendMessage("Successfully established SQL connection",
+                    com.paratopiamc.customshop.plugin.CustomShopLogger.Level.SUCCESS);
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection", ex);
         }
