@@ -348,7 +348,7 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(normalView));
+            Bukkit.getScheduler().runTaskLater(CustomShop.getPlugin(), () -> this.viewer.openInventory(normalView), 2);
         }
     }
 
@@ -358,7 +358,7 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(ownerView));
+            this.viewer.openInventory(ownerView);
         }
     }
 

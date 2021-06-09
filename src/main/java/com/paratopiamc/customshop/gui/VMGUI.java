@@ -243,12 +243,12 @@ public class VMGUI extends ShopGUI {
     @Override
     public void openUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
-        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(inventoryView));
+        Bukkit.getScheduler().runTaskLater(CustomShop.getPlugin(), () -> this.viewer.openInventory(inventoryView), 2);
     }
 
     @Override
     public void openOwnerUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
-        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(inventory));
+        this.viewer.openInventory(inventory);
     }
 }
