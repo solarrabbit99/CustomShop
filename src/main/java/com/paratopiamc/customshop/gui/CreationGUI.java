@@ -34,7 +34,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -172,13 +171,8 @@ public class CreationGUI {
         CompletableFuture<CreationGUI> guicf = CompletableFuture.supplyAsync(() -> new CreationGUI(player, isAdmin));
         guicf.thenAccept(gui -> {
             playerToCreationGUI.put(player.getUniqueId(), gui);
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.openInventory(gui.pages[gui.currentPage]);
-                }
-            };
-            runnable.runTask(CustomShop.getPlugin());
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
+                    () -> player.openInventory(gui.pages[gui.currentPage]));
         });
     }
 

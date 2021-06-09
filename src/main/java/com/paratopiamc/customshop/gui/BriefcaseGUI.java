@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.gui;
 
 import java.util.List;
+
+import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.utils.LanguageUtils;
@@ -346,7 +348,7 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
-            viewer.openInventory(normalView);
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(normalView));
         }
     }
 
@@ -356,7 +358,7 @@ public class BriefcaseGUI extends ShopGUI {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
-            viewer.openInventory(ownerView);
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.viewer.openInventory(ownerView));
         }
     }
 
