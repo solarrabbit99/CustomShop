@@ -21,8 +21,6 @@ package com.paratopiamc.customshop.shop;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.ArmorStand.LockType;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -47,16 +45,11 @@ public abstract class ShopCreator {
      *
      * @param armorStand ArmorStand to lock
      */
-    protected void lockArmorStand(ArmorStand armorStand) {
+    protected void lockArmorStand(ArmorStand armorStand, boolean isSmall) {
         armorStand.setInvulnerable(true);
         armorStand.setGravity(false);
         armorStand.setVisible(false);
-
-        armorStand.addEquipmentLock(EquipmentSlot.HEAD, LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.CHEST, LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.LEGS, LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.FEET, LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.HAND, LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.OFF_HAND, LockType.ADDING_OR_CHANGING);
+        if (isSmall)
+            armorStand.setMarker(true);
     }
 }

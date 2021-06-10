@@ -75,7 +75,7 @@ public class VMCreator extends ShopCreator {
             armorStandBody.setBoots(new ItemStack(Material.DIRT));
         }
 
-        lockArmorStand(armorStand);
+        lockArmorStand(armorStand, false);
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());

@@ -76,7 +76,7 @@ public class BriefcaseCreator extends ShopCreator {
             armorStandBody.setBoots(new ItemStack(Material.DIRT));
         }
 
-        lockArmorStand(armorStand);
+        lockArmorStand(armorStand, true);
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());

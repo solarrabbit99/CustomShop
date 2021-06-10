@@ -282,7 +282,7 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<configuration>
-							<outputDirectory>${project.basedir}/../server_testing/plugins</outputDirectory>
+							<outputDirectory>${project.basedir}/../test_servers</outputDirectory>
 						</configuration>
 					</plugin>
 				</plugins>
