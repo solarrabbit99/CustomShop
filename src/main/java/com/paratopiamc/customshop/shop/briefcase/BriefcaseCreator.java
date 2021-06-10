@@ -49,6 +49,15 @@ public class BriefcaseCreator extends ShopCreator {
             owner.sendMessage(LanguageUtils.getString("create.briefcase.invalid-block"));
             return;
         }
+        Location locationAddOne = location.clone();
+        locationAddOne.setY(location.getY() + 1);
+        Location locationMinusOne = location.clone();
+        locationMinusOne.setY(location.getY() - 1);
+        if (locationAddOne.getBlock().getType() == Material.BARRIER
+                || locationMinusOne.getBlock().getType() == Material.BARRIER) {
+            owner.sendMessage(LanguageUtils.getString("create.no-perms"));
+            return;
+        }
 
         location.getBlock().setType(Material.BARRIER);
 
@@ -76,7 +85,7 @@ public class BriefcaseCreator extends ShopCreator {
             armorStandBody.setBoots(new ItemStack(Material.DIRT));
         }
 
-        lockArmorStand(armorStand, true);
+        lockArmorStand(armorStand);
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());

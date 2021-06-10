@@ -45,11 +45,9 @@ public abstract class ShopCreator {
      *
      * @param armorStand ArmorStand to lock
      */
-    protected void lockArmorStand(ArmorStand armorStand, boolean isSmall) {
+    protected void lockArmorStand(ArmorStand armorStand) {
         armorStand.setInvulnerable(true);
         armorStand.setGravity(false);
         armorStand.setVisible(false);
-        if (isSmall)
-            armorStand.setMarker(true);
     }
 }

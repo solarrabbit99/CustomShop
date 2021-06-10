@@ -54,6 +54,16 @@ public class VMCreator extends ShopCreator {
             return;
         }
 
+        Location locationAddTwo = location.clone();
+        locationAddTwo.setY(location.getY() + 2);
+        Location locationMinusOne = location.clone();
+        locationMinusOne.setY(location.getY() - 1);
+        if (locationAddTwo.getBlock().getType() == Material.BARRIER
+                || locationMinusOne.getBlock().getType() == Material.BARRIER) {
+            owner.sendMessage(LanguageUtils.getString("create.no-perms"));
+            return;
+        }
+
         location.getBlock().setType(Material.BARRIER);
         locationAddOne.getBlock().setType(Material.BARRIER);
 
@@ -75,7 +85,7 @@ public class VMCreator extends ShopCreator {
             armorStandBody.setBoots(new ItemStack(Material.DIRT));
         }
 
-        lockArmorStand(armorStand, false);
+        lockArmorStand(armorStand);
 
         CompletableFuture.runAsync(() -> {
             CustomShop.getPlugin().getDatabase().incrementTotalShopsOwned(owner.getUniqueId());
