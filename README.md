@@ -32,20 +32,20 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 <table style="margin: auto; text-align: center; max-width: 100%;">
 <tbody><tr>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/9O1uP3E" title="Wooden Vending Machine">
-<img src="https://i.imgur.com/9O1uP3E.png" decoding="async" width="128"></a>
+<a title="Wooden Vending Machine">
+<img src="https://i.imgur.com/k9MRtyx.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width:68px">
-<a href="https://imgur.com/hCeiTmn" title="Stone Vending Machine">
-<img src="https://i.imgur.com/hCeiTmn.png" decoding="async" width="128"></a>
+<a title="Stone Vending Machine">
+<img src="https://i.imgur.com/fvCBhi3.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width:68px">
-<a href="https://imgur.com/SyNNdEH" title="Nether Vending Machine">
-<img src="https://i.imgur.com/SyNNdEH.png" decoding="async" width="128"></a>
+<a title="Nether Vending Machine">
+<img src="https://i.imgur.com/hVz4AJz.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width:68px">
-<a href="https://imgur.com/L9KKCZD" title="Sand Vending Machine">
-<img src="https://i.imgur.com/L9KKCZD.png" decoding="async" width="128"></a>
+<a title="Sand Vending Machine">
+<img src="https://i.imgur.com/p3DoI0m.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Wooden Vending Machine</td>
@@ -55,20 +55,20 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 </tr>
 <tr>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/1Jj8Gc6" title="Prismarine Vending Machine">
-<img src="https://i.imgur.com/1Jj8Gc6.png" decoding="async" width="128"></a>
+<a title="Prismarine Vending Machine">
+<img src="https://i.imgur.com/xL8a4SQ.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/4WOLtzt" title="Ice Vending Machine">
-<img src="https://i.imgur.com/4WOLtzt.png" decoding="async" width="128"></a>
+<a title="Ice Vending Machine">
+<img src="https://i.imgur.com/7aD6xOF.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/Fq7LxFY" title="Blackstone Vending Machine">
-<img src="https://i.imgur.com/Fq7LxFY.png" decoding="async" width="128"></a>
+<a title="Blackstone Vending Machine">
+<img src="https://i.imgur.com/y9jYH6i.png" decoding="async" width="128"></a>
 </td>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/69eXO9J" title="Copper Vending Machine">
-<img src="https://i.imgur.com/69eXO9J.png" decoding="async" width="128"></a>
+<a title="Copper Vending Machine">
+<img src="https://i.imgur.com/vmHiPA1.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Prismarine Vending Machine</td>
@@ -78,8 +78,8 @@ purchase exceeds a certain quantity (e.g. 1 for $10, 10 for $90).
 </tr>
 <tr>
 <td scope="col" style="width: 68px;">
-<a href="https://imgur.com/aPEKYGf" title="Amethyst Vending Machine">
-<img src="https://i.imgur.com/aPEKYGf.png" decoding="async" width="128"></a>
+<a title="Amethyst Vending Machine">
+<img src="https://i.imgur.com/dvFdAu2.png" decoding="async" width="128"></a>
 </td></tr>
 <tr>
 <td>Amethyst Vending Machine</td>
