@@ -24,7 +24,6 @@ import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopRemover;
 import com.paratopiamc.customshop.utils.LanguageUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,7 +39,6 @@ public class BriefcaseRemover extends ShopRemover {
 
     private Location location;
     private ItemStack item;
-    // private BlockStateMeta meta;
 
     public BriefcaseRemover(Block targetBlock, ArmorStand armorStand) {
         this.targetBlock = targetBlock;

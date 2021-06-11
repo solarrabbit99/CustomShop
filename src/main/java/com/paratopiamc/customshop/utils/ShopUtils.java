@@ -96,9 +96,9 @@ public class ShopUtils {
         if (targetBlock == null) {
             return null;
         }
-        Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(),
+        Location loc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY() + 0.5,
                 targetBlock.getZ() + 0.5);
-        Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
+        Collection<Entity> list = targetBlock.getWorld().getNearbyEntities(loc, 0, 0, 0);
         if (targetBlock.getType() != Material.BARRIER || list.size() != 1) {
             return null;
         } else {
