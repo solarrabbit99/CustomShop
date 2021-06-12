@@ -94,7 +94,7 @@ public class ShopRemoval extends CSComd implements Listener {
                     }
                 }
             };
-            runnable.runTaskLater(CustomShop.getPlugin(), 45);
+            runnable.runTaskLater(CustomShop.getPlugin(), 36);
         }
     }
 
@@ -250,9 +250,16 @@ public class ShopRemoval extends CSComd implements Listener {
 
             Player player = evt.getPlayer();
             Object handle = CraftPlayer.getMethod("getHandle").invoke(player);
-            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-            Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
-            Object channel = networkManager.getClass().getField("channel").get(networkManager);
+            Object channel;
+            if (Bukkit.getVersion().contains("1.17")) {
+                Object playerConnection = handle.getClass().getField("b").get(handle);
+                Object networkManager = playerConnection.getClass().getField("a").get(playerConnection);
+                channel = networkManager.getClass().getField("k").get(networkManager);
+            } else {
+                Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+                Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
+                channel = networkManager.getClass().getField("channel").get(networkManager);
+            }
             Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel); // ChannelPipeline
 
             ChannelDuplexHandler handler = new ChannelDuplexHandler() {
@@ -289,8 +296,12 @@ public class ShopRemoval extends CSComd implements Listener {
      * @throws ClassNotFoundException if class with the given name cannot be found
      */
     private Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        return Class.forName("net.minecraft.server."
-                + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
+        if (Bukkit.getVersion().contains("1.17")) {
+            return Class.forName("net.minecraft.network.protocol.game." + className);
+        } else {
+            return Class.forName("net.minecraft.server."
+                    + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
+        }
     }
 
     /**

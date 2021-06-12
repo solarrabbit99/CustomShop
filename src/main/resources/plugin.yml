@@ -1,6 +1,6 @@
 main: com.paratopiamc.customshop.plugin.CustomShop
 name: CustomShop
-version: 1.1
+version: 1.2
 author: SolarRabbit
 api-version: 1.14
 
