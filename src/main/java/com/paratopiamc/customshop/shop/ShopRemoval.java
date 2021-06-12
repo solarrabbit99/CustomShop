@@ -18,13 +18,13 @@
 
 package com.paratopiamc.customshop.shop;
 
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import com.comphenix.protocol.PacketType.Play.Client;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
@@ -42,6 +42,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -76,6 +77,7 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = evt.getPlayer();
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
+        createPipeline(evt);
         if (remover != null) {
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
@@ -94,18 +96,6 @@ public class ShopRemoval extends CSComd implements Listener {
             };
             runnable.runTaskLater(CustomShop.getPlugin(), 45);
         }
-
-        CustomShop.getPlugin().getProtocolManager()
-                .addPacketListener(new PacketAdapter(CustomShop.getPlugin(), Client.BLOCK_DIG) {
-                    @Override
-                    public void onPacketReceiving(PacketEvent e) {
-                        PacketContainer packet = e.getPacket();
-                        PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
-                        if (digType.name().equals("ABORT_DESTROY_BLOCK")) {
-                            evt.setCancelled(true);
-                        }
-                    }
-                });
     }
 
     /**
@@ -242,5 +232,76 @@ public class ShopRemoval extends CSComd implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD);
+    }
+
+    /**
+     * Creates a {@link ChannelPipeline} that listens in to packets where player
+     * aborts breaking damaging barrier blocks. If player pre-maturely aborts
+     * damaging, the event is set as cancelled.
+     * 
+     * @param evt event of player damaging the block
+     */
+    private void createPipeline(BlockDamageEvent evt) {
+        Class<?> PacketPlayInBlockDig, EnumPlayerDigType, CraftPlayer;
+        try {
+            PacketPlayInBlockDig = getNMSClass("PacketPlayInBlockDig");
+            EnumPlayerDigType = PacketPlayInBlockDig.getDeclaredClasses()[0];
+            CraftPlayer = getCraftBukkitClass("entity.CraftPlayer");
+
+            Player player = evt.getPlayer();
+            Object handle = CraftPlayer.getMethod("getHandle").invoke(player);
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
+            Object channel = networkManager.getClass().getField("channel").get(networkManager);
+            Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel); // ChannelPipeline
+
+            ChannelDuplexHandler handler = new ChannelDuplexHandler() {
+                @Override
+                public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                    if (PacketPlayInBlockDig.isInstance(msg)) {
+                        Object detectedEnum = PacketPlayInBlockDig.getMethod("d").invoke(msg);
+                        @SuppressWarnings({ "unchecked", "rawtypes" })
+                        Object digType = Enum.valueOf((Class) EnumPlayerDigType, "ABORT_DESTROY_BLOCK");
+                        if (detectedEnum.equals(digType)) {
+                            evt.setCancelled(true);
+                            pipeline.getClass().getMethod("remove", ChannelHandler.class).invoke(pipeline, this);
+                        }
+                    }
+                    super.channelRead(ctx, msg);
+                }
+            };
+
+            if (pipeline.getClass().getMethod("get", String.class).invoke(pipeline, player.getName()) == null) {
+                pipeline.getClass().getMethod("addBefore", String.class, String.class, ChannelHandler.class)
+                        .invoke(pipeline, "packet_handler", player.getName(), handler);
+            }
+        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | SecurityException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Get class by name under {@code net.minecraft.server.*}.
+     *
+     * @param className name of the class
+     * @return the {@code Class} object of the class with given name
+     * @throws ClassNotFoundException if class with the given name cannot be found
+     */
+    private Class<?> getNMSClass(String className) throws ClassNotFoundException {
+        return Class.forName("net.minecraft.server."
+                + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
+    }
+
+    /**
+     * Get class by name under {@code org.bukkit.craftbukkit.*}.
+     *
+     * @param className name of the class
+     * @return the {@code Class} object of the class with given name
+     * @throws ClassNotFoundException if class with the given name cannot be found
+     */
+    private Class<?> getCraftBukkitClass(String className) throws ClassNotFoundException {
+        return Class.forName("org.bukkit.craftbukkit."
+                + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
     }
 }

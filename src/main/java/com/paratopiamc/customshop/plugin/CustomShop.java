@@ -19,8 +19,6 @@
 package com.paratopiamc.customshop.plugin;
 
 import net.milkbowl.vault.economy.Economy;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.paratopiamc.customshop.crate.UnlockShop;
 import com.paratopiamc.customshop.database.Database;
 import com.paratopiamc.customshop.database.SQLite;
@@ -53,13 +51,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class CustomShop extends JavaPlugin {
     private static CustomShop pluginInstance;
     private Economy economy;
-    private ProtocolManager protocolManager;
     private Database database;
 
     @Override
     public void onEnable() {
         pluginInstance = this;
-        protocolManager = ProtocolLibrary.getProtocolManager();
 
         if (!setUpEconomy()) {
             CustomShopLogger.sendMessage("No Vault dependencies found! Disabling plugin...", Level.FAIL);
@@ -179,14 +175,5 @@ public final class CustomShop extends JavaPlugin {
      */
     public Database getDatabase() {
         return this.database;
-    }
-
-    /**
-     * Return {@code ProtocolManager} of the plugin instance.
-     *
-     * @return ProtocolManager
-     */
-    public ProtocolManager getProtocolManager() {
-        return this.protocolManager;
     }
 }
