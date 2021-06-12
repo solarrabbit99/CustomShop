@@ -144,7 +144,7 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlockExact(5);
         if (targetBlock == null) {
-            player.sendMessage(LanguageUtils.getString("remove.invalid-target"));
+            player.sendMessage(LanguageUtils.getString("remove.invalid-block"));
             return true;
         }
         ShopRemover remover = getShopRemover(targetBlock, player);
@@ -155,7 +155,7 @@ public class ShopRemoval extends CSComd implements Listener {
                         .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
             }
         } else {
-            player.sendMessage(LanguageUtils.getString("remove.invalid-block"));
+            player.sendMessage(LanguageUtils.getString("remove.invalid-target"));
         }
         return true;
     }
@@ -172,8 +172,12 @@ public class ShopRemoval extends CSComd implements Listener {
      */
     private static ShopRemover getShopRemover(Block targetBlock, Player player) {
         ArmorStand armorStand = ShopUtils.getArmorStand(targetBlock);
-        if (armorStand == null || !ShopUtils.hasShopPermission(armorStand, player)
-                || !hasTownyPerms(armorStand.getLocation(), player)
+        if (armorStand == null) {
+            return null;
+        } else if (PlayerState.getInteractingPlayer(armorStand) != null) {
+            player.sendMessage(LanguageUtils.getString("shop-currently-in-use.shop"));
+            return null;
+        } else if (!ShopUtils.hasShopPermission(armorStand, player) || !hasTownyPerms(armorStand.getLocation(), player)
                 || !hasWorldGuardPerms(armorStand.getLocation(), player))
             return null;
 
