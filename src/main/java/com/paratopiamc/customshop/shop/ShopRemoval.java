@@ -151,12 +151,19 @@ public class ShopRemoval extends CSComd implements Listener {
     }
 
     /**
-     * Checker for which subtype of {@link ShopRemover} to be used. It is assumed
-     * that a custom shop, if there is any, is the only entity within a particular
-     * barrier block. Conversely, each custom shop has an armor stand embedded in at
-     * least a barrier block. Return {@code null} if player is not owner of the shop
-     * or no ShopRemover can be used.
-     *
+     * Checker for which subtype of {@link ShopRemover} to be used. Returns
+     * {@code null} if:
+     * <ul>
+     * <li>no armorstand is detected within the target block
+     * <li>player does not have permissions to the shop (not an owner/admin)
+     * <li>shop is in use by any player (including the player attempting to break
+     * it)
+     * <li>no ShopRemover can be used.
+     * </ul>
+     * It is assumed that a custom shop, if there is any, is the only entity within
+     * a particular barrier block. Conversely, each custom shop has an armor stand
+     * embedded in at least a barrier block.
+     * 
      * @param targetBlock block targeted by player
      * @return correspond remover for the type of shop
      */
@@ -236,8 +243,8 @@ public class ShopRemoval extends CSComd implements Listener {
 
     /**
      * Creates a {@link ChannelPipeline} that listens in to packets where player
-     * aborts breaking damaging barrier blocks. If player pre-maturely aborts
-     * damaging, the event is set as cancelled.
+     * aborts damaging barrier blocks. If player pre-maturely aborts damaging, the
+     * event is set as cancelled.
      * 
      * @param evt event of player damaging the block
      */
@@ -260,15 +267,15 @@ public class ShopRemoval extends CSComd implements Listener {
                 Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
                 channel = networkManager.getClass().getField("channel").get(networkManager);
             }
-            Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel); // ChannelPipeline
+            Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel);
 
             ChannelDuplexHandler handler = new ChannelDuplexHandler() {
                 @Override
                 public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                     if (PacketPlayInBlockDig.isInstance(msg)) {
                         Object detectedEnum = PacketPlayInBlockDig.getMethod("d").invoke(msg);
-                        @SuppressWarnings({ "unchecked", "rawtypes" })
-                        Object digType = Enum.valueOf((Class) EnumPlayerDigType, "ABORT_DESTROY_BLOCK");
+                        Object digType = Enum.class.getMethod("valueOf", Class.class, String.class).invoke(null,
+                                EnumPlayerDigType, "ABORT_DESTROY_BLOCK");
                         if (detectedEnum.equals(digType)) {
                             evt.setCancelled(true);
                             pipeline.getClass().getMethod("remove", ChannelHandler.class).invoke(pipeline, this);
