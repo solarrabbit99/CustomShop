@@ -24,9 +24,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
-import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
-import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
@@ -34,16 +31,7 @@ import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -173,8 +161,8 @@ public class ShopRemoval extends CSComd implements Listener {
         } else if (PlayerState.getInteractingPlayer(armorStand) != null) {
             player.sendMessage(LanguageUtils.getString("shop-currently-in-use.shop"));
             return null;
-        } else if (!ShopUtils.hasShopPermission(armorStand, player) || !hasTownyPerms(armorStand.getLocation(), player)
-                || !hasWorldGuardPerms(armorStand.getLocation(), player))
+        } else if (!ShopUtils.hasShopPermission(armorStand, player)
+                || !CustomShop.getPlugin().support().hasRemovePerms(armorStand.getLocation(), player))
             return null;
 
         String customName = armorStand.getCustomName();
@@ -191,53 +179,6 @@ public class ShopRemoval extends CSComd implements Listener {
             break;
         }
         return result;
-    }
-
-    /**
-     * Checks if towny will not restrict player from placing custom shop, which is
-     * vacuously true if Towny is not installed or is disabled for the plugin.
-     *
-     * @param location location of the shop
-     * @param player   player removing the shop
-     * @return {@code true} if player is not restricted to build by towny
-     */
-    private static boolean hasTownyPerms(Location location, Player player) {
-        if (!CustomShop.getPlugin().hasTowny())
-            return true;
-        if (!CustomShop.getPlugin().getConfig().getBoolean("towny-enabled"))
-            return true;
-
-        boolean onlyShopPlots = CustomShop.getPlugin().getConfig().getBoolean("only-shop-plots");
-        if (onlyShopPlots) {
-            return ShopPlotUtil.doesPlayerHaveAbilityToEditShopPlot(player, location);
-        } else {
-            return PlayerCacheUtil.getCachePermission(player, location, Material.STONE, ActionType.DESTROY);
-        }
-    }
-
-    /**
-     * Checks if worldguard will not restrict player from placing custom shop, which
-     * is vacuously true if WorldGuard is not installed or is disabled for the
-     * plugin.
-     *
-     * @param location location of the shop
-     * @param player   player removing the shop
-     * @return {@code true} if player is not restricted to build by worldguard
-     */
-    private static boolean hasWorldGuardPerms(Location location, Player player) {
-        if (!CustomShop.getPlugin().hasWorldGuard())
-            return true;
-        if (!CustomShop.getPlugin().getConfig().getBoolean("worldguard-enabled"))
-            return true;
-
-        LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-        if (WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer, localPlayer.getWorld())) {
-            return true;
-        }
-
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery query = container.createQuery();
-        return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD);
     }
 
     /**

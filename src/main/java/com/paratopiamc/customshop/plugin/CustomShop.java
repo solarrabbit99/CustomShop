@@ -52,6 +52,7 @@ public final class CustomShop extends JavaPlugin {
     private static CustomShop pluginInstance;
     private Economy economy;
     private Database database;
+    private ExternalPluginsSupport support;
 
     @Override
     public void onEnable() {
@@ -65,14 +66,7 @@ public final class CustomShop extends JavaPlugin {
             CustomShopLogger.sendMessage("Successfully hooked onto Vault.", Level.SUCCESS);
         }
 
-        if (this.hasTowny()) {
-            CustomShopLogger.sendMessage("Towny plugin detected, successfully hooked into towny.", Level.SUCCESS);
-        }
-
-        if (this.hasWorldGuard()) {
-            CustomShopLogger.sendMessage("WorldGuard plugin detected, successfully hooked into worldguard.",
-                    Level.SUCCESS);
-        }
+        new ExternalPluginsSupport(this).init();
 
         if (!this.getDataFolder().exists()) {
             try {
@@ -133,24 +127,6 @@ public final class CustomShop extends JavaPlugin {
     }
 
     /**
-     * Checks if towny plugin is installed by name.
-     * 
-     * @return {@code true} if the server has towny plugin installed
-     */
-    public boolean hasTowny() {
-        return getServer().getPluginManager().getPlugin("Towny") != null;
-    }
-
-    /**
-     * Checks if worldguard plugin is installed by name.
-     * 
-     * @return {@code true} if the server has worldguard plugin installed
-     */
-    public boolean hasWorldGuard() {
-        return getServer().getPluginManager().getPlugin("WorldGuard") != null;
-    }
-
-    /**
      * Return instance of plugin that is running.
      *
      * @return plugin instance
@@ -175,5 +151,9 @@ public final class CustomShop extends JavaPlugin {
      */
     public Database getDatabase() {
         return this.database;
+    }
+
+    public ExternalPluginsSupport support() {
+        return this.support;
     }
 }
