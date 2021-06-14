@@ -20,17 +20,14 @@ package com.paratopiamc.customshop.player;
 
 import java.util.HashMap;
 import java.util.Optional;
-
 import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.plugin.CustomShop;
-
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-// import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 

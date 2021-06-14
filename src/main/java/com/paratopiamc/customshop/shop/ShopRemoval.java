@@ -22,7 +22,6 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
@@ -289,8 +288,7 @@ public class ShopRemoval extends CSComd implements Listener {
                 pipeline.getClass().getMethod("addBefore", String.class, String.class, ChannelHandler.class)
                         .invoke(pipeline, "packet_handler", player.getName(), handler);
             }
-        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | SecurityException | NoSuchFieldException e) {
+        } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
     }

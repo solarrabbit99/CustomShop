@@ -158,7 +158,7 @@ invalid-input: §c输入无效！
 price-convo-prompt: §a请输入价格。。。
 price-convo-cancelled: §c取消标价。。。
 price-convo-failed-no-item: §c您手上没有任何物件！
-price-convo-success: §a成功标商品价格为$%s！
+price-convo-success: §a成功标商品价格为%s！
 
 # Add items to shop
 add-convo-prompt: §a请输入添加数量。。。

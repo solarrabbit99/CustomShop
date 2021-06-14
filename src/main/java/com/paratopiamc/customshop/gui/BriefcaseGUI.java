@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
@@ -150,7 +149,7 @@ public class BriefcaseGUI extends ShopGUI {
 
             this.updatePlaceHolderLore(1, price);
             return String.format(LanguageUtils.getString("price-convo-success"),
-                    MessageUtils.getHumanReadableNumber(price));
+                    MessageUtils.getReadablePriceTag(price));
         }
     }
 
@@ -394,6 +393,6 @@ public class BriefcaseGUI extends ShopGUI {
 
     @Override
     public void saveInventories() {
-        // Noting to do for briefcases.
+        // Nothing to do for briefcases.
     }
 }

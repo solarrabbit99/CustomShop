@@ -145,8 +145,8 @@ public final class UIUtils {
      */
     public static ItemStack setPriceTag(ItemStack item, double price) {
         return item == null ? null
-                : loreItem(item, "§7--------------------", "§5" + LanguageUtils.getString("price-tag.price") + ": §e$"
-                        + MessageUtils.getHumanReadableNumber(price));
+                : loreItem(item, "§7--------------------", "§5" + LanguageUtils.getString("price-tag.price") + ": §e"
+                        + MessageUtils.getReadablePriceTag(price));
     }
 
     /**
@@ -166,8 +166,7 @@ public final class UIUtils {
                                 : String.format("%,.0f", Double.valueOf(stock))),
                 "§5" + (selling ? LanguageUtils.getString("price-tag.selling")
                         : LanguageUtils.getString("price-tag.buying")),
-                "§5" + LanguageUtils.getString("price-tag.price") + ": §e$"
-                        + MessageUtils.getHumanReadableNumber(price) };
+                "§5" + LanguageUtils.getString("price-tag.price") + ": §e" + MessageUtils.getReadablePriceTag(price) };
         return item == null ? null : loreItem(item, additionalLore);
     }
 

@@ -251,7 +251,7 @@ public class VMGUI extends ShopGUI {
             key.setAmount(1);
             prices.put(key, price);
             return String.format(LanguageUtils.getString("price-convo-success"),
-                    MessageUtils.getHumanReadableNumber(price));
+                    MessageUtils.getReadablePriceTag(price));
         }
     }
 

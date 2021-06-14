@@ -19,6 +19,7 @@
 package com.paratopiamc.customshop.utils;
 
 import java.util.UUID;
+import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -67,10 +68,15 @@ public class MessageUtils {
             String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
         message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
-        message = message.replaceAll("\\{%total%\\}", "\\$" + getHumanReadableNumber(total));
+        message = message.replaceAll("\\{%total%\\}", getReadablePriceTag(total));
         message = message.replaceAll("\\{%item%\\}", itemName == null ? "" : itemName);
         message = message.replaceAll("\\{%amount%\\}", "" + amount);
         return message;
+    }
+
+    public static String getReadablePriceTag(double number) {
+        // TODO: include the use of placeholder api to better format currency
+        return CustomShop.getPlugin().getEconomy().format(number);
     }
 
     /**
@@ -79,7 +85,9 @@ public class MessageUtils {
      *
      * @param number unformatted number
      * @return formatted number in string form
+     * @deprecated use vault's/placeholder api's formatting methods
      */
+    @Deprecated
     public static String getHumanReadableNumber(double number) {
         if (number >= 1000000000) {
             return String.format("%.2fB", number / 1000000000.0);
