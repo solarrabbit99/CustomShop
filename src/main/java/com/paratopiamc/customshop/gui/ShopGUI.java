@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-// import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import net.milkbowl.vault.economy.Economy;
 
@@ -57,8 +57,12 @@ public abstract class ShopGUI {
      * Whether this shop is an admin shop.
      */
     protected final boolean isAdmin;
+    /**
+     * Shop's inventory that the viewer is viewing.
+     */
+    protected Inventory interactingInventory;
 
-    // protected Inventory interactingInventory;
+    protected boolean isOwnerView;
 
     public ShopGUI(Player player, ArmorStand armorStand, String ownerID) {
         this.armorStand = armorStand;
@@ -175,9 +179,23 @@ public abstract class ShopGUI {
         }
     }
 
-    // public Inventory getInteractingInventory() {
-    // return this.interactingInventory;
-    // };
+    /**
+     * Get the inventory that the player is interacting with.
+     * 
+     * @return shop's {@link Inventory} that the player is viewing
+     */
+    public Inventory getInteractingInventory() {
+        return this.interactingInventory;
+    };
+
+    /**
+     * Whether the inventory that the player is interacting is an owner's view.
+     * 
+     * @return {@code true} if player is interacting with an owner's view
+     */
+    public boolean interactingInventoryIsOwnerView() {
+        return this.isOwnerView;
+    }
 
     /**
      * Returns the outcome message of this event.

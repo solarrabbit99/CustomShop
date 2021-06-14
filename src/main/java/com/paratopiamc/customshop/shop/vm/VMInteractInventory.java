@@ -18,18 +18,17 @@
 
 package com.paratopiamc.customshop.shop.vm;
 
+import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.gui.VMGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.PurchaseConversationFactory;
 import com.paratopiamc.customshop.utils.LanguageUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -49,24 +48,31 @@ public class VMInteractInventory implements Listener {
         if (evt.getCurrentItem() == null) {
             return;
         }
-        InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
-        String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase(LanguageUtils.getString("vending-machine-customer"))) {
-            if (holder == null) {
-                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                if (itemMeta.hasDisplayName()
-                        && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                } else if (evt.getSlot() < 27) {
-                    PlayerState state = PlayerState.getPlayerState(player);
-                    VMGUI ui = (VMGUI) state.getShopGUI();
-                    ItemStack item = ui.getItem(evt.getSlot());
-                    state.startTransaction(item, new PurchaseConversationFactory());
-                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                }
-            }
+        PlayerState state = PlayerState.getPlayerState(player);
+        ShopGUI shopGUI = state.getShopGUI();
+
+        if (shopGUI instanceof VMGUI
+                && player.getOpenInventory().getTopInventory().equals(shopGUI.getInteractingInventory())
+                && !shopGUI.interactingInventoryIsOwnerView()) {
             evt.setCancelled(true);
+            if (!evt.getClickedInventory().equals(shopGUI.getInteractingInventory())) {
+                return;
+            }
+        } else {
+            return;
         }
+
+        ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
+        if (itemMeta.hasDisplayName()
+                && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+        } else if (evt.getSlot() < 27) {
+            VMGUI ui = (VMGUI) shopGUI;
+            ItemStack item = ui.getItem(evt.getSlot());
+            state.startTransaction(item, new PurchaseConversationFactory());
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+        }
+
     }
 }

@@ -23,7 +23,6 @@ import org.bukkit.block.ShulkerBox;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
@@ -259,11 +258,15 @@ public class VMGUI extends ShopGUI {
     public void openUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
         Bukkit.getScheduler().runTaskLater(CustomShop.getPlugin(), () -> this.viewer.openInventory(inventoryView), 2);
+        this.interactingInventory = inventoryView;
+        this.isOwnerView = false;
     }
 
     @Override
     public void openOwnerUI() {
         viewer.playSound(armorStand.getLocation(), Sound.BLOCK_BARREL_OPEN, 0.5F, 1.0F);
         this.viewer.openInventory(inventory);
+        this.interactingInventory = inventory;
+        this.isOwnerView = true;
     }
 }

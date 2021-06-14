@@ -19,6 +19,7 @@
 package com.paratopiamc.customshop.shop.briefcase;
 
 import com.paratopiamc.customshop.gui.BriefcaseGUI;
+import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.conversation.AddConversationFactory;
@@ -49,55 +50,56 @@ public class BriefcaseInteractInventory implements Listener {
         if (evt.getCurrentItem() == null) {
             return;
         }
-        InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
-        String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase(LanguageUtils.getString("newt-briefcase-customer"))) {
-            if (holder == null) {
-                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                PlayerState state = PlayerState.getPlayerState(player);
-                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
-                if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
-                    String displayName = itemMeta.getDisplayName();
-                    if (displayName.equals("§c" + LanguageUtils.getString("icons.close")))
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                } else if (evt.getSlot() < 27) {
-                    ItemStack item = ui.getItem();
-                    if (ui.isSelling()) {
-                        state.startTransaction(item, new PurchaseConversationFactory());
-                    } else {
-                        state.startTransaction(item, new SellConversationFactory());
-                    }
+        PlayerState state = PlayerState.getPlayerState(player);
+        ShopGUI shopGUI = state.getShopGUI();
+
+        if (shopGUI instanceof BriefcaseGUI
+                && player.getOpenInventory().getTopInventory().equals(shopGUI.getInteractingInventory())) {
+            evt.setCancelled(true);
+            if (!evt.getClickedInventory().equals(shopGUI.getInteractingInventory())) {
+                return;
+            }
+        } else {
+            return;
+        }
+        BriefcaseGUI ui = (BriefcaseGUI) shopGUI;
+        if (!ui.interactingInventoryIsOwnerView()) {
+            ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
+            if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
+                String displayName = itemMeta.getDisplayName();
+                if (displayName.equals("§c" + LanguageUtils.getString("icons.close")))
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+            } else if (evt.getSlot() < 27) {
+                ItemStack item = ui.getItem();
+                if (ui.isSelling()) {
+                    state.startTransaction(item, new PurchaseConversationFactory());
+                } else {
+                    state.startTransaction(item, new SellConversationFactory());
+                }
+                Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+            }
+        } else if (ui.interactingInventoryIsOwnerView()) {
+            ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
+            if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
+                String displayName = itemMeta.getDisplayName();
+                if (displayName.equals("§c" + LanguageUtils.getString("icons.close"))) {
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.selling"))) {
+                    ui.setSelling(false);
+                } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.buying"))) {
+                    ui.setSelling(true);
+                } else if (displayName.equals("§6" + LanguageUtils.getString("icons.change-price.title"))) {
+                    state.startConversation(new SetPriceConversationFactory(ui.getItem()));
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                } else if (displayName.equals("§6" + LanguageUtils.getString("icons.add-items.title"))) {
+                    state.startConversation(new AddConversationFactory());
+                    Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
+                } else if (displayName.equals("§6" + LanguageUtils.getString("icons.retrieve-items.title"))) {
+                    state.startConversation(new RetrieveConversationFactory());
                     Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
                 }
             }
-            evt.setCancelled(true);
-        } else if (title.equalsIgnoreCase(LanguageUtils.getString("newt-briefcase-owner"))) {
-            if (holder == null) {
-                ItemMeta itemMeta = evt.getCurrentItem().getItemMeta();
-                PlayerState state = PlayerState.getPlayerState(player);
-                BriefcaseGUI ui = (BriefcaseGUI) state.getShopGUI();
-                if (evt.getSlot() >= 27 && itemMeta.hasDisplayName()) {
-                    String displayName = itemMeta.getDisplayName();
-                    if (displayName.equals("§c" + LanguageUtils.getString("icons.close"))) {
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.selling"))) {
-                        ui.setSelling(false);
-                    } else if (displayName.equals("§6" + LanguageUtils.getString("price-tag.buying"))) {
-                        ui.setSelling(true);
-                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.change-price.title"))) {
-                        state.startConversation(new SetPriceConversationFactory(ui.getItem()));
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.add-items.title"))) {
-                        state.startConversation(new AddConversationFactory());
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    } else if (displayName.equals("§6" + LanguageUtils.getString("icons.retrieve-items.title"))) {
-                        state.startConversation(new RetrieveConversationFactory());
-                        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-                    }
-                }
-            }
-            evt.setCancelled(true);
         }
     }
 }

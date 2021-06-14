@@ -378,6 +378,8 @@ public class BriefcaseGUI extends ShopGUI {
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             Bukkit.getScheduler().runTaskLater(CustomShop.getPlugin(), () -> this.viewer.openInventory(normalView), 2);
+            this.interactingInventory = normalView;
+            this.isOwnerView = false;
         }
     }
 
@@ -388,6 +390,8 @@ public class BriefcaseGUI extends ShopGUI {
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             this.viewer.openInventory(ownerView);
+            this.interactingInventory = ownerView;
+            this.isOwnerView = true;
         }
     }
 
