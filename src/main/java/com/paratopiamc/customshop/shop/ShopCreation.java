@@ -24,6 +24,7 @@ import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
 import com.paratopiamc.customshop.gui.CreationGUI;
+import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CSComd;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
@@ -44,7 +45,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -83,7 +84,11 @@ public class ShopCreation extends CSComd implements Listener {
             player.sendMessage(LanguageUtils.getString("create.invalid-block"));
             return false;
         }
-        CreationGUI.openFirstPage(player, isAdmin);
+        CompletableFuture.runAsync(() -> {
+            PlayerState state = PlayerState.getPlayerState(player);
+            state.clearShopInteractions();
+            state.createCreationGUI(this.isAdmin).openFirstPage();
+        });
         return false;
     }
 
@@ -99,59 +104,64 @@ public class ShopCreation extends CSComd implements Listener {
         if (item == null) {
             return;
         }
-        InventoryHolder holder = evt.getClickedInventory().getHolder();
         Player player = (Player) evt.getWhoClicked();
-        String title = evt.getView().getTitle();
-        if (title.equalsIgnoreCase(LanguageUtils.getString("shop-creation"))
-                || title.equalsIgnoreCase(LanguageUtils.getString("admin-shop-creation"))) {
-            this.isAdmin = title.equalsIgnoreCase(LanguageUtils.getString("admin-shop-creation"));
+        PlayerState state = PlayerState.getPlayerState(player);
+        CreationGUI gui = state.getCreationGUI();
+
+        if (gui == null) {
+            return;
+        } else {
             evt.setCancelled(true);
-            if (holder == null) {
-                ItemMeta itemMeta = item.getItemMeta();
-                if (itemMeta.hasDisplayName()
-                        && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
-                    CreationGUI.closeGUI(player);
-                } else if (itemMeta.hasDisplayName()
-                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.previous"))) {
-                    CreationGUI.previousPage(player);
-                } else if (itemMeta.hasDisplayName()
-                        && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.next"))) {
-                    CreationGUI.nextPage(player);
-                } else if (evt.getSlot() < 27) {
-                    Block targetBlock = player.getTargetBlockExact(5);
-                    int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
-                    CompletableFuture<Integer> numbercf = CompletableFuture.supplyAsync(
-                            () -> CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId()));
-                    numbercf.thenAccept(number -> {
-                        BukkitRunnable runnable = new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                CreationGUI.closeGUI(player);
-                                if (number.intValue() >= maxShops) {
-                                    player.sendMessage(LanguageUtils.getString("create.reached-max"));
-                                    return;
-                                }
-                                if (targetBlock == null) {
-                                    player.sendMessage(LanguageUtils.getString("create.invalid-block"));
-                                    return;
-                                }
-                                Location location = getCreationLocation(targetBlock, player);
+        }
 
-                                // Check for towny and worldguard restrictions
-                                if (!hasTownyPerms(location, player) || !hasWorldGuardPerms(location, player)) {
-                                    player.sendMessage(LanguageUtils.getString("create.no-perms"));
-                                    return;
-                                }
+        Inventory interactingInventory = gui.currentInventory();
 
-                                ShopCreator creator = getShopCreator(itemMeta);
-                                creator.createShop(location, player, item, isAdmin);
-                                CreationGUI.closeGUI(player);
+        if (evt.getClickedInventory().equals(interactingInventory)) {
+            this.isAdmin = gui.isAdmin();
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta.hasDisplayName()
+                    && itemMeta.getDisplayName().equals("§c" + LanguageUtils.getString("icons.close"))) {
+                state.closeCreationGUI();
+            } else if (itemMeta.hasDisplayName()
+                    && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.previous"))) {
+                gui.previousPage();
+            } else if (itemMeta.hasDisplayName()
+                    && itemMeta.getDisplayName().equals("§e" + LanguageUtils.getString("icons.next"))) {
+                gui.nextPage();
+            } else if (evt.getSlot() < 27) {
+                Block targetBlock = player.getTargetBlockExact(5);
+                int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
+                CompletableFuture<Integer> numbercf = CompletableFuture.supplyAsync(
+                        () -> CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId()));
+                numbercf.thenAccept(number -> {
+                    BukkitRunnable runnable = new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            state.closeCreationGUI();
+                            if (number.intValue() >= maxShops) {
+                                player.sendMessage(LanguageUtils.getString("create.reached-max"));
+                                return;
                             }
-                        };
-                        runnable.runTask(CustomShop.getPlugin());
-                    });
-                }
+                            if (targetBlock == null) {
+                                player.sendMessage(LanguageUtils.getString("create.invalid-block"));
+                                return;
+                            }
+                            Location location = getCreationLocation(targetBlock, player);
+
+                            // Check for towny and worldguard restrictions
+                            if (!hasTownyPerms(location, player) || !hasWorldGuardPerms(location, player)) {
+                                player.sendMessage(LanguageUtils.getString("create.no-perms"));
+                                return;
+                            }
+
+                            ShopCreator creator = getShopCreator(itemMeta);
+                            creator.createShop(location, player, item, isAdmin);
+                        }
+                    };
+                    runnable.runTask(CustomShop.getPlugin());
+                });
             }
+
         }
     }
 

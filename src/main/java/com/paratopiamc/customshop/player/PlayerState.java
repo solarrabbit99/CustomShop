@@ -20,12 +20,17 @@ package com.paratopiamc.customshop.player;
 
 import java.util.HashMap;
 import java.util.Optional;
+
+import com.paratopiamc.customshop.gui.CreationGUI;
 import com.paratopiamc.customshop.gui.ShopGUI;
 import com.paratopiamc.customshop.plugin.CustomShop;
+
+import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+// import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,6 +49,7 @@ public class PlayerState {
     private Player player;
     private BukkitRunnable unlockingShop;
     private ItemStack unlockingShopItem;
+    private CreationGUI creationGUI;
 
     private PlayerState(Player player) {
         this.player = player;
@@ -95,6 +101,20 @@ public class PlayerState {
             }
         };
         this.unlockingShop.runTaskLater(CustomShop.getPlugin(), 45);
+    }
+
+    public CreationGUI createCreationGUI(boolean isAdmin) {
+        this.creationGUI = new CreationGUI(this.player, isAdmin);
+        return this.creationGUI;
+    }
+
+    public CreationGUI getCreationGUI() {
+        return this.creationGUI;
+    }
+
+    public void closeCreationGUI() {
+        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.player.closeInventory());
+        this.creationGUI = null;
     }
 
     /**
@@ -204,6 +224,9 @@ public class PlayerState {
         if (this.shopGUI != null) {
             this.shopGUI.saveInventories();
             this.shopGUI = null;
+        }
+        if (this.creationGUI != null) {
+            this.creationGUI = null;
         }
     }
 

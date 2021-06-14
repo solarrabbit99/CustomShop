@@ -28,6 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+// import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import net.milkbowl.vault.economy.Economy;
 
@@ -56,6 +57,8 @@ public abstract class ShopGUI {
      * Whether this shop is an admin shop.
      */
     protected final boolean isAdmin;
+
+    // protected Inventory interactingInventory;
 
     public ShopGUI(Player player, ArmorStand armorStand, String ownerID) {
         this.armorStand = armorStand;
@@ -171,6 +174,10 @@ public abstract class ShopGUI {
             return true;
         }
     }
+
+    // public Inventory getInteractingInventory() {
+    // return this.interactingInventory;
+    // };
 
     /**
      * Returns the outcome message of this event.

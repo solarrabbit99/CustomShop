@@ -19,12 +19,9 @@
 package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
@@ -40,27 +37,27 @@ public class CreationGUI {
     public static int noOfItems;
     public static LinkedList<String> names;
     public static LinkedList<Integer> modelData;
-
     private static int noOfPages;
     private static List<Integer> defaults;
-    private static HashMap<UUID, CreationGUI> playerToCreationGUI;
 
     private List<Integer> unlockedShops;
     private Inventory[] pages;
     private int currentPage;
     private boolean isAdmin;
+    private Player player;
 
     /**
      * Set up a GUI for the player. Called when static method
      * {@link #openFirstPage(Player)} is called.
      */
-    private CreationGUI(Player player, boolean isAdmin) {
+    public CreationGUI(Player player, boolean isAdmin) {
         this.isAdmin = isAdmin;
         this.currentPage = 0;
         if (!isAdmin && !CustomShop.getPlugin().getConfig().getBoolean("unlock-all")) {
             unlockedShops = CustomShop.getPlugin().getDatabase().getUnlockedShops(player);
         }
         this.setUpGUI(player);
+        this.player = player;
     }
 
     /**
@@ -73,7 +70,6 @@ public class CreationGUI {
         names = new LinkedList<>();
         modelData = new LinkedList<>();
         defaults = new ArrayList<>();
-        playerToCreationGUI = new HashMap<>();
 
         int defaultVM = CustomShop.getPlugin().getConfig().getInt("defaults.vending-machine");
         Set<String> vm = CustomShop.getPlugin().getConfig().getConfigurationSection("vending-machine").getKeys(false);
@@ -159,63 +155,47 @@ public class CreationGUI {
         }
     }
 
+    public Inventory currentInventory() {
+        return this.pages[this.currentPage];
+    }
+
+    public boolean isAdmin() {
+        return this.isAdmin;
+    }
+
     /**
      * Opens the first page for its viewer.
-     *
-     * @param player  player viewing the GUI
-     * @param isAdmin whether it is an admin shop creation
+     * 
      * @throws NullPointerException if GUI is not yet initialised
      * @see #setUpGUI()
      */
-    public static void openFirstPage(Player player, boolean isAdmin) {
-        CompletableFuture<CreationGUI> guicf = CompletableFuture.supplyAsync(() -> new CreationGUI(player, isAdmin));
-        guicf.thenAccept(gui -> {
-            playerToCreationGUI.put(player.getUniqueId(), gui);
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                    () -> player.openInventory(gui.pages[gui.currentPage]));
-        });
+    public void openFirstPage() {
+        currentPage = 0;
+        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(pages[currentPage]));
     }
 
     /**
      * Navigate to the previous page for its viewer.
      *
-     * @param player viewer of the GUI
      * @throws NullPointerException if player has yet to open the first page
      */
-    public static void nextPage(Player player) {
-        CreationGUI gui = playerToCreationGUI.get(player.getUniqueId());
-        if (gui.currentPage != gui.pages.length - 1) {
-            gui.currentPage++;
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                    () -> player.openInventory(gui.pages[gui.currentPage]));
+    public void nextPage() {
+        if (currentPage != pages.length - 1) {
+            currentPage++;
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(pages[currentPage]));
         }
     }
 
     /**
      * Navigate to the previous page for its viewer.
      *
-     * @param player viewer of the GUI
      * @throws NullPointerException if player has yet to open the first page
      */
-    public static void previousPage(Player player) {
-        CreationGUI gui = playerToCreationGUI.get(player.getUniqueId());
-        if (gui.currentPage != 0) {
-            gui.currentPage--;
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
-                    () -> player.openInventory(gui.pages[gui.currentPage]));
+    public void previousPage() {
+        if (currentPage != 0) {
+            currentPage--;
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(pages[currentPage]));
         }
-    }
-
-    /**
-     * Removes any mapping of a player if he/she closed the GUI.
-     *
-     * @param player player that closed the GUI
-     * @return {@code true} if the specified player had the GUI open
-     */
-    public static boolean closeGUI(Player player) {
-        Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.closeInventory());
-        CreationGUI gui = playerToCreationGUI.remove(player.getUniqueId());
-        return gui != null;
     }
 
     /**
