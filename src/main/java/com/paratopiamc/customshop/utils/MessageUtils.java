@@ -19,6 +19,8 @@
 package com.paratopiamc.customshop.utils;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -68,14 +70,13 @@ public class MessageUtils {
             String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
         message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
-        message = message.replaceAll("\\{%total%\\}", getReadablePriceTag(total));
+        message = message.replaceAll("\\{%total%\\}", Matcher.quoteReplacement(getReadablePriceTag(total)));
         message = message.replaceAll("\\{%item%\\}", itemName == null ? "" : itemName);
         message = message.replaceAll("\\{%amount%\\}", "" + amount);
         return message;
     }
 
     public static String getReadablePriceTag(double number) {
-        // TODO: include the use of placeholder api to better format currency
         return CustomShop.getPlugin().getEconomy().format(number);
     }
 

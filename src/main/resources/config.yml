@@ -13,6 +13,12 @@ unlock-all: true
 # Language to be used for the server (Currently available: english, chinese, italian)
 language: english
 
+# Set this to true if the currency's unit that you are using is integer (e.g. emeralds)
+round-down-price: false
+
+# Maximum price that players can set for items (DO NOT set it arbitrarily large, though billions are tested fine too)
+max-price: 5000000.00
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                      Model Data                      | #

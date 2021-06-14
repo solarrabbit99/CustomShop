@@ -73,7 +73,12 @@ public class SetPriceConversationFactory extends ConversationFactory {
                 PlayerState state = PlayerState.getPlayerState(player);
                 ShopGUI ui = state.getShopGUI();
                 try {
-                    double price = ((Double) (Double.parseDouble(input) * 100)).intValue() / 100.0;
+                    // round off price input
+                    double price = Math.floor((Double.parseDouble(input) * 100)) / 100;
+                    price = Math.min(price, CustomShop.getPlugin().getConfig().getDouble("max-price"));
+                    if (CustomShop.getPlugin().getConfig().getBoolean("round-down-price"))
+                        price = Math.floor(price);
+
                     if (price <= 0) {
                         player.sendMessage(LanguageUtils.getString("invalid-input"));
                     } else {

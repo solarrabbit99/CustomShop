@@ -144,7 +144,7 @@ public final class CustomShop extends JavaPlugin {
     /**
      * Checks if worldguard plugin is installed by name.
      * 
-     * @return {@code true} if the server has worldguaard plugin installed
+     * @return {@code true} if the server has worldguard plugin installed
      */
     public boolean hasWorldGuard() {
         return getServer().getPluginManager().getPlugin("WorldGuard") != null;
