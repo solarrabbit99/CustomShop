@@ -27,6 +27,8 @@ import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
+
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -88,6 +90,11 @@ public class ShopRemoval extends CSComd implements Listener {
      */
     @EventHandler
     public void onBarrierBreak(BlockBreakEvent evt) {
+        // Checking if event is cancelled is an ItemsAdder solution, may also impose
+        // land protection for some plugins
+        if (evt.isCancelled() || evt.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+            return;
+        }
         Player player = evt.getPlayer();
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);

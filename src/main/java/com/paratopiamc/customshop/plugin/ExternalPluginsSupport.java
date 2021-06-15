@@ -141,21 +141,24 @@ public class ExternalPluginsSupport {
      * Use ProtocolLib's API for handling {@code ABORT_DESTROY_BLOCK} packets. This
      * should be use if ProtocolLib is present for a safer workaround (avoid access
      * conflict) with the ProtocolLib plugin.
-     * 
+     *
      * @param evt event of player damaging the block
      */
     private void protocolLibHandler(BlockDamageEvent evt) {
-        ProtocolLibrary.getProtocolManager()
-                .addPacketListener(new PacketAdapter(CustomShop.getPlugin(), Client.BLOCK_DIG) {
-                    @Override
-                    public void onPacketReceiving(PacketEvent e) {
-                        PacketContainer packet = e.getPacket();
-                        PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
-                        if (digType.name().equals("ABORT_DESTROY_BLOCK")) {
-                            evt.setCancelled(true);
-                        }
-                    }
-                });
+        if (!this.has("ProtocolLib"))
+            return;
+
+        try {
+            Class<?> ProtocolLibrary = Class.forName("com.comphenix.protocol.ProtocolLibrary");
+            Class<?> PacketListener = Class.forName("com.comphenix.protocol.events.PacketListener");
+            Object protocolManager;
+            protocolManager = ProtocolLibrary.getMethod("getProtocolManager").invoke(null);
+            protocolManager.getClass().getMethod("addPacketListener", PacketListener).invoke(protocolManager,
+                    new ProtocolLibHandler(CustomShop.getPlugin(), Client.BLOCK_DIG, evt));
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
