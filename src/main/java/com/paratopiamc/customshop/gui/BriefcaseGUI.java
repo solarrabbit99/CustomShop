@@ -20,6 +20,8 @@ package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
@@ -375,6 +377,8 @@ public class BriefcaseGUI extends ShopGUI {
     public void openUI() {
         if (normalView == null) {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
+                    () -> PlayerState.getPlayerState(viewer).clearShopInteractions());
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             Bukkit.getScheduler().runTaskLater(CustomShop.getPlugin(), () -> this.viewer.openInventory(normalView), 2);
@@ -387,6 +391,8 @@ public class BriefcaseGUI extends ShopGUI {
     public void openOwnerUI() {
         if (ownerView == null) {
             viewer.sendMessage(LanguageUtils.getString("briefcase-not-initialized"));
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(),
+                    () -> PlayerState.getPlayerState(viewer).clearShopInteractions());
         } else {
             viewer.playSound(armorStand.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.5F, 1.0F);
             this.viewer.openInventory(ownerView);
