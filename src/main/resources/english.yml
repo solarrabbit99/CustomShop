@@ -10,22 +10,22 @@ author: SolarRabbit
 ############################################################
 
 # Title of inventory view when player accesses the shop-creation GUI.
-shop-creation: §e§lCustom Shops
+shop-creation: Custom Shops
 
 # Title of inventory view when player accesses the admin-shop-creation GUI.
-admin-shop-creation: §e§lAdmin Custom Shops
+admin-shop-creation: Admin Custom Shops
 
 # Title of vending machines' inventory view when player accesses the customer's view
-vending-machine-customer: §5§lVending Machine
+vending-machine-customer: Vending Machine
 
 # Title of vending machines' inventory view when player accesses the owner's view
-vending-machine-owner: §5§lVending Machine Content
+vending-machine-owner: Vending Machine Content
 
 # Title of newt's briefcases' inventory view when player accesses the customer's view
-newt-briefcase-customer: §5§lNewt's Briefcase
+newt-briefcase-customer: Newt's Briefcase
 
 # Title of newt's briefcases' inventory view when player accesses the owner's view
-newt-briefcase-owner: §5§lNewt's Briefcase Settings
+newt-briefcase-owner: Newt's Briefcase Settings
 
 # Words used in price tags (capitalize whenever applicable)
 price-tag:

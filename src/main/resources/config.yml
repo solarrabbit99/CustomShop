@@ -26,9 +26,20 @@ max-price: 5000000.00
 #                                                          #
 #   Deconflict your custom model data here. Make sure      #
 #   that the data here correctly corresponds to the data   #
-#   in the resource pack. Keep custom model data to no     #
-#   than 6 digits. DO NOT change model data once players   #
+#   in the resource pack. You can choose to delete/rename  #
+#   sub-sections (e.g. "wooden" section under              #
+#   "vending-machine") if you do not want them in your     #
+#   server.                                                #
+#                                                          #
+#   WARNING: DO NOT remove/rename the main sections        #
+#   (e.g. "vending-machine", "briefcase" and anything      #
+#   under "default")!                                      #
+#                                                          #
+#   WARNING: DO NOT change model data once players         #
 #   start unlocking or creating shops!                     #
+#                                                          #
+#   NOTE: You can safely ignore the custom model data if   #
+#   you have ItemsAdder installed.                         #
 #                                                          #
 ############################################################
 

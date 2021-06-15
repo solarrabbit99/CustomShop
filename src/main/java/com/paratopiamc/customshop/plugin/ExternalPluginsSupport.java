@@ -138,9 +138,9 @@ public class ExternalPluginsSupport {
     // return GriefPrevention.instance.allowBuild(player, location) == null;
     // }
 
-    // ################################################################### //
-    // Shop removal permissions, currently registering: Towny, WorldGuard //
-    // ################################################################### //
+    // #######################################################################################################################
+    // Shop removal permissions, currently registering: Towny, WorldGuard
+    // #######################################################################################################################
 
     public boolean hasRemovePerms(Location location, Player player) {
         return hasTownyRemovePerms(location, player) && hasWorldGuardRemovePerms(location, player)

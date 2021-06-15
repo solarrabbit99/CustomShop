@@ -66,7 +66,8 @@ public final class CustomShop extends JavaPlugin {
             CustomShopLogger.sendMessage("Successfully hooked onto Vault.", Level.SUCCESS);
         }
 
-        new ExternalPluginsSupport(this).init();
+        this.support = new ExternalPluginsSupport(this);
+        this.support.init();
 
         if (!this.getDataFolder().exists()) {
             try {

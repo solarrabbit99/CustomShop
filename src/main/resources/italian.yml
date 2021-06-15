@@ -10,22 +10,22 @@ author: Teslabelloh
 ############################################################
 
 # Title of inventory view when player accesses the shop-creation GUI.
-shop-creation: §e§lShop personalizzati
+shop-creation: Shop personalizzati
 
 # Title of inventory view when player accesses the admin-shop-creation GUI.
-admin-shop-creation: §e§lShop personalizzati admin
+admin-shop-creation: Shop personalizzati admin
 
 # Title of vending machines' inventory view when player accesses the customer's view
-vending-machine-customer: §5§lDistributore automatico
+vending-machine-customer: Distributore automatico
 
 # Title of vending machines' inventory view when player accesses the owner's view
-vending-machine-owner: §5§lImpostazioni del distributore automatico
+vending-machine-owner: Impostazioni del distributore automatico
 
 # Title of newt's briefcases' inventory view when player accesses the customer's view
-newt-briefcase-customer: §5§lValigetta di newt
+newt-briefcase-customer: Valigetta di newt
 
 # Title of newt's briefcases' inventory view when player accesses the owner's view
-newt-briefcase-owner: §5§lImpostazioni della valigetta di newt
+newt-briefcase-owner: Impostazioni della valigetta di newt
 
 # Words used in price tags (capitalize whenever applicable)
 price-tag:

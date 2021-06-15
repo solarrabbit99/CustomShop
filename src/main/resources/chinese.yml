@@ -10,22 +10,22 @@ author: SolarRabbit
 ############################################################
 
 # Title of inventory view when player accesses the shop-creation GUI.
-shop-creation: §e§l自制商店
+shop-creation: 自制商店
 
 # Title of inventory view when player accesses the admin-shop-creation GUI.
-admin-shop-creation: §e§l公共自制商店
+admin-shop-creation: 公共自制商店
 
 # Title of vending machines' inventory view when player accesses the customer's view
-vending-machine-customer: §5§l自动售货机
+vending-machine-customer: 自动售货机
 
 # Title of vending machines' inventory view when player accesses the owner's view
-vending-machine-owner: §5§l自动售货机内容
+vending-machine-owner: 自动售货机内容
 
 # Title of newt's briefcases' inventory view when player accesses the customer's view
-newt-briefcase-customer: §5§l纽特公文包
+newt-briefcase-customer: 纽特公文包
 
 # Title of newt's briefcases' inventory view when player accesses the owner's view
-newt-briefcase-owner: §5§l纽特公文包设置
+newt-briefcase-owner: 纽特公文包设置
 
 # Words used in price tags (capitalize whenever applicable)
 price-tag:
