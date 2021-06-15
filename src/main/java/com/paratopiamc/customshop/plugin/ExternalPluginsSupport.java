@@ -30,6 +30,9 @@ import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import com.paratopiamc.customshop.shop.ShopCreator;
+import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
+import com.paratopiamc.customshop.shop.vm.VMCreator;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
@@ -109,6 +112,17 @@ public class ExternalPluginsSupport {
         map.put(defaultBriefcase, defaultBriefcaseItem);
 
         return map;
+    }
+
+    public ShopCreator getShopCreator(ItemStack item) {
+        if (!has("ItemsAdder"))
+            return null;
+        String id = CustomStack.byItemStack(item).getNamespacedID();
+        if (id.contains("vending_machine"))
+            return new VMCreator();
+        if (id.contains("briefcase"))
+            return new BriefcaseCreator();
+        return null;
     }
 
     // #######################################################################################################################

@@ -143,7 +143,7 @@ public class ShopCreation extends CSComd implements Listener {
                                 return;
                             }
 
-                            ShopCreator creator = getShopCreator(itemMeta);
+                            ShopCreator creator = getShopCreator(item);
                             creator.createShop(location, player, item, isAdmin);
                         }
                     };
@@ -183,8 +183,12 @@ public class ShopCreation extends CSComd implements Listener {
      * @throws NoSuchShopException if the given item meta does not match any shop
      *                             designs
      */
-    private static ShopCreator getShopCreator(ItemMeta meta) {
-        if (!meta.hasDisplayName()) {
+    private static ShopCreator getShopCreator(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        ShopCreator creatorFromExternalPlugins = CustomShop.getPlugin().support().getShopCreator(item);
+        if (creatorFromExternalPlugins != null) {
+            return creatorFromExternalPlugins;
+        } else if (!meta.hasDisplayName()) {
             throw new NoSuchShopException();
         } else if (!meta.hasCustomModelData()) {
             throw new NoSuchShopException(meta.getDisplayName());
@@ -203,7 +207,6 @@ public class ShopCreation extends CSComd implements Listener {
                     return new VMCreator();
                 }
             }
-
             return new BriefcaseCreator();
         }
     }
