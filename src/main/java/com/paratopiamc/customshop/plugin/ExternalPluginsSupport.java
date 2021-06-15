@@ -18,6 +18,8 @@
 
 package com.paratopiamc.customshop.plugin;
 
+import java.util.HashMap;
+import java.util.Set;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
@@ -32,19 +34,26 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import dev.lone.itemsadder.api.CustomStack;
 // import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 
 public class ExternalPluginsSupport {
     private CustomShop plugin;
-    private final String[] plugins = new String[] { "Towny", "WorldGuard", "GriefPrevention", "Lands" };
+    private final String[] landProtectionPlugins = new String[] { "Towny", "WorldGuard", "GriefPrevention", "Lands" };
+    private final String[] customItemsPlugins = new String[] { "ItemsAdder" };
 
     public ExternalPluginsSupport(CustomShop plugin) {
         this.plugin = plugin;
     }
 
     public void init() {
-        for (String plugin : plugins) {
+        for (String plugin : landProtectionPlugins) {
+            if (this.has(plugin))
+                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
+        }
+        for (String plugin : customItemsPlugins) {
             if (this.has(plugin))
                 CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
         }
@@ -54,9 +63,41 @@ public class ExternalPluginsSupport {
         return this.plugin.getServer().getPluginManager().getPlugin(pluginName) != null;
     }
 
-    // ################################################################### //
-    // Shop creation permissions, currently registering: Towny, WorldGuard //
-    // ################################################################### //
+    // #######################################################################################################################
+    // ItemsAdder handler here
+    // #######################################################################################################################
+
+    public HashMap<Integer, ItemStack> getModelDataToShopMapping() {
+        if (!has("ItemsAdder"))
+            return null;
+        HashMap<Integer, ItemStack> map = new HashMap<>();
+
+        Set<String> vm = this.plugin.getConfig().getConfigurationSection("vending-machine").getKeys(false);
+        for (String shop : vm) {
+            Integer customModelData = this.plugin.getConfig().getInt("vending-machine." + shop + ".model-data");
+            ItemStack item = CustomStack.getInstance("customshop:" + shop + "_vending_machine").getItemStack();
+            map.put(customModelData, item);
+        }
+        Set<String> nb = this.plugin.getConfig().getConfigurationSection("briefcase").getKeys(false);
+        for (String shop : nb) {
+            Integer customModelData = this.plugin.getConfig().getInt("briefcase." + shop + ".model-data");
+            ItemStack item = CustomStack.getInstance("customshop:" + shop + "_briefcase").getItemStack();
+            map.put(customModelData, item);
+        }
+
+        Integer defaultVM = this.plugin.getConfig().getInt("defaults.vending-machine");
+        ItemStack defaultVMItem = CustomStack.getInstance("customshop:default_vending_machine").getItemStack();
+        map.put(defaultVM, defaultVMItem);
+        Integer defaultBriefcase = this.plugin.getConfig().getInt("defaults.briefcase");
+        ItemStack defaultBriefcaseItem = CustomStack.getInstance("customshop:default_briefcase").getItemStack();
+        map.put(defaultBriefcase, defaultBriefcaseItem);
+
+        return map;
+    }
+
+    // #######################################################################################################################
+    // Shop creation permissions, currently registering: Towny, WorldGuard
+    // #######################################################################################################################
 
     public boolean hasCreatePerms(Location location, Player player) {
         return hasTownyCreatePerms(location, player) && hasWorldGuardCreatePerms(location, player)

@@ -19,6 +19,7 @@
 package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -146,10 +148,16 @@ public class CreationGUI {
             UIUtils.createItem(pages[i], 3, 4, Material.BARRIER, 1, "§c" + LanguageUtils.getString("icons.close"));
             UIUtils.createItem(pages[i], 3, 5, Material.ARROW, 1, "§e" + LanguageUtils.getString("icons.next"));
 
+            HashMap<Integer, ItemStack> map = CustomShop.getPlugin().support().getModelDataToShopMapping();
             for (int j = 0; j < 27; j++) {
                 if (i == noOfPages - 1 && item == noOfItems)
                     break;
-                UIUtils.createItem(pages[i], j, Material.PAPER, 1, iterModelData.poll(), iterNames.poll());
+                // Checks if there are custom items already provided by ItemsAdder
+                if (map != null) {
+                    pages[i].setItem(j, map.get(iterModelData.poll()));
+                } else {
+                    UIUtils.createItem(pages[i], j, Material.PAPER, 1, iterModelData.poll(), iterNames.poll());
+                }
                 item++;
             }
         }
