@@ -5,7 +5,7 @@ author: SolarRabbit
 api-version: 1.14
 
 depend: [Vault]
-softdepend: [Towny, WorldGuard, GriefPrevention]
+softdepend: [Towny, WorldGuard, GriefPrevention, Lands]
 
 commands:
     customshop:

@@ -32,42 +32,26 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+// import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.angeschossen.lands.api.integration.LandsIntegration;
 
 public class ExternalPluginsSupport {
     private CustomShop plugin;
+    private final String[] plugins = new String[] { "Towny", "WorldGuard", "GriefPrevention", "Lands" };
 
     public ExternalPluginsSupport(CustomShop plugin) {
         this.plugin = plugin;
-
     }
 
     public void init() {
-        if (this.hasTowny()) {
-            CustomShopLogger.sendMessage("Towny plugin detected, successfully hooked into towny.", Level.SUCCESS);
-        }
-
-        if (this.hasWorldGuard()) {
-            CustomShopLogger.sendMessage("WorldGuard plugin detected, successfully hooked into worldguard.",
-                    Level.SUCCESS);
+        for (String plugin : plugins) {
+            if (this.has(plugin))
+                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
         }
     }
 
-    /**
-     * Checks if towny plugin is installed by name.
-     * 
-     * @return {@code true} if the server has towny plugin installed
-     */
-    public boolean hasTowny() {
-        return this.plugin.getServer().getPluginManager().getPlugin("Towny") != null;
-    }
-
-    /**
-     * Checks if worldguard plugin is installed by name.
-     * 
-     * @return {@code true} if the server has worldguard plugin installed
-     */
-    public boolean hasWorldGuard() {
-        return this.plugin.getServer().getPluginManager().getPlugin("WorldGuard") != null;
+    private boolean has(String pluginName) {
+        return this.plugin.getServer().getPluginManager().getPlugin(pluginName) != null;
     }
 
     // ################################################################### //
@@ -75,7 +59,8 @@ public class ExternalPluginsSupport {
     // ################################################################### //
 
     public boolean hasCreatePerms(Location location, Player player) {
-        return hasTownyCreatePerms(location, player) && hasWorldGuardCreatePerms(location, player);
+        return hasTownyCreatePerms(location, player) && hasWorldGuardCreatePerms(location, player)
+                && hasLandsCreatePerms(location, player);
     }
 
     /**
@@ -86,7 +71,7 @@ public class ExternalPluginsSupport {
      * @return {@code true} if player is not restricted to build by towny
      */
     private boolean hasTownyCreatePerms(Location location, Player player) {
-        if (!this.hasTowny())
+        if (!this.has("Towny"))
             return true;
         if (!CustomShop.getPlugin().getConfig().getBoolean("towny-enabled"))
             return true;
@@ -108,7 +93,7 @@ public class ExternalPluginsSupport {
      * @return {@code true} if player is not restricted to build by worldguard
      */
     private boolean hasWorldGuardCreatePerms(Location location, Player player) {
-        if (!this.hasWorldGuard())
+        if (!this.has("WorldGuard"))
             return true;
         if (!CustomShop.getPlugin().getConfig().getBoolean("worldguard-enabled"))
             return true;
@@ -123,24 +108,55 @@ public class ExternalPluginsSupport {
         return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD);
     }
 
+    /**
+     * Checks if lands will not restrict player from placing custom shop (if the
+     * player has {@link me.angeschossen.lands.api.flags.Flags#BLOCK_PLACE} flag in
+     * specified location), which is vacuously true if Lands is not installed or is
+     * disabled for the plugin.
+     *
+     * @param location location where the shop will be placed
+     * @return {@code true} if player is not restricted to block placing by lands
+     */
+    private boolean hasLandsCreatePerms(Location location, Player player) {
+        if (!this.has("Lands"))
+            return true;
+        if (!CustomShop.getPlugin().getConfig().getBoolean("lands-enabled"))
+            return true;
+
+        return new LandsIntegration(this.plugin).getAreaByLoc(location).hasFlag(player.getUniqueId(),
+                me.angeschossen.lands.api.flags.Flags.BLOCK_PLACE);
+    }
+
+    // private boolean hasGriefPreventionCreatePerms(Location location, Player
+    // player) {
+    // if (!this.hasWorldGuard())
+    // return true;
+    // if
+    // (!CustomShop.getPlugin().getConfig().getBoolean("griefprevention-enabled"))
+    // return true;
+
+    // return GriefPrevention.instance.allowBuild(player, location) == null;
+    // }
+
     // ################################################################### //
     // Shop removal permissions, currently registering: Towny, WorldGuard //
     // ################################################################### //
 
     public boolean hasRemovePerms(Location location, Player player) {
-        return hasTownyRemovePerms(location, player) && hasWorldGuardRemovePerms(location, player);
+        return hasTownyRemovePerms(location, player) && hasWorldGuardRemovePerms(location, player)
+                && hasLandsRemovePerms(location, player);
     }
 
     /**
-     * Checks if towny will not restrict player from placing custom shop, which is
+     * Checks if towny will not restrict player from removing custom shop, which is
      * vacuously true if Towny is not installed or is disabled for the plugin.
      *
      * @param location location of the shop
      * @param player   player removing the shop
-     * @return {@code true} if player is not restricted to build by towny
+     * @return {@code true} if player is not restricted to destroy by towny
      */
     private boolean hasTownyRemovePerms(Location location, Player player) {
-        if (!this.hasTowny())
+        if (!this.has("Towny"))
             return true;
         if (!CustomShop.getPlugin().getConfig().getBoolean("towny-enabled"))
             return true;
@@ -154,8 +170,8 @@ public class ExternalPluginsSupport {
     }
 
     /**
-     * Checks if worldguard will not restrict player from placing custom shop, which
-     * is vacuously true if WorldGuard is not installed or is disabled for the
+     * Checks if worldguard will not restrict player from removing custom shop,
+     * which is vacuously true if WorldGuard is not installed or is disabled for the
      * plugin.
      *
      * @param location location of the shop
@@ -163,7 +179,7 @@ public class ExternalPluginsSupport {
      * @return {@code true} if player is not restricted to build by worldguard
      */
     private boolean hasWorldGuardRemovePerms(Location location, Player player) {
-        if (!this.hasWorldGuard())
+        if (!this.has("WorldGuard"))
             return true;
         if (!CustomShop.getPlugin().getConfig().getBoolean("worldguard-enabled"))
             return true;
@@ -177,4 +193,36 @@ public class ExternalPluginsSupport {
         RegionQuery query = container.createQuery();
         return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.BUILD);
     }
+
+    /**
+     * Checks if lands will not restrict player from removing custom shop (if the
+     * player has {@link me.angeschossen.lands.api.flags.Flags#BLOCK_BREAK} flag in
+     * specified location), which is vacuously true if Lands is not installed or is
+     * disabled for the plugin.
+     *
+     * @param location location where the shop will be placed
+     * @return {@code true} if player is not restricted to block breaking by lands
+     */
+    private boolean hasLandsRemovePerms(Location location, Player player) {
+        if (!this.has("Lands"))
+            return true;
+        if (!CustomShop.getPlugin().getConfig().getBoolean("lands-enabled"))
+            return true;
+
+        return new LandsIntegration(this.plugin).getAreaByLoc(location).hasFlag(player.getUniqueId(),
+                me.angeschossen.lands.api.flags.Flags.BLOCK_BREAK);
+    }
+
+    // private boolean hasGriefPreventionRemovePerms(Location location, Player
+    // player) {
+    // if (!this.hasWorldGuard())
+    // return true;
+    // if
+    // (!CustomShop.getPlugin().getConfig().getBoolean("griefprevention-enabled"))
+    // return true;
+
+    // // return GriefPrevention.instance.allowBreak(player,
+    // // Material.STONE, location) == null;
+    // return false;
+    // }
 }

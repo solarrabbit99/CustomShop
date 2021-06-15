@@ -121,3 +121,29 @@ only-shop-plots: false
 
 # Use worldguard's build permissions for custom shop creation and removal?
 worldguard-enabled: true
+
+############################################################
+# +------------------------------------------------------+ #
+# |               GriefPrevention Settings               | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   Ignore this section if you do not have                 #
+#   GriefPrevention installed.                             #
+#                                                          #
+############################################################
+
+# Use griefprevention's build/break permissions for custom shop creation and removal?
+griefprevention-enabled: true
+
+############################################################
+# +------------------------------------------------------+ #
+# |                    Lands Settings                    | #
+# +------------------------------------------------------+ #
+#                                                          #
+#   Ignore this section if you do not have Lands           #
+#   installed.                                             #
+#                                                          #
+############################################################
+
+# Use Lands's build/break permissions for custom shop creation and removal?
+lands-enabled: true
