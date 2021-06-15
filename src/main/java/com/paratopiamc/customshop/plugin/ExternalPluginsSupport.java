@@ -20,6 +20,12 @@ package com.paratopiamc.customshop.plugin;
 
 import java.util.HashMap;
 import java.util.Set;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.PacketType.Play.Client;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
@@ -31,11 +37,16 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import dev.lone.itemsadder.api.CustomStack;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
 // import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 
@@ -43,6 +54,7 @@ public class ExternalPluginsSupport {
     private CustomShop plugin;
     private final String[] landProtectionPlugins = new String[] { "Towny", "WorldGuard", "GriefPrevention", "Lands" };
     private final String[] customItemsPlugins = new String[] { "ItemsAdder" };
+    private final String[] protocolHandlers = new String[] { "ProtocolLib" };
 
     public ExternalPluginsSupport(CustomShop plugin) {
         this.plugin = plugin;
@@ -54,6 +66,10 @@ public class ExternalPluginsSupport {
                 CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
         }
         for (String plugin : customItemsPlugins) {
+            if (this.has(plugin))
+                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
+        }
+        for (String plugin : protocolHandlers) {
             if (this.has(plugin))
                 CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
         }
@@ -93,6 +109,120 @@ public class ExternalPluginsSupport {
         map.put(defaultBriefcase, defaultBriefcaseItem);
 
         return map;
+    }
+
+    // #######################################################################################################################
+    // ProtocolLib handler here
+    // #######################################################################################################################
+
+    public void blockDamagePacketHandler(BlockDamageEvent evt) {
+        if (!has("ProtocolLib")) {
+            createPipeline(evt);
+        } else {
+            protocolLibHandler(evt);
+        }
+    }
+
+    /**
+     * Use ProtocolLib's API for handling {@code ABORT_DESTROY_BLOCK} packets. This
+     * should be use if ProtocolLib is present for a safer workaround (avoid access
+     * conflict) with the ProtocolLib plugin.
+     * 
+     * @param evt event of player damaging the block
+     */
+    private void protocolLibHandler(BlockDamageEvent evt) {
+        ProtocolLibrary.getProtocolManager()
+                .addPacketListener(new PacketAdapter(CustomShop.getPlugin(), Client.BLOCK_DIG) {
+                    @Override
+                    public void onPacketReceiving(PacketEvent e) {
+                        PacketContainer packet = e.getPacket();
+                        PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
+                        if (digType.name().equals("ABORT_DESTROY_BLOCK")) {
+                            evt.setCancelled(true);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Creates a {@link ChannelPipeline} that listens in to packets where player
+     * aborts damaging barrier blocks. If player pre-maturely aborts damaging, the
+     * event is set as cancelled.
+     * 
+     * @param evt event of player damaging the block
+     */
+    private void createPipeline(BlockDamageEvent evt) {
+        Class<?> PacketPlayInBlockDig, EnumPlayerDigType, CraftPlayer;
+        try {
+            PacketPlayInBlockDig = getNMSClass("PacketPlayInBlockDig");
+            EnumPlayerDigType = PacketPlayInBlockDig.getDeclaredClasses()[0];
+            CraftPlayer = getCraftBukkitClass("entity.CraftPlayer");
+
+            Player player = evt.getPlayer();
+            Object handle = CraftPlayer.getMethod("getHandle").invoke(player);
+            Object channel;
+            if (Bukkit.getVersion().contains("1.17")) {
+                Object playerConnection = handle.getClass().getField("b").get(handle);
+                Object networkManager = playerConnection.getClass().getField("a").get(playerConnection);
+                channel = networkManager.getClass().getField("k").get(networkManager);
+            } else {
+                Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+                Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
+                channel = networkManager.getClass().getField("channel").get(networkManager);
+            }
+            Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel);
+
+            ChannelDuplexHandler handler = new ChannelDuplexHandler() {
+                @Override
+                public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                    if (PacketPlayInBlockDig.isInstance(msg)) {
+                        Object detectedEnum = PacketPlayInBlockDig.getMethod("d").invoke(msg);
+                        Object digType = Enum.class.getMethod("valueOf", Class.class, String.class).invoke(null,
+                                EnumPlayerDigType, "ABORT_DESTROY_BLOCK");
+                        if (detectedEnum.equals(digType)) {
+                            evt.setCancelled(true);
+                            pipeline.getClass().getMethod("remove", ChannelHandler.class).invoke(pipeline, this);
+                        }
+                    }
+                    super.channelRead(ctx, msg);
+                }
+            };
+
+            if (pipeline.getClass().getMethod("get", String.class).invoke(pipeline, player.getName()) == null) {
+                pipeline.getClass().getMethod("addBefore", String.class, String.class, ChannelHandler.class)
+                        .invoke(pipeline, "packet_handler", player.getName(), handler);
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Get class by name under {@code net.minecraft.server.*}.
+     *
+     * @param className name of the class
+     * @return the {@code Class} object of the class with given name
+     * @throws ClassNotFoundException if class with the given name cannot be found
+     */
+    private Class<?> getNMSClass(String className) throws ClassNotFoundException {
+        if (Bukkit.getVersion().contains("1.17")) {
+            return Class.forName("net.minecraft.network.protocol.game." + className);
+        } else {
+            return Class.forName("net.minecraft.server."
+                    + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
+        }
+    }
+
+    /**
+     * Get class by name under {@code org.bukkit.craftbukkit.*}.
+     *
+     * @param className name of the class
+     * @return the {@code Class} object of the class with given name
+     * @throws ClassNotFoundException if class with the given name cannot be found
+     */
+    private Class<?> getCraftBukkitClass(String className) throws ClassNotFoundException {
+        return Class.forName("org.bukkit.craftbukkit."
+                + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
     }
 
     // #######################################################################################################################

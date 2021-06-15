@@ -18,10 +18,6 @@
 
 package com.paratopiamc.customshop.shop;
 
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.player.PlayerState;
@@ -31,7 +27,6 @@ import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -64,7 +59,7 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = evt.getPlayer();
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
-        createPipeline(evt);
+        CustomShop.getPlugin().support().blockDamagePacketHandler(evt);
         if (remover != null) {
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
@@ -179,86 +174,5 @@ public class ShopRemoval extends CSComd implements Listener {
             break;
         }
         return result;
-    }
-
-    /**
-     * Creates a {@link ChannelPipeline} that listens in to packets where player
-     * aborts damaging barrier blocks. If player pre-maturely aborts damaging, the
-     * event is set as cancelled.
-     * 
-     * @param evt event of player damaging the block
-     */
-    private void createPipeline(BlockDamageEvent evt) {
-        Class<?> PacketPlayInBlockDig, EnumPlayerDigType, CraftPlayer;
-        try {
-            PacketPlayInBlockDig = getNMSClass("PacketPlayInBlockDig");
-            EnumPlayerDigType = PacketPlayInBlockDig.getDeclaredClasses()[0];
-            CraftPlayer = getCraftBukkitClass("entity.CraftPlayer");
-
-            Player player = evt.getPlayer();
-            Object handle = CraftPlayer.getMethod("getHandle").invoke(player);
-            Object channel;
-            if (Bukkit.getVersion().contains("1.17")) {
-                Object playerConnection = handle.getClass().getField("b").get(handle);
-                Object networkManager = playerConnection.getClass().getField("a").get(playerConnection);
-                channel = networkManager.getClass().getField("k").get(networkManager);
-            } else {
-                Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-                Object networkManager = playerConnection.getClass().getField("networkManager").get(playerConnection);
-                channel = networkManager.getClass().getField("channel").get(networkManager);
-            }
-            Object pipeline = channel.getClass().getMethod("pipeline").invoke(channel);
-
-            ChannelDuplexHandler handler = new ChannelDuplexHandler() {
-                @Override
-                public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                    if (PacketPlayInBlockDig.isInstance(msg)) {
-                        Object detectedEnum = PacketPlayInBlockDig.getMethod("d").invoke(msg);
-                        Object digType = Enum.class.getMethod("valueOf", Class.class, String.class).invoke(null,
-                                EnumPlayerDigType, "ABORT_DESTROY_BLOCK");
-                        if (detectedEnum.equals(digType)) {
-                            evt.setCancelled(true);
-                            pipeline.getClass().getMethod("remove", ChannelHandler.class).invoke(pipeline, this);
-                        }
-                    }
-                    super.channelRead(ctx, msg);
-                }
-            };
-
-            if (pipeline.getClass().getMethod("get", String.class).invoke(pipeline, player.getName()) == null) {
-                pipeline.getClass().getMethod("addBefore", String.class, String.class, ChannelHandler.class)
-                        .invoke(pipeline, "packet_handler", player.getName(), handler);
-            }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Get class by name under {@code net.minecraft.server.*}.
-     *
-     * @param className name of the class
-     * @return the {@code Class} object of the class with given name
-     * @throws ClassNotFoundException if class with the given name cannot be found
-     */
-    private Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        if (Bukkit.getVersion().contains("1.17")) {
-            return Class.forName("net.minecraft.network.protocol.game." + className);
-        } else {
-            return Class.forName("net.minecraft.server."
-                    + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
-        }
-    }
-
-    /**
-     * Get class by name under {@code org.bukkit.craftbukkit.*}.
-     *
-     * @param className name of the class
-     * @return the {@code Class} object of the class with given name
-     * @throws ClassNotFoundException if class with the given name cannot be found
-     */
-    private Class<?> getCraftBukkitClass(String className) throws ClassNotFoundException {
-        return Class.forName("org.bukkit.craftbukkit."
-                + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + className);
     }
 }
