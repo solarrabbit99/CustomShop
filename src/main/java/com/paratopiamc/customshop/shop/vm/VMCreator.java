@@ -41,6 +41,12 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 public class VMCreator extends ShopCreator {
     @Override
     public void createShop(Location location, Player owner, ItemStack item, boolean isAdmin) {
+        Boolean nullable = CustomShop.getPlugin().support().isDefaultModel(item);
+        if (nullable != null && nullable.booleanValue()) {
+            owner.sendMessage(LanguageUtils.getString("create.vending-machine.locked"));
+            return;
+        }
+
         if (item.getItemMeta().getCustomModelData() == CustomShop.getPlugin().getConfig()
                 .getInt("defaults.vending-machine")) {
             owner.sendMessage(LanguageUtils.getString("create.vending-machine.locked"));

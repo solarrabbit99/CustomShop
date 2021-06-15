@@ -18,6 +18,7 @@
 
 package com.paratopiamc.customshop.shop;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.gui.CreationGUI;
@@ -77,7 +78,7 @@ public class ShopCreation extends CSComd implements Listener {
             PlayerState state = PlayerState.getPlayerState(player);
             state.clearShopInteractions();
             state.createCreationGUI(this.isAdmin).openFirstPage();
-        });
+        }).whenComplete((result, throwable) -> Optional.ofNullable(throwable).ifPresent(e -> e.printStackTrace()));
         return false;
     }
 
@@ -185,9 +186,9 @@ public class ShopCreation extends CSComd implements Listener {
      */
     private static ShopCreator getShopCreator(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        ShopCreator creatorFromExternalPlugins = CustomShop.getPlugin().support().getShopCreator(item);
-        if (creatorFromExternalPlugins != null) {
-            return creatorFromExternalPlugins;
+        ShopCreator creator = CustomShop.getPlugin().support().getShopCreator(item);
+        if (creator != null) {
+            return creator;
         } else if (!meta.hasDisplayName()) {
             throw new NoSuchShopException();
         } else if (!meta.hasCustomModelData()) {

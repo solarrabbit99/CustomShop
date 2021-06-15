@@ -20,12 +20,7 @@ package com.paratopiamc.customshop.plugin;
 
 import java.util.HashMap;
 import java.util.Set;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.PacketType.Play.Client;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.palmergames.bukkit.towny.utils.ShopPlotUtil;
@@ -114,15 +109,20 @@ public class ExternalPluginsSupport {
         return map;
     }
 
+    public Boolean isDefaultModel(ItemStack item) {
+        if (!has("ItemsAdder"))
+            return null;
+        String id = CustomStack.byItemStack(item).getNamespacedID();
+        return id.contains("default");
+    }
+
     public ShopCreator getShopCreator(ItemStack item) {
         if (!has("ItemsAdder"))
             return null;
         String id = CustomStack.byItemStack(item).getNamespacedID();
         if (id.contains("vending_machine"))
             return new VMCreator();
-        if (id.contains("briefcase"))
-            return new BriefcaseCreator();
-        return null;
+        return new BriefcaseCreator();
     }
 
     // #######################################################################################################################
