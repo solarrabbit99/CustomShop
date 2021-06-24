@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.utils;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
-
 import com.paratopiamc.customshop.plugin.CustomShop;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

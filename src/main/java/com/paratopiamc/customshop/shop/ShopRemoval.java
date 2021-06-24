@@ -27,7 +27,6 @@ import com.paratopiamc.customshop.shop.briefcase.BriefcaseRemover;
 import com.paratopiamc.customshop.shop.vm.VMRemover;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.ShopUtils;
-
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -61,8 +60,8 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = evt.getPlayer();
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
-        CustomShop.getPlugin().support().blockDamagePacketHandler(evt);
         if (remover != null) {
+            CustomShop.getPlugin().support().blockDamagePacketHandler(evt);
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
                 public void run() {

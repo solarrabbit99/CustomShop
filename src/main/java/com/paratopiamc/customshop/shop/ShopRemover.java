@@ -43,7 +43,8 @@ public abstract class ShopRemover {
      * related to the custom shop that is currently being removed.
      *
      * @param dropItems whether items should be dropped as a result of shop removal
-     * @return shop owner's UUID
+     * @return shop owner's UUID, {@code null} if shop removal failed due to various
+     *         reasons
      */
     public abstract UUID removeShop(boolean dropItems);
 }
