@@ -61,6 +61,11 @@ public class ShopRemoval extends CSComd implements Listener {
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
+            // Not included in getShopRemover method as this should not affect shop removals
+            // via commands.
+            if (!player.hasPermission("customshop.removeshop.break")) {
+                return;
+            }
             CustomShop.getPlugin().support().blockDamagePacketHandler(evt);
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
@@ -98,6 +103,12 @@ public class ShopRemoval extends CSComd implements Listener {
         Block targetBlock = evt.getBlock();
         ShopRemover remover = getShopRemover(targetBlock, player);
         if (remover != null) {
+            // Not included in getShopRemover method as this should not affect shop removals
+            // via commands.
+            if (!player.hasPermission("customshop.removeshop.break")) {
+                evt.setCancelled(true);
+                return;
+            }
             PlayerState.getPlayerState(player).clearShopInteractions();
             UUID ownerID = remover.removeShop(true);
             if (ownerID != null) {
@@ -115,7 +126,9 @@ public class ShopRemoval extends CSComd implements Listener {
     public boolean exec() {
         if (!(sender instanceof Player)) {
             return true;
-        } else if (!sender.hasPermission("customshop.removeshop")) {
+        } else if (!sender.hasPermission("customshop.removeshop.command")) {
+            // Not included in getShopRemover method as this should not affect shop removals
+            // via breaking of blocks.
             sender.sendMessage(LanguageUtils.getString("command-no-perms"));
             return false;
         }

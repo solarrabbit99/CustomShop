@@ -9,13 +9,16 @@ softdepend: [Towny, WorldGuard, GriefPrevention, Lands, ItemsAdder, ProtocolLib]
 
 commands:
     customshop:
-        alias: [cs]
+        aliases: [cs]
 
 permissions:
     customshop.createshop:
         description: User able to create non-admin shops.
         default: true
-    customshop.removeshop:
+    customshop.removeshop.break:
+        description: User able to remove shops by breaking blocks.
+        default: true
+    customshop.removeshop.command:
         description: User able to remove shops through command. Briefcases removed via command will not drop any items.
         default: op
     customshop.lockall:
@@ -31,7 +34,7 @@ permissions:
         description: User able to perform all commands and full access to admin shops.
         default: op
         children:
-            customshop.removeshop: true
+            customshop.removeshop.command: true
             customshop.lockall: true
             customshop.setcount: true
             customshop.reload: true
