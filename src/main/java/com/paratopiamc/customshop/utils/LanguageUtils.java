@@ -21,6 +21,9 @@ package com.paratopiamc.customshop.utils;
 import java.io.File;
 import java.io.IOException;
 import com.paratopiamc.customshop.plugin.CustomShop;
+import com.paratopiamc.customshop.plugin.CustomShopLogger;
+import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,12 +41,24 @@ public class LanguageUtils {
     public static void loadLanguageConfig() {
         Plugin plugin = CustomShop.getPlugin();
         language = plugin.getConfig().getString("language");
-        languageFile = new File(plugin.getDataFolder(), language + ".yml");
+
+        File languageFolder = new File(plugin.getDataFolder(), "languages");
+        File tempResource = new File(plugin.getDataFolder(), language + ".yml");
+
+        // Create a 'languages' folder if not already exists.
+        languageFile = new File(languageFolder, language + ".yml");
         languageFile.getParentFile().mkdirs();
-        plugin.saveResource(language + ".yml", true);
+
+        if (plugin.getResource(language + ".yml") != null) { // Language provided by plugin.
+            // After saving resource, tempResource can then be renamed to sub-directory.
+            plugin.saveResource(language + ".yml", true);
+            tempResource.renameTo(languageFile);
+        }
+
         languageConfiguration = new YamlConfiguration();
         try {
             languageConfiguration.load(languageFile);
+            CustomShopLogger.sendMessage("Using language: " + language, Level.INFO);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

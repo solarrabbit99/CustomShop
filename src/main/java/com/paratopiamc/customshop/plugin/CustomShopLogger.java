@@ -29,7 +29,7 @@ public class CustomShopLogger {
      * Level of log message.
      */
     public enum Level {
-        FAIL(ChatColor.RED), INFO(ChatColor.WHITE), WARN(ChatColor.YELLOW), SUCCESS(ChatColor.GREEN);
+        FAIL(ChatColor.RED), INFO(ChatColor.AQUA), WARN(ChatColor.YELLOW), SUCCESS(ChatColor.GREEN);
 
         private ChatColor color;
 

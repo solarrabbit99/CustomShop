@@ -63,7 +63,7 @@ public final class CustomShop extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            CustomShopLogger.sendMessage("Successfully hooked onto Vault.", Level.SUCCESS);
+            CustomShopLogger.sendMessage("Successfully hooked onto Vault", Level.SUCCESS);
         }
 
         this.support = new ExternalPluginsSupport(this);
