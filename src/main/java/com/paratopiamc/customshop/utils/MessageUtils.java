@@ -34,6 +34,48 @@ public class MessageUtils {
     private MessageUtils() {
     }
 
+    public static class Message {
+        private String message;
+        private String itemName;
+        private boolean hasDisplayName;
+
+        public Message(String message, String itemName, boolean hasDisplayName) {
+            this.message = message;
+            this.itemName = itemName;
+            this.hasDisplayName = hasDisplayName;
+        }
+
+        public String getMessage() {
+            return this.message;
+        }
+
+        public String getItemName() {
+            return this.itemName;
+        }
+
+        public boolean hasDisplayName() {
+            return this.hasDisplayName;
+        }
+    }
+
+    public static Message getMessage(String message, String ownerID, OfflinePlayer viewer, double total,
+            String itemName, boolean hasDisplayName, int amount) {
+        String rawMessage = convertMessage(message, ownerID, viewer, total, amount);
+        return new Message(rawMessage, itemName, hasDisplayName);
+    }
+
+    public static Message getMessage(String message, String ownerID, OfflinePlayer viewer, double total, ItemStack item,
+            int amount) {
+        String rawMessage = convertMessage(message, ownerID, viewer, total, amount);
+        if (item == null) {
+            return new Message(rawMessage, null, false);
+        } else {
+            ItemMeta meta = item.getItemMeta();
+            String itemName = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
+            return new Message(rawMessage, itemName, meta.hasDisplayName());
+        }
+    }
+
     /**
      * Formats messages to replace place holders with their respective texts.
      * 
@@ -42,10 +84,36 @@ public class MessageUtils {
      * @param viewer  customer of the transaction, who can be offline when
      *                transaction messages are sent to the shop owner
      * @param total   total amount of moeny involved in transaction
-     * @param item    item involved in transaction
      * @param amount  amount of items involved in transaction
      * @return formatted message
      */
+    private static String convertMessage(String message, String ownerID, OfflinePlayer viewer, double total,
+            int amount) {
+        message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
+        message = message.replaceAll("\\{%owner%\\}", Bukkit.getOfflinePlayer(UUID.fromString(ownerID)).getName());
+        message = message.replaceAll("\\{%total%\\}", Matcher.quoteReplacement(getReadablePriceTag(total)));
+        message = message.replaceAll("\\{%amount%\\}", "" + amount);
+        return message;
+    }
+
+    public static String getReadablePriceTag(double number) {
+        return CustomShop.getPlugin().getEconomy().format(number);
+    }
+
+    /**
+     * Formats messages to replace place holders with their respective texts.
+     *
+     * @param message the entire message containing placeholders
+     * @param ownerID String representation of shop owner's UUID
+     * @param viewer  customer of the transaction, who can be offline when
+     *                transaction messages are sent to the shop owner
+     * @param total   total amount of moeny involved in transaction
+     * @param item    item involved in transaction
+     * @param amount  amount of items involved in transaction
+     * @return formatted message
+     * @deprecated use {@link #getMessage} instead
+     */
+    @Deprecated
     public static String convertMessage(String message, String ownerID, Player viewer, double total, ItemStack item,
             int amount) {
         ItemMeta meta = item.getItemMeta();
@@ -55,7 +123,7 @@ public class MessageUtils {
 
     /**
      * Formats messages to replace place holders with their respective texts.
-     * 
+     *
      * @param message  the entire message containing placeholders
      * @param ownerID  String representation of shop owner's UUID
      * @param viewer   customer of the transaction, who can be offline when
@@ -64,7 +132,9 @@ public class MessageUtils {
      * @param itemName material type of the item or display name of the item, if any
      * @param amount   amount of items involved in transaction
      * @return formatted message
+     * @deprecated use {@link #getMessage} instead
      */
+    @Deprecated
     public static String convertMessage(String message, String ownerID, OfflinePlayer viewer, double total,
             String itemName, int amount) {
         message = message.replaceAll("\\{%customer%\\}", viewer == null ? "" : viewer.getName());
@@ -73,10 +143,6 @@ public class MessageUtils {
         message = message.replaceAll("\\{%item%\\}", itemName == null ? "" : itemName);
         message = message.replaceAll("\\{%amount%\\}", "" + amount);
         return message;
-    }
-
-    public static String getReadablePriceTag(double number) {
-        return CustomShop.getPlugin().getEconomy().format(number);
     }
 
     /**

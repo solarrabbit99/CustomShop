@@ -30,6 +30,8 @@ import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
+import com.paratopiamc.customshop.utils.MessageUtils.Message;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -256,13 +258,15 @@ public abstract class Database {
         PreparedStatement ps = null;
         int sell = selling ? 1 : 0;
         ItemMeta meta = item.getItemMeta();
+        int hasDisplayName = meta.hasDisplayName() ? 1 : 0;
         String itemName = meta.hasDisplayName() ? meta.getDisplayName() : item.getType().toString();
+
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("INSERT INTO " + pendingTransactions
-                    + " (player,customer,selling,item_name,amount,total_cost) VALUES('" + ownerID + "', '"
-                    + customer.getUniqueId().toString() + "'," + sell + ", '" + itemName + "', " + amount + ", "
-                    + totalCost + ");");
+                    + " (player,customer,selling,item_name,has_display_name,amount,total_cost) VALUES('" + ownerID
+                    + "', '" + customer.getUniqueId().toString() + "'," + sell + ", '" + itemName + "', "
+                    + hasDisplayName + ", " + amount + ", " + totalCost + ");");
             ps.executeUpdate();
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
@@ -279,8 +283,8 @@ public abstract class Database {
      * @param ownerID String representation of shop owner's UUID
      * @return list of formatted messages to be sent to owner
      */
-    public List<String> getMessages(String ownerID) {
-        List<String> messages = new ArrayList<>();
+    public List<MessageUtils.Message> getMessages(String ownerID) {
+        List<MessageUtils.Message> messages = new ArrayList<>();
         String sellMessage = LanguageUtils.getString("customer-buy-success-owner");
         String buyMessage = LanguageUtils.getString("customer-sell-success-owner");
         Connection conn = null;
@@ -295,11 +299,14 @@ public abstract class Database {
                 String itemName = rs.getString("item_name");
                 int amount = rs.getInt("amount");
                 double totalCost = rs.getDouble("total_cost");
-                String message;
+                boolean hasDisplayName = rs.getBoolean("has_display_name");
+                Message message;
                 if (rs.getBoolean("selling")) {
-                    message = MessageUtils.convertMessage(sellMessage, ownerID, customer, totalCost, itemName, amount);
+                    message = MessageUtils.getMessage(sellMessage, ownerID, customer, totalCost, itemName,
+                            hasDisplayName, amount);
                 } else {
-                    message = MessageUtils.convertMessage(buyMessage, ownerID, customer, totalCost, itemName, amount);
+                    message = MessageUtils.getMessage(buyMessage, ownerID, customer, totalCost, itemName,
+                            hasDisplayName, amount);
                 }
                 messages.add(message);
             }

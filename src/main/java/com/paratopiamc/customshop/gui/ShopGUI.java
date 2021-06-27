@@ -23,6 +23,8 @@ import java.util.concurrent.CompletableFuture;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
+import com.paratopiamc.customshop.utils.MessageUtils.Message;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -109,24 +111,28 @@ public abstract class ShopGUI {
         double bal = economy.getBalance(viewer);
 
         if (bal < totalCost) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-money"), ownerID,
-                    viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-money"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return false;
         } else if (this.isAdmin) { // Valid transaction
             economy.withdrawPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-customer"),
-                    ownerID, viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-success-customer"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return true;
         } else {
             OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(this.ownerID));
             economy.withdrawPlayer(viewer, totalCost);
             economy.depositPlayer(owner, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-customer"),
-                    ownerID, viewer, totalCost, item, amount));
-            String ownerMessage = MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-success-owner"),
-                    ownerID, viewer, totalCost, item, amount);
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-success-customer"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
+
             if (owner.isOnline()) {
-                owner.getPlayer().sendMessage(ownerMessage);
+                Message ownerMessage = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-success-owner"),
+                        ownerID, viewer, totalCost, item, amount);
+                CustomShop.getPlugin().support().sendMessage(owner.getPlayer(), ownerMessage);
             } else {
                 CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer,
                         true, item, amount, totalCost));
@@ -154,23 +160,27 @@ public abstract class ShopGUI {
         double bal = economy.getBalance(owner);
 
         if (bal < totalCost) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-money"), ownerID,
-                    viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-fail-money"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return false;
         } else if (this.isAdmin) { // Valid transaction
             economy.depositPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-customer"),
-                    ownerID, viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-success-customer"),
+                    ownerID, viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return true;
         } else {
             economy.withdrawPlayer(owner, totalCost);
             economy.depositPlayer(viewer, totalCost);
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-customer"),
-                    ownerID, viewer, totalCost, item, amount));
-            String ownerMessage = MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-success-owner"),
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-success-customer"),
                     ownerID, viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
+
             if (owner.isOnline()) {
-                owner.getPlayer().sendMessage(ownerMessage);
+                Message ownerMessage = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-success-owner"),
+                        ownerID, viewer, totalCost, item, amount);
+                CustomShop.getPlugin().support().sendMessage(owner.getPlayer(), ownerMessage);
             } else {
                 CompletableFuture.runAsync(() -> CustomShop.getPlugin().getDatabase().storeMessage(ownerID, viewer,
                         false, item, amount, totalCost));

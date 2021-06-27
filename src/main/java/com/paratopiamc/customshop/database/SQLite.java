@@ -38,7 +38,8 @@ public class SQLite extends Database {
             + " (`player` varchar(36) NOT NULL, `shops_unlocked` INTEGER NOT NULL);";
     private String SQLiteCreatePendingTransactionMessagesTable = "CREATE TABLE IF NOT EXISTS " + pendingTransactions
             + " (`player` varchar(36) NOT NULL, `customer` varchar(36) NOT NULL, `selling` INTEGER NOT NULL, "
-            + "`item_name` TEXT NOT NULL, `amount` INTEGER NOT NULL, `total_cost` REAL NOT NULL);";
+            + "`item_name` TEXT NOT NULL, `has_display_name` INTEGER NOT NULL, `amount` INTEGER NOT NULL, "
+            + "`total_cost` REAL NOT NULL);";
 
     public SQLite(CustomShop instance) {
         super(instance);

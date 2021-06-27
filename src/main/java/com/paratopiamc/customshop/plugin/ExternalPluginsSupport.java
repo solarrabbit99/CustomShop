@@ -28,6 +28,7 @@ import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.shop.ShopCreator;
 import com.paratopiamc.customshop.shop.briefcase.BriefcaseCreator;
 import com.paratopiamc.customshop.shop.vm.VMCreator;
+import com.paratopiamc.customshop.utils.MessageUtils.Message;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
@@ -47,12 +48,14 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 // import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.angeschossen.lands.api.integration.LandsIntegration;
+import me.pikamug.localelib.LocaleLib;
+import me.pikamug.localelib.LocaleManager;
 
 public class ExternalPluginsSupport {
     private CustomShop plugin;
     private final String[] landProtectionPlugins = new String[] { "Towny", "WorldGuard", "GriefPrevention", "Lands" };
     private final String[] customItemsPlugins = new String[] { "ItemsAdder" };
-    private final String[] protocolHandlers = new String[] { "ProtocolLib" };
+    private final String[] externalLibraries = new String[] { "ProtocolLib", "LocaleLib" };
 
     public ExternalPluginsSupport(CustomShop plugin) {
         this.plugin = plugin;
@@ -61,15 +64,15 @@ public class ExternalPluginsSupport {
     public void init() {
         for (String plugin : landProtectionPlugins) {
             if (this.has(plugin))
-                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
+                CustomShopLogger.sendMessage("Land protection plugin detected: " + plugin, Level.INFO);
         }
         for (String plugin : customItemsPlugins) {
             if (this.has(plugin))
-                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
+                CustomShopLogger.sendMessage("Using custom item model data provided by " + plugin, Level.INFO);
         }
-        for (String plugin : protocolHandlers) {
+        for (String plugin : externalLibraries) {
             if (this.has(plugin))
-                CustomShopLogger.sendMessage("Successfully hooked into " + plugin + ".", Level.SUCCESS);
+                CustomShopLogger.sendMessage("Successfully hooked into " + plugin, Level.SUCCESS);
         }
     }
 
@@ -126,8 +129,25 @@ public class ExternalPluginsSupport {
     }
 
     // #######################################################################################################################
-    // ProtocolLib handler here
+    // External libraries handler here
     // #######################################################################################################################
+
+    public void sendMessage(Player player, Message message) {
+        if (message.hasDisplayName()) {
+            player.sendMessage(message.getMessage().replaceAll("\\{%item%\\}", message.getItemName()));
+        } else if (message.getItemName() == null) {
+            player.sendMessage(message.getMessage().replaceAll("\\{%item%\\}", ""));
+        } else if (!has("LocaleLib")) {
+            String itemName = Material.matchMaterial(message.getItemName()).name();
+            player.sendMessage(message.getMessage().replaceAll("\\{%item%\\}", itemName));
+        } else {
+            LocaleManager localeManager = ((LocaleLib) this.plugin.getServer().getPluginManager()
+                    .getPlugin("LocaleLib")).getLocaleManager();
+            String rawMessage = message.getMessage().replaceAll("\\{%item%\\}", "<item>");
+            localeManager.sendMessage(player, rawMessage, Material.matchMaterial(message.getItemName()), (short) 0,
+                    null);
+        }
+    }
 
     public void blockDamagePacketHandler(BlockDamageEvent evt) {
         if (!has("ProtocolLib")) {
@@ -174,6 +194,7 @@ public class ExternalPluginsSupport {
             PacketPlayInBlockDig = getNMSClass("PacketPlayInBlockDig");
             EnumPlayerDigType = PacketPlayInBlockDig.getDeclaredClasses()[0];
             CraftPlayer = getCraftBukkitClass("entity.CraftPlayer");
+            // PacketPlayOutBlockBreakAnimation
 
             Player player = evt.getPlayer();
             Object handle = CraftPlayer.getMethod("getHandle").invoke(player);

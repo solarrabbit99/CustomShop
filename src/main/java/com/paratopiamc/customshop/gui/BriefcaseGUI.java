@@ -20,7 +20,6 @@ package com.paratopiamc.customshop.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
@@ -28,6 +27,8 @@ import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
+import com.paratopiamc.customshop.utils.MessageUtils.Message;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -171,8 +172,9 @@ public class BriefcaseGUI extends ShopGUI {
         Inventory pInventory = viewer.getInventory();
 
         if (!pInventory.containsAtLeast(item, amount)) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return;
         }
 
@@ -232,15 +234,17 @@ public class BriefcaseGUI extends ShopGUI {
         }
         ItemStack item = this.getItem();
         if (this.quantity < amount) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return;
         }
         Inventory pInventory = viewer.getInventory();
 
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
         } else { // Valid operation
             List<ItemStack> stacks = new ArrayList<>();
             int stackNumber = 0;
@@ -278,8 +282,9 @@ public class BriefcaseGUI extends ShopGUI {
         Inventory pInventory = viewer.getInventory();
 
         if (!pInventory.containsAtLeast(item, amount)) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-sell-fail-item"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return;
         }
 
@@ -340,16 +345,18 @@ public class BriefcaseGUI extends ShopGUI {
             return;
         }
         if (this.quantity < amount && !this.isAdmin) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return;
         }
         Inventory pInventory = viewer.getInventory();
         double totalCost = amount * price;
 
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
-                    viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             List<ItemStack> stacks = new ArrayList<>();
             int stackNumber = 0;

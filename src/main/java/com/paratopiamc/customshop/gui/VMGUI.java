@@ -27,6 +27,8 @@ import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.UIUtils;
+import com.paratopiamc.customshop.utils.MessageUtils.Message;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -199,8 +201,9 @@ public class VMGUI extends ShopGUI {
             viewer.sendMessage("§cItem is null...");
             return;
         } else if (!inventory.containsAtLeast(item, amount) && !this.isAdmin) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
-                    viewer, 0, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-item"), ownerID,
+                    viewer, 0, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
             return;
         }
 
@@ -210,8 +213,9 @@ public class VMGUI extends ShopGUI {
 
         Inventory pInventory = viewer.getInventory();
         if (!UIUtils.hasSpace(pInventory, item, amount)) {
-            viewer.sendMessage(MessageUtils.convertMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
-                    viewer, totalCost, item, amount));
+            Message message = MessageUtils.getMessage(LanguageUtils.getString("customer-buy-fail-space"), ownerID,
+                    viewer, totalCost, item, amount);
+            CustomShop.getPlugin().support().sendMessage(viewer, message);
         } else if (super.ownerSell(amount, totalCost, item)) { // Valid transaction
             item.setAmount(amount);
             // addItem mutates item, use temp to clone a copy
