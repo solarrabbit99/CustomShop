@@ -31,7 +31,6 @@ import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.utils.LanguageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils;
 import com.paratopiamc.customshop.utils.MessageUtils.Message;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -86,11 +85,20 @@ public abstract class Database {
             ps = connection.prepareStatement("SELECT * FROM " + shopsUnlocked);
             rs = ps.executeQuery();
             close(ps, rs);
+            // 1.5 update adds an extra column, drop table if column does not already exist
             ps = connection.prepareStatement("SELECT * FROM " + pendingTransactions);
             rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
             close(ps, rs);
-            CustomShopLogger.sendMessage("Successfully established SQL connection",
-                    com.paratopiamc.customshop.plugin.CustomShopLogger.Level.SUCCESS);
+            if (columnCount <= 6) {
+                CustomShopLogger.sendMessage(
+                        "Missing required column in " + pendingTransactions + " table, recreating table...",
+                        CustomShopLogger.Level.WARN);
+                ps = connection.prepareStatement("DROP table " + pendingTransactions);
+                ps.executeUpdate();
+                close(ps, connection);
+                this.load();
+            }
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection", ex);
         }

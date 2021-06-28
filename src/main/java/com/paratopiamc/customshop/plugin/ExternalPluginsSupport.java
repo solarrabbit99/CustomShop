@@ -44,7 +44,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import dev.lone.itemsadder.api.CustomStack;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
