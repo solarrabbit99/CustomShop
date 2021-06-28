@@ -36,12 +36,15 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import dev.lone.itemsadder.api.CustomStack;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
@@ -138,14 +141,22 @@ public class ExternalPluginsSupport {
         } else if (message.getItemName() == null) {
             player.sendMessage(message.getMessage().replaceAll("\\{%item%\\}", ""));
         } else if (!has("LocaleLib")) {
-            String itemName = Material.matchMaterial(message.getItemName()).name();
+            // Converting GRASS_BLOCK to a more eye-pleasing Grass Block.
+            String itemName = WordUtils.capitalize(message.getItemName().toLowerCase().replaceAll("_", " "));
             player.sendMessage(message.getMessage().replaceAll("\\{%item%\\}", itemName));
         } else {
             LocaleManager localeManager = ((LocaleLib) this.plugin.getServer().getPluginManager()
                     .getPlugin("LocaleLib")).getLocaleManager();
             String rawMessage = message.getMessage().replaceAll("\\{%item%\\}", "<item>");
-            localeManager.sendMessage(player, rawMessage, Material.matchMaterial(message.getItemName()), (short) 0,
-                    null);
+            // LocaleLib doesn't seem to be able to send messages to player who just joined
+            // without a 1 tick delay...
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    localeManager.sendMessage(player, rawMessage, Material.matchMaterial(message.getItemName()),
+                            (short) 0, null);
+                }
+            }.runTask(this.plugin);
         }
     }
 
@@ -194,7 +205,6 @@ public class ExternalPluginsSupport {
             PacketPlayInBlockDig = getNMSClass("PacketPlayInBlockDig");
             EnumPlayerDigType = PacketPlayInBlockDig.getDeclaredClasses()[0];
             CraftPlayer = getCraftBukkitClass("entity.CraftPlayer");
-            // PacketPlayOutBlockBreakAnimation
 
             Player player = evt.getPlayer();
             Object handle = CraftPlayer.getMethod("getHandle").invoke(player);
