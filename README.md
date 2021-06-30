@@ -1,5 +1,11 @@
 # CustomShop
 
+[![Codacy](https://app.codacy.com/project/badge/Grade/e5f2b01009cc4ce5a123676a285c24c7)](https://www.codacy.com/gh/zhenghanlee/CustomShop/dashboard?utm_source=github.com&utm_medium=referral&utm_content=zhenghanlee/CustomShop&utm_campaign=Badge_Grade)
+[![License](https://img.shields.io/github/license/zhenghanlee/CustomShop)](https://img.shields.io/github/license/zhenghanlee/CustomShop)
+[![Spigot Downloads](http://badge.henrya.org/spigotbukkit/downloads?spigot=92629&name=spigot_downloads)](https://www.spigotmc.org/resources/customshop-1-14-x-1-17.92629/)
+[![Commit Activity](https://img.shields.io/github/commit-activity/m/zhenghanlee/CustomShop)](https://img.shields.io/github/commit-activity/m/zhenghanlee/CustomShop)
+[![Discord](https://img.shields.io/discord/846941711741222922.svg?logo=discord)](https://discord.gg/YSv7pptDjE)
+
 A Minecraft plugin that implements custom shop designs as a complement to
 chest-shops.
 
