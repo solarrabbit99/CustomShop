@@ -83,6 +83,12 @@ unlock:
     unlocked-new: "§aYou have unlocked a new custom shop: %s"
     unlocked-already: §6You already have %s§6 unlocked!
 
+# Message when player isn't targeting a valid block while executing a command
+invalid-target: §cInvalid target...
+
+# Owner of the shop
+shop-owner: §bThe targeted shop is owned by %s.
+
 # Messages for shop creation
 create:
     invalid-block: §cYou are not targeting any block...
@@ -100,7 +106,6 @@ create:
 # Messages for shop removal
 remove:
     invalid-block: §cYou are not targeting any block...
-    invalid-target: §cInvalid target...
     contain-items: §cPlease remove all items in the briefcase before removing the briefcase!
 
 ############################################################

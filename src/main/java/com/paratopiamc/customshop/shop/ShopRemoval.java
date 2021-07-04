@@ -135,7 +135,7 @@ public class ShopRemoval extends CSComd implements Listener {
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlockExact(5);
         if (targetBlock == null) {
-            player.sendMessage(LanguageUtils.getString("remove.invalid-block"));
+            player.sendMessage(LanguageUtils.getString("invalid-block"));
             return true;
         }
         ShopRemover remover = getShopRemover(targetBlock, player);
@@ -146,7 +146,7 @@ public class ShopRemoval extends CSComd implements Listener {
                         .runAsync(() -> CustomShop.getPlugin().getDatabase().decrementTotalShopsOwned(ownerID));
             }
         } else {
-            player.sendMessage(LanguageUtils.getString("remove.invalid-target"));
+            player.sendMessage(LanguageUtils.getString("invalid-target"));
         }
         return true;
     }

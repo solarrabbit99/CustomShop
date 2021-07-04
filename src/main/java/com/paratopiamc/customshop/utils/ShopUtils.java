@@ -19,10 +19,13 @@
 package com.paratopiamc.customshop.utils;
 
 import java.util.Collection;
+import java.util.UUID;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -43,7 +46,8 @@ public class ShopUtils {
      * features. Currently only owners, OPs or player with {@code customshop.admin}
      * permission can access the shop.
      *
-     * @param armorStand {@link ArmorStand} representing the custom shop
+     * @param armorStand {@link ArmorStand} representing the custom shop obtained
+     *                   from {@link #getArmorStand(Block)}
      * @param player     player of interest
      * @return {@code true} if player has permissions
      */
@@ -59,22 +63,38 @@ public class ShopUtils {
             return false;
         }
 
-        ItemStack item = equipment.getChestplate();
-        if (item != null && item.getType() != Material.AIR) {
-            ItemMeta meta = item.getItemMeta();
-            if (!meta.hasDisplayName()) {
-                Location standLocation = armorStand.getLocation();
-                CustomShopLogger.sendMessage(
-                        "Custom shop without owner's display name detected at " + standLocation + "!", Level.FAIL);
-                return false;
-            }
-            String ownerUUID = meta.getDisplayName();
-            return player.getUniqueId().toString().equals(ownerUUID);
+        return player.getUniqueId().equals(getOwner(armorStand).getUniqueId());
+    }
+
+    /**
+     * Returns the owner of the shop represented by the armor stand holder.
+     * 
+     * @param armorStand representing a shop obtained from
+     *                   {@link #getArmorStand(Block)}
+     * @return the owner of the shop, if any
+     */
+    public static OfflinePlayer getOwner(ArmorStand armorStand) {
+        if (armorStand == null) {
+            return null;
         } else {
-            Location standLocation = armorStand.getLocation();
-            CustomShopLogger.sendMessage("Custom shop without owner item detected at " + standLocation + "!",
-                    Level.FAIL);
-            return false;
+            EntityEquipment equipment = armorStand.getEquipment();
+            ItemStack item = equipment.getChestplate();
+            if (item != null && item.getType() != Material.AIR) {
+                ItemMeta meta = item.getItemMeta();
+                if (!meta.hasDisplayName()) {
+                    Location standLocation = armorStand.getLocation();
+                    CustomShopLogger.sendMessage(
+                            "Custom shop without owner's display name detected at " + standLocation + "!", Level.FAIL);
+                    return null;
+                }
+                String ownerUUID = meta.getDisplayName();
+                return Bukkit.getOfflinePlayer(UUID.fromString(ownerUUID));
+            } else {
+                Location standLocation = armorStand.getLocation();
+                CustomShopLogger.sendMessage("Custom shop without owner item detected at " + standLocation + "!",
+                        Level.FAIL);
+                return null;
+            }
         }
     }
 

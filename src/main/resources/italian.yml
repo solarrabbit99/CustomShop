@@ -83,6 +83,12 @@ unlock:
     unlocked-new: "§aHai sbloccato un nuovo shop personalizzato: %s"
     unlocked-already: §6Hai già sbloccato lo shop %s§6!
 
+# Message when player isn't targeting a valid block while executing a command
+invalid-target: §cBersaglio non valido...
+
+# Owner of the shop
+shop-owner: §bIl negozio preso di mira è di %s proprietà.
+
 # Messages for shop creation
 create:
     invalid-block: §cNon stai guardando nessun blocco...
@@ -100,7 +106,6 @@ create:
 # Messages for shop removal
 remove:
     invalid-block: §cNon stai guardando nessun blocco...
-    invalid-target: §cBersaglio non valido...
     contain-items: §cRimuovi tutti gli oggetti nella valigetta prima di rimuoverla!
 
 ############################################################

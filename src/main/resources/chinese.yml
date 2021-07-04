@@ -82,6 +82,12 @@ unlock:
     unlocked-new: §a成功开解%s
     unlocked-already: §6%s§6已开解！
 
+# Message when player isn't targeting a valid block while executing a command
+invalid-target: §c锁定目标无效。。。
+
+# Owner of the shop
+shop-owner: §b锁定商店为%s所有。
+
 # Messages for shop creation
 create:
     invalid-block: §c锁定目标无效。。。
@@ -99,7 +105,6 @@ create:
 # Messages for shop removal
 remove:
     invalid-block: §c锁定目标无效。。。
-    invalid-target: §c锁定目标无效。。。
     contain-items: §c请取出公文包里的所有物件再销毁！
 
 ############################################################

@@ -21,6 +21,7 @@ package com.paratopiamc.customshop.plugin;
 import com.paratopiamc.customshop.crate.GiveHead;
 import com.paratopiamc.customshop.crate.GetTotal;
 import com.paratopiamc.customshop.crate.LockAll;
+import com.paratopiamc.customshop.shop.GetShopOwner;
 import com.paratopiamc.customshop.shop.SetShopCount;
 import com.paratopiamc.customshop.shop.ShopCreation;
 import com.paratopiamc.customshop.shop.ShopRemoval;
@@ -58,6 +59,9 @@ public class CSComdExec implements CommandExecutor {
                 break;
             case "setcount":
                 comd = new SetShopCount(sender, args);
+                break;
+            case "getshopowner":
+                comd = new GetShopOwner(sender);
                 break;
             case "reload":
                 comd = new Reload(sender);
