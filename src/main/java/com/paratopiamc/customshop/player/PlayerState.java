@@ -109,6 +109,10 @@ public class PlayerState {
         return this.creationGUI;
     }
 
+    public void setCreationGUI(CreationGUI gui) {
+        this.creationGUI = gui;
+    }
+
     public void closeCreationGUI() {
         Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> this.player.closeInventory());
         this.creationGUI = null;

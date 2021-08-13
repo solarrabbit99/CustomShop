@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import com.paratopiamc.customshop.player.PlayerState;
 import com.paratopiamc.customshop.plugin.CustomShop;
 import com.paratopiamc.customshop.plugin.CustomShopLogger;
 import com.paratopiamc.customshop.plugin.CustomShopLogger.Level;
@@ -33,6 +35,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /** GUI for players to create a new custom shop. */
 public class CreationGUI {
@@ -154,7 +157,11 @@ public class CreationGUI {
                     break;
                 // Checks if there are custom items already provided by ItemsAdder
                 if (map != null) {
-                    pages[i].setItem(j, map.get(iterModelData.poll()));
+                    ItemStack itemsAdderItem = map.get(iterModelData.poll());
+                    ItemMeta meta = itemsAdderItem.getItemMeta();
+                    meta.setDisplayName(iterNames.poll());
+                    itemsAdderItem.setItemMeta(meta);
+                    pages[i].setItem(j, itemsAdderItem);
                 } else {
                     UIUtils.createItem(pages[i], j, Material.PAPER, 1, iterModelData.poll(), iterNames.poll());
                 }
@@ -190,7 +197,10 @@ public class CreationGUI {
     public void nextPage() {
         if (currentPage != pages.length - 1) {
             currentPage++;
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(pages[currentPage]));
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> {
+                player.openInventory(pages[currentPage]);
+                PlayerState.getPlayerState(player).setCreationGUI(this);
+            });
         }
     }
 
@@ -202,7 +212,10 @@ public class CreationGUI {
     public void previousPage() {
         if (currentPage != 0) {
             currentPage--;
-            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> player.openInventory(pages[currentPage]));
+            Bukkit.getScheduler().runTask(CustomShop.getPlugin(), () -> {
+                player.openInventory(pages[currentPage]);
+                PlayerState.getPlayerState(player).setCreationGUI(this);
+            });
         }
     }
 
