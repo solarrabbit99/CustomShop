@@ -120,7 +120,7 @@ public class ShopCreation extends CSComd implements Listener {
                 gui.nextPage();
             } else if (evt.getSlot() < 27) {
                 Block targetBlock = player.getTargetBlockExact(5);
-                int maxShops = CustomShop.getPlugin().getConfig().getInt("max-shops");
+                int maxShops = getMaxShops(player);
                 CompletableFuture<Integer> numbercf = CompletableFuture.supplyAsync(
                         () -> CustomShop.getPlugin().getDatabase().getTotalShopOwned(player.getUniqueId()));
                 numbercf.thenAccept(number -> {
@@ -210,6 +210,19 @@ public class ShopCreation extends CSComd implements Listener {
             }
             return new BriefcaseCreator();
         }
+    }
+
+    private int getMaxShops(Player player) {
+        int playerPermissions = player.getEffectivePermissions().stream().filter(permsInfo -> permsInfo.getValue())
+                .map(permsInfo -> permsInfo.getPermission()).filter(perm -> perm.startsWith("customshop.createshop."))
+                .map(perm -> perm.replaceFirst("customshop.createshop.", "")).map(str -> {
+                    try {
+                        return Integer.parseInt(str);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                }).reduce(0, (x, y) -> Math.max(x, y));
+        return Math.max(playerPermissions, CustomShop.getPlugin().getConfig().getInt("max-shops"));
     }
 
     /**
