@@ -55,7 +55,7 @@ public class VMCreator extends ShopCreator {
 
         Location locationAddOne = location.clone();
         locationAddOne.setY(location.getY() + 1);
-        if (location.getBlock().getType() != Material.AIR || locationAddOne.getBlock().getType() != Material.AIR) {
+        if (!location.getBlock().getType().isAir() || !locationAddOne.getBlock().getType().isAir()) {
             owner.sendMessage(LanguageUtils.getString("create.vending-machine.invalid-block"));
             return;
         }
