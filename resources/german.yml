@@ -1,0 +1,189 @@
+author: Hinterix
+
+# WICHTIG! Wenn Sie eine der Nachrichten bearbeiten möchten, erstellen Sie bitte eine neue Datei,
+# kopiere den Inhalt und bearbeite ihn dort. Diese Datei wird beim erneuten Laden des Servers überschrieben. 
+
+############################################################
+# +------------------------------------------------------+ #
+# |                       Shop GUI                       | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Titel der Inventaransicht, wenn der Spieler auf die Shop-Erstellungs-GUI zugreift.
+shop-creation: §aCustom Shops
+
+# Titel der Inventaransicht, wenn der Spieler auf die Admin-Shop-Creation-GUI zugreift.
+admin-shop-creation: §6Admin's Custom Shops
+
+# Titel der Inventaransicht des Automaten, wenn der Spieler auf die !!Kundenansicht!! zugreift.
+vending-machine-customer: Verkaufsautomat
+
+# Titel der Inventaransicht des Automaten, wenn der Spieler auf die !!Eigentümeransicht!! zugreift.
+vending-machine-owner: Automateninhalt
+
+# Titel der Inventaransicht von Molchs Aktentaschen, wenn der Spieler auf die Kundenansicht zugreift.
+newt-briefcase-customer: Molchs Aktenkoffer
+
+# Titel der Inventaransicht von Molchs Aktentaschen, wenn der Spieler auf die Ansicht des Besitzers zugreift.
+newt-briefcase-owner: Molchs Aktenkoffer Einstellungen
+
+# Wörter, die in Preisschildern verwendet werden (ggf. in Großbuchstaben schreiben)
+price-tag:
+    price: Preis
+    selling: Kauf
+    buying: Verkauf
+    stock: Lagerbestand
+    unlimited: Unendlich
+
+# Wörter, die für anklickbare Symbole in GUIs verwendet werden (wenn zutreffend, das erste Wort groß schreiben)
+icons:
+    selling-status:
+        lore: Klicke hier, zum Umschalten
+    change-price:
+        title: Preis ändern
+        lore: Klicke hier, um den Preis zu Ändern.
+    add-items:
+        title: Artikel hinzufügen
+        lore: Klicke hier, um den Artikel zum Shop hinzuzufügen.
+    retrieve-items:
+        title: Artikel abrufen
+        lore: Klicke hier, um Artikel aus dem Shop abzurufen.
+    close: Schließen
+    previous: Zurück
+    next: Weiter
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Nachrichten (Allgemein)             | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Keine Berechtigung für den Befehl
+command-no-perms: §cSie sind nicht berechtigt, diesen Befehl zu verwenden.
+
+# Wird gesendet, wenn Spieler [ /customshop gettotal ] ausführt.
+total-shop-owned: "§bGesamte §aCustom Shops §bim Besitz: %s"
+
+# Aktenkoffer-Initialisierung
+briefcase-not-initialized: §cDer Verkaufsautomat ist leer, bitte füllen!
+briefcase-already-initialized: §cDieser Artikel existiert bereits!
+
+# Wird gesendet, wenn Spieler auf Shops zugreifen, die von anderen Spielern genutzt werden.
+shop-currently-in-use:
+    shop: §cShop wird derzeit verwendet, bitte warten.
+    vending-machine: §cVending wird derzeit verwndet, bitte warten.
+    briefcase: §cAktenkoffer wird derzeit verwendet, bitte warten.
+
+# Wird gesendet, wenn Spieler keine Berechtigungen für den Shop haben.
+shop-no-perms: §cYou hast kene Berechtigung für diesen Shop! Wende dich an einen Admin!
+
+# Meldungen beim Freischalten von Shop-Designs.
+unlock:
+    confirmation: §bZum Bestätigen erneut platzieren!
+    unlocked-new: "§aDu hast neue §aCustom Shops §afreigeschaltet: %s"
+    unlocked-already: "§6Bereits Entsperrte Shops: §6%s!"
+
+# Nachricht, wenn der Spieler keinen gültigen Block anvisiert, während er einen Befehl ausführt.
+invalid-target: §cZiel-Block ungültig.
+
+# Inhaber des Shops
+shop-owner: "§bDieser §aCustom Shop §bist im Besitz von §e%s."
+
+# Nachrichten zur Shop-Erstellung.
+create:
+    invalid-block: §cEDu hast kein Ziel-Block Anvesiert.
+    no-perms: §cEs ist dir nicht gestattet, hier einen §aCustom Shop §caufzustellen!
+    reached-max: §cDu hast die maximale Anzahl erlaubter §aCustom Shops §cerreicht!§b
+    vending-machine:
+        locked: §aVerkaufsautomaten §cfreigeschalten!
+        invalid-block: §aVerkaufsautomaten §cbenötigen mindestens zwei Luftblöcke.
+        success: §aVerkaufsautomat §cerfolgreich aufgestellt!
+    briefcase:
+        locked: §cDu musst den Ausgewählte §aMolchs Aktenkoffer §cnoch entsperren!
+        invalid-block: §aAktenkoffer §cbenötigen mindestens zwei Luftblöcke.
+        success: §aMolchs Aktenkoffer §cerfolgreich aufgestellt!
+
+# Nachrichten zum Entfernen eines Shops.
+remove:
+    invalid-block: §cDu hast kein Ziel-Block Anvesiert ...
+    contain-items: §cBitte entferne alle Items, befor du den Schränke oder Koffer entfernst!
+
+############################################################
+# +------------------------------------------------------+ #
+# |                Messages (Transactions)               | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Placeholders:
+  
+# Kunde       %customer%      Benutzername des Kunden, entweder Kauf oder Verkauf von Artikeln an den Shop.
+# Eigentümer  %owner%         Benutzername des Inhabers des Shops.
+# Total       %total%         Gesamtbetrag des Geldes, das an der Transaktion beteiligt ist.
+# Artikel     %item%          Anzeigename des Artikels oder seines Materialtyps, wenn Anzeigename fehlt.
+# Anzahl      %amount%        Anzahl der im Shop gekauften/verkauften Artikel
+
+
+# Nachricht an den Shop-Inhaber, wenn der Shop-Inhaber erfolgreich an den Kunden verkauft wurde.
+customer-buy-success-owner: §c{%customer%} kaufte {%amount%}x{%item%} §cvon dir zum Preis von {%total%}.
+
+# Nachricht an den Kunden, wenn der Kunde den Artikel erfolgreich im Shop gekauft hat.
+customer-buy-success-customer: §aErfolgreich gekauft {%amount%}x{%item%} §azum Preis von {%total%}.
+
+# Nachricht an den Kunden, wenn der Kunde aufgrund von unzureichendem Geld keinen Artikel im Shop kaufen konnte.
+customer-buy-fail-money: §cDu benötigst mindestens {%total%}, um den Kauf zu tätigen!
+
+# Nachricht an den Kunden, wenn der Kunde aufgrund von unzureichendem Platz keinen Artikel im Shop kaufen konnte.
+# Auch die gleiche Nachricht an den Besitzer mit unzureichendem Speicherplatz, der versucht, einen Artikel aus einem Geschäft abzurufen.
+customer-buy-fail-space: §cDein Inventory ist voll! Schaffe Platz!
+
+# Nachricht an den Kunden, wenn der Kunde aufgrund unzureichender Artikel im Shop keinen Artikel aus dem Shop kaufen konnte.
+# Auch die gleiche Nachricht an den Besitzer, der versucht, mehr Artikel aus einem Shop abzurufen, als der Shop hat.
+customer-buy-fail-item: §cDer Shop hat nicht die angegebene Menge des ausgewählten Artikels!
+
+# Nachricht an den Shop-Inhaber, wenn der Shop-Inhaber erfolgreich vom Kunden gekauft hat.
+customer-sell-success-owner: §a{%customer%} verkauft {%amount%}x{%item%} §aan dich zum Preis von {%total%}.
+
+# Nachricht an den Kunden, wenn der Kunde den Artikel erfolgreich an den Shop verkauft hat.
+customer-sell-success-customer: §aErfolgreich verkauft {%amount%}x{%item%} §azu Preis von {%total%}.
+
+# Nachricht an den Kunden, wenn der Kunde den Artikel nicht an den Shop verkauft hat, weil der Besitzer nicht genug Geld hat.
+customer-sell-fail-money: §c{%owner%} hat nicht genug Geld!
+
+# Nachricht an den Kunden, wenn der Kunde aufgrund unzureichender Artikel keinen Artikel an den Shop verkauft hat.
+# Auch die gleiche Nachricht an den Besitzer mit unzureichenden Artikeln, die versuchen, Artikel zum Shop hinzuzufügen.
+customer-sell-fail-item: §cDu hast nicht die angegebene Menge des angegebenen Artikels!
+
+#####################################################################################################
+# +-----------------------------------------------------------------------------------------------+ #
+# |           Konversionen - Interaktion, Engagement und Kommentare (Shop-Interaktionen)          | #
+# +-----------------------------------------------------------------------------------------------+ #
+#####################################################################################################
+
+# Allgemein
+invalid-input: §cUngültige Eingabe!
+
+# Artikelpreis festlegen.
+price-convo-prompt: §aGib den Preis des Artikels ein, den du auflisten möchtest.
+price-convo-cancelled: §cShop-Eintrag storniert.
+price-convo-failed-no-item: §cDu hältst nichts in deiner Haupthand!
+price-convo-success: "§aArtikel: %s erfolgreich zum Preis von %s gelistet!"
+
+# Artikel zum Shop hinzufügen.
+add-convo-prompt: §aGib die Artikelmenge ein, die du dem Shop hinzufügen möchtest.
+add-convo-cancelled: §cHizufügen des Artikels abgebrochen.
+add-convo-success: "§aArtikel: %s erfolgreich hizugefügt!"
+add-convo-failed-limit: §cShoplimit erreicht! Du kannst dem Shop nur noch %s weitere Artikel hinzufügen!
+
+# Artikel aus dem Shop abrufen.
+retrieve-convo-prompt: §aGeben Sie die Artikelmenge ein, die Sie abrufen möchten.
+retrieve-convo-cancelled: §cArtikel abrufen abgebrochen.
+retrieve-convo-success: "§aArtikel: %s erfolgreich abgerufen!"
+
+# Artikel im Shop kaufen.
+purchase-convo-prompt: §aGeben Sie den Betrag ein, den Sie kaufen möchten.
+purchase-convo-cancelled: §cKauf storniert.
+
+# Artikel an ein Geschäft verkaufen.
+sell-convo-prompt: §aGeben Sie den Betrag ein, zu dem Sie verkaufen möchten.
+sell-convo-cancelled: §cVerkauf abgebrochen.
+sell-convo-failed-limit: §cShoplimit erreicht! Sie können nur noch %s weitere Artikel an den Shop verkaufen!
