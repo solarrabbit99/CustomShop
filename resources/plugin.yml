@@ -17,6 +17,7 @@ softdepend:
         TheNewEconomy,
         Gringotts,
         Economy,
+        EconomyPlus,
         LocaleLib,
     ]
 
