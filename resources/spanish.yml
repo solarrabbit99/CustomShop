@@ -1,0 +1,187 @@
+author: Dezer0
+
+# IMPORTANT! If you want to edit any of the messages, please create a new file,
+# copy the content over and edit there. This file will be overwritten upon server reloads.
+
+############################################################
+# +------------------------------------------------------+ #
+# |                       Shop GUI                       | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Title of inventory view when player accesses the shop-creation GUI.
+shop-creation: Custom Shops
+
+# Title of inventory view when player accesses the admin-shop-creation GUI.
+admin-shop-creation: Admin Custom Shops
+
+# Title of vending machines' inventory view when player accesses the customer's view
+vending-machine-customer: Maquina Expendedora
+
+# Title of vending machines' inventory view when player accesses the owner's view
+vending-machine-owner: Contenido de la Maquina Expendedora
+
+# Title of newt's briefcases' inventory view when player accesses the customer's view
+newt-briefcase-customer: Maletin
+
+# Title of newt's briefcases' inventory view when player accesses the owner's view
+newt-briefcase-owner: Configuracion del Maletin
+
+# Words used in price tags (capitalize whenever applicable)
+price-tag:
+    price: Precio
+    selling: Venta
+    buying: Compra
+    stock: Stock Actual
+    unlimited: Ilimitado
+
+# Words used for clickable icons in GUIs (capitalize the first word whenever applicable)
+icons:
+    selling-status:
+        lore: Click para cambiar
+    change-price:
+        title: Cambiar el precio
+        lore: Click para poner un precio
+    add-items:
+        title: Agregar Items
+        lore: Click para agregar items a la tienda
+    retrieve-items:
+        title: Recuperar Items
+        lore: Click para recuperar items de la tienda
+    close: Cerrar
+    previous: Pagina anterior
+    next: Siguiente pagina
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Messages (General)                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# No permission for command
+command-no-perms: §cNo tienes permiso para usar este comando.
+
+# Sent when players run `/customshop gettotal`
+total-shop-owned: "§9Tiendas propias: %s"
+
+# Briefcase initialization
+briefcase-not-initialized: §cEsta tienda no esta vendiendo/comprando ningún item!
+briefcase-already-initialized: §cEste item ya está añadido al maletin!
+
+# Sent when player access shops that are in use by other players
+shop-currently-in-use:
+    shop: §cTienda en uso, por favor espera...
+    vending-machine: §cMaquina Expendedora en uso, por favor espera...
+    briefcase: §cMaletin en uso, por favor espera...
+
+# Sent when players do not have permissions to the shop
+shop-no-perms: §cNo tienes permiso para usar esta tienda!
+
+# Messages when unlocking shop designs
+unlock:
+    confirmation: §9Coloca de nuevo para confirmar!
+    unlocked-new: "§aDesbloqueaste un nuevo Custom Shop: %s"
+    unlocked-already: §6Ya tienes %s§6 desbloqueado!
+
+# Message when player isn't targeting a valid block while executing a command
+invalid-target: §cObjetivo inválido...
+
+# Owner of the shop
+shop-owner: §bEsta tienda pertenece a %s.
+
+# Messages for shop creation
+create:
+    invalid-block: §cDebes apuntar a un bloque primero...
+    no-perms: §cNo puedes colocar Custom Shops aquí!
+    reached-max: §cAlcanzaste el número máximo de Custom Shops creados!
+    vending-machine:
+        locked: §cDebes desbloquear primero la Maquina Expendedora seleccionada!
+        invalid-block: §cLa posición seleccionada debe tener al menos 2 bloques de aire por encima...
+        success: §aMaquina Expendedora creada!
+    briefcase:
+        locked: §cDebes desbloquear primero el Maletin seleccionado!
+        invalid-block: §cLa posición seleccionada debe tener al menos 1 bloque de aire por encima...
+        success: §aMaletin creado!
+
+# Messages for shop removal
+remove:
+    invalid-block: §cDebes apuntar a un bloque...
+    contain-items: §cRemueve todos los items antes de quitar el Maletin!
+
+############################################################
+# +------------------------------------------------------+ #
+# |                Messages (Transactions)               | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Placeholders:
+# Customer      %customer%      Username of the customer, either purchasing or selling items to the shop
+# Owner         %owner%         Username of the owner of the shop
+# Total         %total%         Total amount of money involved in the transaction
+# Item          %item%          Display name of the item, or its material type if display name is absent
+# Amount        %amount%        Amount of items purchased/sold to the shop
+
+# Message to shop owner when shop owner successfully sold to customer.
+customer-buy-success-owner: §c{%customer%} te ha comprado {%amount%}x{%item%}§c por el precio de {%total%}.
+
+# Message to customer when customer successfully purchased item from shop.
+customer-buy-success-customer: §aCompraste {%amount%}x{%item%}§a al precio de {%total%}.
+
+# Message to customer when customer failed to purchase item from shop due to insufficient money.
+customer-buy-fail-money: §cNecesitas al menos {%total%} para realizar esta compra!
+
+# Message to customer when customer failed to purchase item from shop due to insufficient space.
+# Also the same message to owner with insufficient space trying to retrieve item from a shop.
+customer-buy-fail-space: §cNo tienes espacio suficiente en el inventario!
+
+# Message to customer when customer failed to purchase item from shop due to insufficient items in shop.
+# Also the same message to owner trying to retrieve more items from a shop than the shop has.
+customer-buy-fail-item: §cLa tienda no tiene esa cantidad de items!
+
+# Message to shop owner when shop owner successfully bought from customer.
+customer-sell-success-owner: §a{%customer%} te ha vendido {%amount%}x{%item%}§a a ti por el precio de {%total%}.
+
+# Message to customer when customer successfully sold item to shop.
+customer-sell-success-customer: §aHas vendido {%amount%}x{%item%}§a por el precio de {%total%}.
+
+# Message to customer when customer failed to sell item to shop due to owner's insufficient money.
+customer-sell-fail-money: §c{%owner%} no tiene suficiente dinero!
+
+# Message to customer when customer failed to sell item to shop due to insufficient items.
+# Also the same message to owner with insufficient items trying to add items to shop.
+customer-sell-fail-item: §cNo tienes la cantidad suficiente de este item!
+
+############################################################
+# +------------------------------------------------------+ #
+# |           Conversation (Shop Interactions)           | #
+# +------------------------------------------------------+ #
+############################################################
+
+# General
+invalid-input: §cDatos ingresados inválidos!
+
+# Set items price
+price-convo-prompt: §aIngresa el precio del item que quieres agregar...
+price-convo-cancelled: §cAgregado de items/precio cancelado...
+price-convo-failed-no-item: §cDebes sostener un item en tu mano principal!
+price-convo-success: §aItem agregado por el precio de %s!
+
+# Add items to shop
+add-convo-prompt: §aIngresa la cantidad de items que quieres agragar a la tienda...
+add-convo-cancelled: §cAgregado de items cancelado...
+add-convo-success: §aSe agregaron %s items mas!
+add-convo-failed-limit: §cHas alcanzado el limite de items de la tienda! Solo puedes agregar %s items mas a la tienda!
+
+# Retrieve items from shop
+retrieve-convo-prompt: §aIngresa la cantidad de items que quieres recuperar...
+retrieve-convo-cancelled: §cRecuperación de items cancelada...
+retrieve-convo-success: §aSe recuperaron %s items!
+
+# Purchase items from shop
+purchase-convo-prompt: §aIngresa la cantidad que quieres comprar...
+purchase-convo-cancelled: §cCompra cancelada...
+
+# Sell items to shop
+sell-convo-prompt: §aIngresa la cantidad que quieres vender...
+sell-convo-cancelled: §cVenta cancelada...
+sell-convo-failed-limit: §cHas alcanzado el limite! Solo puedes vender %s items más!
